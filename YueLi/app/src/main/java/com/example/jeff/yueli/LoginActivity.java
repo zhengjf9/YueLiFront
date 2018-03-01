@@ -3,6 +3,7 @@ package com.example.jeff.yueli;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +40,10 @@ public class LoginActivity extends AppCompatActivity {
                 EditText passWord = (EditText)findViewById(R.id.psw_input);
                 String username = userName.getText().toString();
                 String password = passWord.getText().toString();
+                //for test
+                Intent intent = new Intent(LoginActivity.this, Map.class);
+                startActivity(intent);
+
                 if (isUserExist(username)) {
                     if (password.equals(getPassWord(username))) {
                         // 跳转主页面->!
