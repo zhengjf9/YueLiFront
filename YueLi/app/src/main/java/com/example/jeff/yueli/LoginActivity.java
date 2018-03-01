@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
                 String username = userName.getText().toString();
                 String password = passWord.getText().toString();
                 //for test
-                Intent intent = new Intent(LoginActivity.this, Map.class);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
 
                 if (isUserExist(username)) {

@@ -35,11 +35,14 @@ public class Map  extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         try {
+
+
             //禁止地图缩放和移动
             aMap.getUiSettings().setScrollGesturesEnabled(false);
             aMap.getUiSettings().setZoomGesturesEnabled(false);
             //设置缩放比例
             aMap.moveCamera(CameraUpdateFactory.zoomTo(500));
+            Log.e("enter", "map");
             // 实现定位
 //            MyLocationStyle myLocationStyle;
 //            myLocationStyle = new MyLocationStyle();
