@@ -1,6 +1,7 @@
 package com.example.jeff.yueli;
 
 import android.content.Intent;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -8,22 +9,37 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private float y1;
     private float y2;
-
+    ImageView recommend, meet, trip, individual;
+    private int pos;
+    private ArrayList<spot> spots;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ImageView map = (ImageView)findViewById(R.id.meet);
-        map.setOnClickListener(new View.OnClickListener() {
+        spots = new ArrayList<>();
+        pos = 0;
+        recommend = (ImageView)findViewById(R.id.recommend);
+        meet = (ImageView)findViewById(R.id.meet);
+        trip = (ImageView)findViewById(R.id.trip);
+        individual = (ImageView)findViewById(R.id.individual);
+        meet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Map.class);
+
+                pos = 2;
                 startActivity(intent);
             }
         });
+    }
+
+    private void changeItemColor(int p) {
+        
     }
 
     @Override
