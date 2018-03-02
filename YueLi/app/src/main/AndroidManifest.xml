@@ -29,9 +29,7 @@
         <activity android:name=".ForgetActivity">
 
         </activity>
-        <activity android:name=".Map">
 
-        </activity>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <!--允许程序设置内置sd卡的写权限-->

@@ -2,8 +2,13 @@ package com.example.jeff.yueli;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
@@ -14,30 +19,22 @@ import com.amap.api.maps2d.model.MyLocationStyle;
  * Created by XDDN2 on 2018/3/1.
  */
 
-public class Map  extends AppCompatActivity {
+public class Map  extends Fragment {
     private AMap aMap;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.map);
-        try {
-            MapView mapView = (MapView) findViewById(R.id.map);
-            mapView.onCreate(savedInstanceState);// 此方法必须重写
-            aMap = mapView.getMap();
 
-        }catch (Exception e) {
-            Log.e("Map", "Wrong", e);
-        }
+    public Map() {
 
     }
 
+    @Nullable
     @Override
-    protected void onStart() {
-        super.onStart();
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.map, container, false);
         try {
-
-
-            //禁止地图缩放和移动
+            MapView mapView = (MapView) view.findViewById(R.id.map);
+            mapView.onCreate(savedInstanceState);// 此方法必须重写
+            aMap = mapView.getMap();
+//禁止地图缩放和移动
             aMap.getUiSettings().setScrollGesturesEnabled(false);
             aMap.getUiSettings().setZoomGesturesEnabled(false);
             //设置缩放比例
@@ -56,8 +53,12 @@ public class Map  extends AppCompatActivity {
             aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
 //            aMap.getUiSettings().setMyLocationButtonEnabled(true); //设置默认定位按钮是否显示，非必需设置。
             aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-        } catch (Exception e) {
-            Log.e("map", "Wrong!", e);
+        }catch (Exception e) {
+            Log.e("Map", "Wrong", e);
         }
+
+        return view;
     }
+
+
 }

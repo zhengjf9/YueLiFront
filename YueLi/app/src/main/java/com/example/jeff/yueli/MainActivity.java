@@ -1,69 +1,178 @@
 package com.example.jeff.yueli;
 
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.media.Image;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    private float y1;
-    private float y2;
-    ImageView recommend, meet, trip, individual;
-    private int pos;
-    private ArrayList<spot> spots;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private AddActivity addActivity;
+    private IndividualActivity individualActivity;
+    private RecommendActivity recommendActivity;
+    private TripActivity tripActivity;
+    private Map map;
+    private ViewPager vp;
+    private List<Fragment> fragmentList = new ArrayList<>();
+    private FragmentAdapter fragmentAdapter;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        spots = new ArrayList<>();
-        pos = 0;
-        recommend = (ImageView)findViewById(R.id.recommend);
-        meet = (ImageView)findViewById(R.id.meet);
-        trip = (ImageView)findViewById(R.id.trip);
-        individual = (ImageView)findViewById(R.id.individual);
-        meet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Map.class);
+        try {
+            Log.e("getIntoMain", "Successfully");
+            initViews();
 
-                pos = 2;
-                startActivity(intent);
-            }
-        });
+            fragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), fragmentList);
+            vp.setOffscreenPageLimit(5);
+            vp.setAdapter(fragmentAdapter);
+            vp.setCurrentItem(4);
+            changeTextColor(4);
+            //ViewPager的监听事件
+            vp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                /*此方法在页面被选中时调用*/
+                    changeTextColor(position);
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+                /*此方法是在状态改变的时候调用，其中arg0这个参数有三种状态（0，1，2）。
+                arg0 ==1的时辰默示正在滑动，
+                arg0==2的时辰默示滑动完毕了，
+                arg0==0的时辰默示什么都没做。*/
+                }
+            });
+        } catch (Exception e) {
+            Log.e("main", "Wrong", e);
+        }
+
     }
 
-    private void changeItemColor(int p) {
-        
+    private void initViews() {
+        ImageView recommend = (ImageView) findViewById(R.id.recommend);
+        ImageView add = (ImageView) findViewById(R.id.plus);
+        ImageView individual = (ImageView) findViewById(R.id.individual);
+        ImageView trip = (ImageView) findViewById(R.id.trip);
+        ImageView meet = (ImageView) findViewById(R.id.meet);
+
+        recommend.setOnClickListener(this);
+        add.setOnClickListener(this);
+        individual.setOnClickListener(this);
+        trip.setOnClickListener(this);
+        meet.setOnClickListener(this);
+
+        vp = (ViewPager)findViewById(R.id.viewPager);
+        addActivity = new AddActivity();
+        individualActivity = new IndividualActivity();
+        recommendActivity = new RecommendActivity();
+        tripActivity = new TripActivity();
+        map = new Map();
+
+        fragmentList.add(recommendActivity);
+        fragmentList.add(map);
+        fragmentList.add(addActivity);
+        fragmentList.add(tripActivity);
+        fragmentList.add(individualActivity);
     }
 
+    public class FragmentAdapter extends FragmentPagerAdapter {
+
+        List<Fragment> fragmentList = new ArrayList<Fragment>();
+
+        public FragmentAdapter(FragmentManager fm, List<Fragment> fragmentList) {
+            super(fm);
+            this.fragmentList = fragmentList;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
+        }
+
+    }
+
+    void changeTextColor(int pos) {
+        ImageView recommend = (ImageView) findViewById(R.id.recommend);
+        ImageView add = (ImageView) findViewById(R.id.plus);
+        ImageView individual = (ImageView) findViewById(R.id.individual);
+        ImageView trip = (ImageView) findViewById(R.id.trip);
+        ImageView meet = (ImageView) findViewById(R.id.meet);
+        recommend.setImageResource(R.drawable.marker_96px);
+        add.setImageResource(R.drawable.plus);
+        individual.setImageResource(R.drawable.male_user_96px);
+        trip.setImageResource(R.drawable.photo_gallery_96px);
+        meet.setImageResource(R.drawable.map_marker_96px);
+        switch (pos) {
+            case 2:
+                add.setImageResource(R.drawable.plus_cover);
+                break;
+            case 4:
+                individual.setImageResource(R.drawable.male_user_96px_cover);
+                break;
+            case 0:
+                recommend.setImageResource(R.drawable.marker_96px_cover);
+                break;
+            case 3:
+                trip.setImageResource(R.drawable.photo_gallery_96px_cover);
+                break;
+            case 1:
+                meet.setImageResource(R.drawable.map_marker_96px_cover);
+                break;
+        }
+    }
+
+    /**
+     * 点击底部Text 动态修改ViewPager的内容
+     */
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        //继承了Activity的onTouchEvent方法，直接监听点击事件
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            //当手指按下的时候
-            y1 = event.getY();
-        }
-        if(event.getAction() == MotionEvent.ACTION_UP) {
-            //当手指离开的时候
-            y2 = event.getY();
-            if(y1 - y2 > 50) {
-                Toast.makeText(MainActivity.this, "向上滑", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivity.this, "向下滑", Toast.LENGTH_SHORT).show();
+    public void onClick(View v) {
+        try {
+            switch (v.getId()) {
+                case R.id.plus:
+                    vp.setCurrentItem(0, true);
+                    break;
+                case R.id.individual:
+                    vp.setCurrentItem(1, true);
+                    break;
+                case R.id.recommend:
+                    vp.setCurrentItem(2, true);
+                    break;
+                case R.id.trip:
+                    vp.setCurrentItem(3, true);
+                    break;
+                case R.id.meet:
+                    vp.setCurrentItem(4, true);
+                    break;
             }
+        } catch (Exception e) {
+            Log.e("jump", "wrong", e);
         }
-        return super.onTouchEvent(event);
     }
-
-    // 网络访问部分
-
-    // 获取景点介绍和文字!->
-
 
 }
