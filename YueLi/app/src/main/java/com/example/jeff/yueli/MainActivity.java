@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView add = (ImageView) findViewById(R.id.plus);
         ImageView individual = (ImageView) findViewById(R.id.individual);
         ImageView trip = (ImageView) findViewById(R.id.trip);
-        ImageView meet = (ImageView) findViewById(R.id.map);
+        ImageView meet = (ImageView) findViewById(R.id.meet);
         recommend.setImageResource(R.drawable.marker_96px);
         add.setImageResource(R.drawable.plus);
         individual.setImageResource(R.drawable.male_user_96px);
@@ -152,22 +152,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.plus:
-                vp.setCurrentItem(0, true);
-                break;
-            case R.id.individual:
-                vp.setCurrentItem(1, true);
-                break;
-            case R.id.recommend:
-                vp.setCurrentItem(2, true);
-                break;
-            case R.id.trip:
-                vp.setCurrentItem(3, true);
-                break;
-            case R.id.meet:
-                vp.setCurrentItem(4, true);
-                break;
+        try {
+            switch (v.getId()) {
+                case R.id.plus:
+                    vp.setCurrentItem(0, true);
+                    break;
+                case R.id.individual:
+                    vp.setCurrentItem(1, true);
+                    break;
+                case R.id.recommend:
+                    vp.setCurrentItem(2, true);
+                    break;
+                case R.id.trip:
+                    vp.setCurrentItem(3, true);
+                    break;
+                case R.id.meet:
+                    vp.setCurrentItem(4, true);
+                    break;
+            }
+        } catch (Exception e) {
+            Log.e("jump", "wrong", e);
         }
     }
 
