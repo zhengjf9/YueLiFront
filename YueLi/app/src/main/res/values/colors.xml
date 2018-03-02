@@ -6,4 +6,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="blue">#272274</color>
+    <color name="gray">#bfbfbf</color>
+    <color name="mood_blue">#1e90ff</color>
+    <color name="green">#32b16c</color>
 </resources>
