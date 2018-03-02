@@ -3,6 +3,7 @@ package com.example.jeff.yueli;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,9 +42,9 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText userName = (EditText)findViewById(R.id.name_input);
                 EditText passWord = (EditText)findViewById(R.id.psw_input);
-                String username = userName.getText().toString();
-                String password = passWord.getText().toString();
-                String url="http://private-aa8865-yueliapi.apiary-mock.com/api/users?username="+username+"&password="+password;
+                final String username = userName.getText().toString();
+                final String password = passWord.getText().toString();
+                String url="http://private-aa8865-yueliapi.apiary-mock.com/api/users/login?username="+username+"&password="+password;
                 OkHttpClient httpClient = new OkHttpClient.Builder()
                         .cookieJar(new CookieJar() {
                             private final java.util.Map<String, List<Cookie>> cookiesMap = new HashMap<String, List<Cookie>>();
@@ -86,20 +87,24 @@ public class RegisterActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 Gson gson = new Gson();
-                                Type registertype = new TypeToken<Result<signup>>(){}.getType();
-                                Result<signup> registerresult = gson.fromJson(string, registertype);
-                                signup denglu = registerresult.data;
+                                Type regtype = new TypeToken<Result<signup>>(){}.getType();
+                                Result<signup> regresult = gson.fromJson(string, regtype);
+                                signup zhuce = regresult.data;
 
-                                if (response.code() == 400) {
-                                    Toast.makeText(RegisterActivity.this, registerresult.msg, Toast.LENGTH_SHORT);
-                                } else {
+                                int rescode = response.code();
+                                if (rescode == 200) {
                                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                                     startActivity(intent);
+
+                                } else {
+
+                                    Toast.makeText(RegisterActivity.this, "test", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
                     }
                 });
+
             }
         });
         // 返回按钮绑定

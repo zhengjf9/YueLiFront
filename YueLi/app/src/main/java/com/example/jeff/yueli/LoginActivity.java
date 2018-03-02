@@ -35,11 +35,17 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        Button login = (Button)findViewById(R.id.log_button);
-        Button forget = (Button)findViewById(R.id.forget_button);
-        Button regist = (Button)findViewById(R.id.register_button);
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_login);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Button login = (Button) findViewById(R.id.log_button);
+        Button forget = (Button) findViewById(R.id.forget_button);
+        Button regist = (Button) findViewById(R.id.register_button);
         // 注册、登录、忘记密码按钮绑定
         regist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,8 +119,10 @@ public class LoginActivity extends AppCompatActivity {
                                 if (rescode == 200) {
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                     startActivity(intent);
+
                                 } else {
-                                    Toast.makeText(LoginActivity.this, loginresult.msg, Toast.LENGTH_SHORT).show();
+
+                                    Toast.makeText(LoginActivity.this, "test", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -123,6 +131,7 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 }

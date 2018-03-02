@@ -41,8 +41,8 @@ public class ForgetActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText userName = (EditText)findViewById(R.id.name_input);
                 EditText passWord = (EditText)findViewById(R.id.psw_input);
-                String username = userName.getText().toString();
-                String password = passWord.getText().toString();
+                final String username = userName.getText().toString();
+                final String password = passWord.getText().toString();
                 String url="http://private-aa8865-yueliapi.apiary-mock.com/api/users/login?username="+username+"&password="+password;
                 OkHttpClient httpClient = new OkHttpClient.Builder()
                         .cookieJar(new CookieJar() {
@@ -86,9 +86,9 @@ public class ForgetActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 Gson gson = new Gson();
-                                Type forgettype = new TypeToken<Result<signin>>(){}.getType();
-                                Result<signin> forgetresult = gson.fromJson(string, forgettype);
-                                signin forget = forgetresult.data;
+                                Type forgettype = new TypeToken<Result<forget>>(){}.getType();
+                                Result<forget> forgetresult = gson.fromJson(string, forgettype);
+                                forget wangji = forgetresult.data;
 
                                 int rescode = response.code();
                                 if (rescode == 200) {
