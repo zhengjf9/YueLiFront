@@ -150,7 +150,8 @@ public class TripActivity extends Fragment {
         });
         Map<String, String> temp = new LinkedHashMap<String, String>();
         temp.put("title", "上海:梦中城");
-        temp.put("time","2018.3.1/3天");
+        temp.put("firstday","2018.3.1");
+        temp.put("duration", "3天");
         temp.put("location", "中国，上海");
         temp.put("name", "旅行者");
         temp.put("like_num", "99");
@@ -158,7 +159,8 @@ public class TripActivity extends Fragment {
         mDatas.add(temp);
         Map<String, String> temp1 = new LinkedHashMap<String, String>();
         temp1.put("title", "广州:羊城");
-        temp1.put("time","2018.3.1/3天");
+        temp1.put("firstday","2018.3.1");
+        temp1.put("duration","4天");
         temp1.put("location", "中国，广州");
         temp1.put("name", "旅行者");
         temp1.put("like_num", "99");
@@ -191,11 +193,12 @@ public class TripActivity extends Fragment {
         public void onBindViewHolder(final MyViewHolder holder, int position)
         {
             holder.title.setText(mDatas.get(position).get("title"));
-            holder.time.setText(mDatas.get(position).get("time"));
+            holder.firstday.setText(mDatas.get(position).get("firstday"));
+            holder.duration.setText(mDatas.get(position).get("duration"));
             holder.location.setText(mDatas.get(position).get("location"));
             holder.name.setText(mDatas.get(position).get("name"));
             holder.like_num.setText(mDatas.get(position).get("like_num"));
-            holder.comment_num.setText(mDatas.get(position).get("commemt_num"));
+            holder.comment_num.setText(mDatas.get(position).get("comment_num"));
             if (mOnItemClickLitener != null)
             {
                 holder.itemView.setOnClickListener(new View.OnClickListener()
@@ -236,7 +239,8 @@ public class TripActivity extends Fragment {
         {
 
             TextView title;
-            TextView time;
+            TextView firstday;
+            TextView duration;
             TextView location;
             ImageView avator;
             TextView name;
@@ -247,7 +251,8 @@ public class TripActivity extends Fragment {
             {
                 super(view);
                 title = (TextView) view.findViewById(R.id.title);
-                time = (TextView) view.findViewById(R.id.time);
+                firstday = (TextView) view.findViewById(R.id.firstday);
+                duration = (TextView) view.findViewById(R.id.duration);
                 location = (TextView) view.findViewById(R.id.location);
                 avator = (ImageView) view.findViewById(R.id.avator);
                 name = (TextView) view.findViewById(R.id.name);
