@@ -15,9 +15,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by XDDN2 on 2018/3/2.
@@ -35,7 +51,12 @@ public class TripActivity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_trip, container,false);
+
+       // String user= getActivity().getIntent().getStringExtra("user");
+       // User yonghu=new Gson().fromJson(user,User.class);
+
         initData();
+
         final RecyclerView myRecView = (RecyclerView)view.findViewById(R.id.my_recyclerview);
         final HomeAdapter myAdapter = new HomeAdapter();
         myAdapter.setOnItemClickLitener(new OnItemClickLitener()
@@ -60,15 +81,62 @@ public class TripActivity extends Fragment {
     }
     public void initData(){
         //获取网络数据
-        Map<String, String> temp = new LinkedHashMap<String, String>();
-        temp.put("title", "上海:梦中城");
-        temp.put("firstday","2018.3.1");
-        temp.put("duration", "3天");
-        temp.put("location", "中国，上海");
-        temp.put("name", "旅行者");
-        temp.put("like_num", "99");
-        temp.put("comment_num", "99");
-        mDatas.add(temp);
+        MyApplication application = (MyApplication)getActivity().getApplication();
+
+        OkHttpClient httpClient = application.gethttpclient();
+        User user = application.getUser();
+        Toast.makeText(getActivity().getApplicationContext(),String.valueOf(user.getuserid())  , Toast.LENGTH_LONG).show();
+        String url="http://123.207.29.66:3009/api/travels?user_id="+String.valueOf(user.getuserid());
+                //"2";
+                //String.valueOf(yonghu.getuserid());
+
+
+        Request request = new Request.Builder().url(url).build();
+
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            String string=null;
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                      //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
+                        try {
+                            string = response.body().string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Gson gson = new Gson();
+                        Travel result = gson.fromJson(string,Travel.class);
+                        List<Travel.trip> travellist =  result.gettrips();
+
+                        for (int i = 0; i < travellist.size(); i++) {
+                            Travel.trip t = travellist.get(i);
+                            Map<String, String> temp = new LinkedHashMap<String, String>();
+                            temp.put("title", t.gettitle());
+                            temp.put("firstday", t.getFirst_day());
+                            temp.put("duration", "3天");
+                            temp.put("location", t.getlocation());
+                            temp.put("name", t.getnickname());
+                            temp.put("like_num", String.valueOf(t.getfavoritecount()));
+                            temp.put("comment_num", String.valueOf(t.getfavoritecount()));
+                            mDatas.add(temp);
+                        }
+                        int rescode = response.code();
+                        if (rescode == 200) {
+                            Toast.makeText(getActivity().getApplicationContext(),String.valueOf(travellist.get(0).getuserid())  , Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+
+
         Map<String, String> temp1 = new LinkedHashMap<String, String>();
         temp1.put("title", "广州:羊城");
         temp1.put("firstday","2018.3.1");
@@ -78,6 +146,7 @@ public class TripActivity extends Fragment {
         temp1.put("like_num", "99");
         temp1.put("comment_num", "99");
         mDatas.add(temp1);
+
     }
 
 

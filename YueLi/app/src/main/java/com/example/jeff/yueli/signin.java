@@ -7,19 +7,19 @@ package com.example.jeff.yueli;
 public class signin {
 
     private String nickname;
-    private int userid;
+    private int user_id;
 
     public String getnickname() {
         return nickname;
     }
     public int getuserid() {
-        return userid;
+        return user_id;
     }
     public void setnickname(String name) {
         this.nickname = name;
     }
     public void setuserid(int id) {
-        this.userid = id;
+        this.user_id = id;
     }
 
 }

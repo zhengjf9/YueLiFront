@@ -23,6 +23,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
