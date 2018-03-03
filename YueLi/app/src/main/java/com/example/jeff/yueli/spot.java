@@ -10,10 +10,13 @@ public class spot {
     private Bitmap image;
     private String description;
     private String local;
-    public spot(Bitmap img, String des, String l) {
+    private double latitude, longtitude;
+    public spot(Bitmap img, String des, String l, double la, double lo) {
         image = img;
         description = des;
         local = l;
+        latitude = la;
+        longtitude = lo;
     }
 
     public Bitmap getImage() {
@@ -26,5 +29,13 @@ public class spot {
 
     public String getLocal() {
         return local;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongtitude() {
+        return longtitude;
     }
 }

@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), fragmentList);
             vp.setOffscreenPageLimit(5);
             vp.setAdapter(fragmentAdapter);
-            vp.setCurrentItem(4);
-            changeTextColor(4);
+            vp.setCurrentItem(1);
+            changeTextColor(1);
             //ViewPager的监听事件
             vp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -152,27 +152,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onClick(View v) {
+        int p = 0;
         try {
             switch (v.getId()) {
                 case R.id.plus:
-                    vp.setCurrentItem(0, true);
+                    vp.setCurrentItem(2, true);
+                    p = 2;
                     break;
                 case R.id.individual:
-                    vp.setCurrentItem(1, true);
+                    vp.setCurrentItem(4, true);
+                    p = 4;
                     break;
                 case R.id.recommend:
-                    vp.setCurrentItem(2, true);
+                    vp.setCurrentItem(0, true);
+                    p = 0;
                     break;
                 case R.id.trip:
                     vp.setCurrentItem(3, true);
+                    p = 3;
                     break;
                 case R.id.meet:
-                    vp.setCurrentItem(4, true);
+                    vp.setCurrentItem(1, true);
+                    p = 1;
                     break;
             }
         } catch (Exception e) {
             Log.e("jump", "wrong", e);
         }
+        Log.e("click function",String.valueOf(p));
     }
 
 }
