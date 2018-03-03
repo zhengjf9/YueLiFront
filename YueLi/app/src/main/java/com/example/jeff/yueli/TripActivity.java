@@ -1,5 +1,6 @@
 package com.example.jeff.yueli;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -53,8 +54,8 @@ public class TripActivity extends Fragment {
                 //myAdapter.removeData(position);
             }
         });
+        myRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
         myRecView.setAdapter(myAdapter);
-        myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
     }
     public void initData(){
@@ -85,7 +86,8 @@ public class TripActivity extends Fragment {
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
         {
-            MyViewHolder holder = new MyViewHolder(getLayoutInflater().inflate(R.layout.journey_item, parent,
+            MyViewHolder holder = new MyViewHolder(
+                    LayoutInflater.from(getActivity()).inflate(R.layout.journey_item, parent,
                     false));
             return holder;
         }
