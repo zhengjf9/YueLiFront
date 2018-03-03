@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onClick(View v) {
+        // 测试按钮
         int p = 0;
         try {
             switch (v.getId()) {
