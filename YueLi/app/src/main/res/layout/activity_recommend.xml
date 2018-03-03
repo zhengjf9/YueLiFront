@@ -71,5 +71,11 @@
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="4dp"
         />
+    <View
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 </android.support.constraint.ConstraintLayout>
