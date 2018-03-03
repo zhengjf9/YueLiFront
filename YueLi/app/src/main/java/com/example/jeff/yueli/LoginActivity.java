@@ -124,8 +124,12 @@ public class LoginActivity extends AppCompatActivity {
                                 int rescode = response.code();
                                 if (rescode == 200) {
                                     //Toast.makeText(LoginActivity.this, loginresult.msg, Toast.LENGTH_SHORT).show();
-                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                     startActivity(intent);
+                                    User yonghu=new User();
+                                    yonghu.setusername(username);
+                                    yonghu.setuserid(denglu.getuserid());
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.putExtra("user",yonghu);
+                                    startActivity(intent);
                                 } else {
 
                                     Toast.makeText(LoginActivity.this, loginresult.msg, Toast.LENGTH_SHORT).show();

@@ -100,7 +100,11 @@ public class RegisterActivity extends AppCompatActivity {
                                 int rescode = response.code();
                                 if (rescode == 200) {
                                   //  Toast.makeText(RegisterActivity.this, regresult.msg, Toast.LENGTH_SHORT).show();
+                                    User yonghu=new User();
+                                    yonghu.setusername(username);
+                                    yonghu.setuserid(zhuce.getuserid());
                                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                    intent.putExtra("user",yonghu);
                                     startActivity(intent);
 
                                 } else {

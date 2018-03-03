@@ -99,7 +99,11 @@ public class ForgetActivity extends AppCompatActivity {
                                 int rescode = response.code();
                                 if (rescode == 200) {
                                     //Toast.makeText(ForgetActivity.this, "密码更改成功", Toast.LENGTH_SHORT).show();
+                                    User yonghu=new User();
+                                    yonghu.setusername(username);
+                                    yonghu.setuserid(wangji.getuserid());
                                     Intent intent = new Intent(ForgetActivity.this, MainActivity.class);
+                                    intent.putExtra("user",yonghu);
                                     startActivity(intent);
                                 } else {
                                     Toast.makeText(ForgetActivity.this, forgetresult.msg, Toast.LENGTH_SHORT).show();

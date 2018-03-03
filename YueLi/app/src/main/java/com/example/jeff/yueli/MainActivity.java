@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        String user=getIntent().getStringExtra("user");
+        User yonghu=new Gson().fromJson(user,User.class);
+
+       // Log.d(TAG,"book title->"+book.getTitle());
+       // Log.d(TAG,"book author name->"+book.getAuthor().getName());
         try {
             Log.e("getIntoMain", "Successfully");
             initViews();
