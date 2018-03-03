@@ -52,10 +52,10 @@ public class TripActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_trip, container,false);
 
-        String user= getActivity().getIntent().getStringExtra("user");
-        User yonghu=new Gson().fromJson(user,User.class);
+       // String user= getActivity().getIntent().getStringExtra("user");
+       // User yonghu=new Gson().fromJson(user,User.class);
 
-        initData(yonghu);
+        initData();
 
         final RecyclerView myRecView = (RecyclerView)view.findViewById(R.id.my_recyclerview);
         final HomeAdapter myAdapter = new HomeAdapter();
@@ -79,38 +79,20 @@ public class TripActivity extends Fragment {
         myRecView.setAdapter(myAdapter);
         return view;
     }
-    public void initData(User yonghu){
+    public void initData(){
         //获取网络数据
-        String url="http://123.207.29.66:3009/api/travels?user_id="+String.valueOf(yonghu.getuserid());
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .cookieJar(new CookieJar() {
-                    private final java.util.Map<String, List<Cookie>> cookiesMap = new HashMap<String, List<Cookie>>();
-                    @Override
-                    public void saveFromResponse(HttpUrl arg0, List<Cookie> arg1) {
-                        // TODO Auto-generated method stub
-                        //移除相同的url的Cookie
-                        String host = arg0.host();
-                        List<Cookie> cookiesList = cookiesMap.get(host);
-                        if (cookiesList != null){
-                            cookiesMap.remove(host);
-                        }
-                        //再重新天添加
-                        cookiesMap.put(host, arg1);
-                    }
-                    @Override
-                    public List<Cookie> loadForRequest(HttpUrl arg0) {
-                        // TODO Auto-generated method stub
-                        List<Cookie> cookiesList = cookiesMap.get(arg0.host());
-                        //注：这里不能返回null，否则会报NULLException的错误。
-                        //原因：当Request 连接到网络的时候，OkHttp会调用loadForRequest()
-                        return cookiesList != null ? cookiesList : new ArrayList<Cookie>();
-                    }
-                })
-                .addInterceptor(new HttpLoggingInterceptor()).build();
-        FormBody formBody = new FormBody
-                .Builder()
-                .build();
-        Request request = new Request.Builder().post(formBody).url(url).build();
+        MyApplication application = (MyApplication)getActivity().getApplication();
+
+        OkHttpClient httpClient = application.gethttpclient();
+        User user = application.getUser();
+        Toast.makeText(getActivity().getApplicationContext(),String.valueOf(user.getuserid())  , Toast.LENGTH_LONG).show();
+        String url="http://123.207.29.66:3009/api/travels?user_id="+String.valueOf(user.getuserid());
+                //"2";
+                //String.valueOf(yonghu.getuserid());
+
+
+        Request request = new Request.Builder().url(url).build();
+
         httpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -121,42 +103,40 @@ public class TripActivity extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                      //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
                         try {
                             string = response.body().string();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                         Gson gson = new Gson();
-                        Type logintype = new TypeToken<Result<signin>>(){}.getType();
-                        Result<signin> loginresult = gson.fromJson(string, logintype);
-                        signin denglu = loginresult.data;
+                        Travel result = gson.fromJson(string,Travel.class);
+                        List<Travel.trip> travellist =  result.gettrips();
 
+                        for (int i = 0; i < travellist.size(); i++) {
+                            Travel.trip t = travellist.get(i);
+                            Map<String, String> temp = new LinkedHashMap<String, String>();
+                            temp.put("title", t.gettitle());
+                            temp.put("firstday", t.getFirst_day());
+                            temp.put("duration", "3天");
+                            temp.put("location", t.getlocation());
+                            temp.put("name", t.getnickname());
+                            temp.put("like_num", String.valueOf(t.getfavoritecount()));
+                            temp.put("comment_num", String.valueOf(t.getfavoritecount()));
+                            mDatas.add(temp);
+                        }
                         int rescode = response.code();
                         if (rescode == 200) {
-                            //Toast.makeText(LoginActivity.this, loginresult.msg, Toast.LENGTH_SHORT).show();
-                            User yonghu=new User();
-                            yonghu.setusername(yonghu.getusername());
-                            yonghu.setuserid(yonghu.getuserid());
-                           // Intent intent = new Intent(TripActivity.this, MainActivity.class);
-                            //intent.putExtra("user",yonghu);
-                            //star0tActivity(intent);
+                            Toast.makeText(getActivity().getApplicationContext(),String.valueOf(travellist.get(0).getuserid())  , Toast.LENGTH_SHORT).show();
                         } else {
-
-                            //Toast.makeText(LoginActivity.this, loginresult.msg, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
         });
-        Map<String, String> temp = new LinkedHashMap<String, String>();
-        temp.put("title", "上海:梦中城");
-        temp.put("firstday","2018.3.1");
-        temp.put("duration", "3天");
-        temp.put("location", "中国，上海");
-        temp.put("name", "旅行者");
-        temp.put("like_num", "99");
-        temp.put("comment_num", "99");
-        mDatas.add(temp);
+
+
         Map<String, String> temp1 = new LinkedHashMap<String, String>();
         temp1.put("title", "广州:羊城");
         temp1.put("firstday","2018.3.1");
@@ -166,6 +146,7 @@ public class TripActivity extends Fragment {
         temp1.put("like_num", "99");
         temp1.put("comment_num", "99");
         mDatas.add(temp1);
+
     }
 
 

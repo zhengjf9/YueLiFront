@@ -9,16 +9,16 @@ import java.io.Serializable;
 public class User implements Serializable {
     private int id;
 
-    private String name;
+    private String nickname;
 
-    public String getusername() {
-        return name;
+    public String getnickname() {
+        return nickname;
     }
     public int getuserid() {
         return id;
     }
-    public void setusername(String name) {
-        this.name = name;
+    public void setnickname(String name) {
+        this.nickname = name;
     }
     public void setuserid(int id) {
         this.id = id;

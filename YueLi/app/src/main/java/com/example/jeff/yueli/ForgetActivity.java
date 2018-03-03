@@ -45,31 +45,9 @@ public class ForgetActivity extends AppCompatActivity {
                 final String username = userName.getText().toString();
                 final String password = passWord.getText().toString();
                 String url="http://123.207.29.66:3009/api/users/login";
-                OkHttpClient httpClient = new OkHttpClient.Builder()
-                        .cookieJar(new CookieJar() {
-                            private final java.util.Map<String, List<Cookie>> cookiesMap = new HashMap<String, List<Cookie>>();
-                            @Override
-                            public void saveFromResponse(HttpUrl arg0, List<Cookie> arg1) {
-                                // TODO Auto-generated method stub
-                                //移除相同的url的Cookie
-                                String host = arg0.host();
-                                List<Cookie> cookiesList = cookiesMap.get(host);
-                                if (cookiesList != null){
-                                    cookiesMap.remove(host);
-                                }
-                                //再重新天添加
-                                cookiesMap.put(host, arg1);
-                            }
-                            @Override
-                            public List<Cookie> loadForRequest(HttpUrl arg0) {
-                                // TODO Auto-generated method stub
-                                List<Cookie> cookiesList = cookiesMap.get(arg0.host());
-                                //注：这里不能返回null，否则会报NULLException的错误。
-                                //原因：当Request 连接到网络的时候，OkHttp会调用loadForRequest()
-                                return cookiesList != null ? cookiesList : new ArrayList<Cookie>();
-                            }
-                        })
-                        .addInterceptor(new HttpLoggingInterceptor()).build();
+                final MyApplication application = (MyApplication)getApplication();
+
+                OkHttpClient httpClient = application.gethttpclient();
                 FormBody formBody = new FormBody
                         .Builder()
                         .add("username",username)//设置参数名称和参数值
@@ -99,11 +77,14 @@ public class ForgetActivity extends AppCompatActivity {
                                 int rescode = response.code();
                                 if (rescode == 200) {
                                     //Toast.makeText(ForgetActivity.this, "密码更改成功", Toast.LENGTH_SHORT).show();
-                                    User yonghu=new User();
-                                    yonghu.setusername(username);
-                                    yonghu.setuserid(wangji.getuserid());
+                                    //application.setuserid(wangji.getuserid());
+                                    //application.setusernickname(wangji.getnickname());
+                                    User u = new User();
+                                    u.setuserid(wangji.getuserid());
+                                    u.setnickname(wangji.getnickname());
+                                    MyApplication application = (MyApplication)getApplication();
+                                    application.setUser(u);
                                     Intent intent = new Intent(ForgetActivity.this, MainActivity.class);
-                                    intent.putExtra("user",yonghu);
                                     startActivity(intent);
                                 } else {
                                     Toast.makeText(ForgetActivity.this, forgetresult.msg, Toast.LENGTH_SHORT).show();
