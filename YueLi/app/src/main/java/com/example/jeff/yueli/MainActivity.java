@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), fragmentList);
             vp.setOffscreenPageLimit(5);
             vp.setAdapter(fragmentAdapter);
-            vp.setCurrentItem(2);
-
+            vp.setCurrentItem(4);
+            changeTextColor(4);
             //ViewPager的监听事件
             vp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -89,11 +89,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tripActivity = new TripActivity();
         map = new Map();
 
-        fragmentList.add(addActivity);
-        fragmentList.add(individualActivity);
         fragmentList.add(recommendActivity);
-        fragmentList.add(tripActivity);
         fragmentList.add(map);
+        fragmentList.add(addActivity);
+        fragmentList.add(tripActivity);
+        fragmentList.add(individualActivity);
     }
 
     public class FragmentAdapter extends FragmentPagerAdapter {
@@ -129,19 +129,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         trip.setImageResource(R.drawable.photo_gallery_96px);
         meet.setImageResource(R.drawable.map_marker_96px);
         switch (pos) {
-            case 0:
+            case 2:
                 add.setImageResource(R.drawable.plus_cover);
                 break;
-            case 1:
+            case 4:
                 individual.setImageResource(R.drawable.male_user_96px_cover);
                 break;
-            case 2:
-                recommend.setImageResource(R.drawable.map_marker_96px_cover);
+            case 0:
+                recommend.setImageResource(R.drawable.marker_96px_cover);
                 break;
             case 3:
                 trip.setImageResource(R.drawable.photo_gallery_96px_cover);
                 break;
-            case 4:
+            case 1:
                 meet.setImageResource(R.drawable.map_marker_96px_cover);
                 break;
         }
