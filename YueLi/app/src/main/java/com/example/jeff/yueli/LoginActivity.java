@@ -21,6 +21,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
+import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -43,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Button login = (Button) findViewById(R.id.log_button);
+        final Button login = (Button) findViewById(R.id.log_button);
         Button forget = (Button) findViewById(R.id.forget_button);
         Button regist = (Button) findViewById(R.id.register_button);
         // 注册、登录、忘记密码按钮绑定
@@ -68,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 EditText passWord = (EditText)findViewById(R.id.psw_input);
                 final String username = userName.getText().toString();
                 final String password = passWord.getText().toString();
-                String url="http://private-aa8865-yueliapi.apiary-mock.com/api/users/login?username="+username+"&password="+password;
+                String url="http://123.207.29.66:3009/api/users/login";
                 OkHttpClient httpClient = new OkHttpClient.Builder()
                         .cookieJar(new CookieJar() {
                             private final java.util.Map<String, List<Cookie>> cookiesMap = new HashMap<String, List<Cookie>>();
@@ -94,7 +95,12 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         })
                         .addInterceptor(new HttpLoggingInterceptor()).build();
-                Request request = new Request.Builder().url(url).build();
+                FormBody formBody = new FormBody
+                        .Builder()
+                        .add("username",username)//设置参数名称和参数值
+                        .add("password",password)
+                        .build();
+                Request request = new Request.Builder().post(formBody).url(url).build();
                 httpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -117,12 +123,12 @@ public class LoginActivity extends AppCompatActivity {
 
                                 int rescode = response.code();
                                 if (rescode == 200) {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-
+                                    //Toast.makeText(LoginActivity.this, loginresult.msg, Toast.LENGTH_SHORT).show();
+                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                     startActivity(intent);
                                 } else {
 
-                                    Toast.makeText(LoginActivity.this, "test", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, loginresult.msg, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
