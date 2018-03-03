@@ -7,7 +7,7 @@
     android:id="@+id/journey_bg"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:background="@drawable/shanghai"
+    android:background="@color/gray"
     />
     <TextView
         android:id="@+id/title"
@@ -65,7 +65,7 @@
         android:id="@+id/avator"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/male_user_96px"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="10dp"
         app:layout_constraintBottom_toBottomOf="@id/journey_bg"
