@@ -21,6 +21,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
+import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -43,7 +44,7 @@ public class ForgetActivity extends AppCompatActivity {
                 EditText passWord = (EditText)findViewById(R.id.psw_input);
                 final String username = userName.getText().toString();
                 final String password = passWord.getText().toString();
-                String url="http://private-aa8865-yueliapi.apiary-mock.com/api/users/login?username="+username+"&password="+password;
+                String url="http://123.207.29.66:3009/api/users/login";
                 OkHttpClient httpClient = new OkHttpClient.Builder()
                         .cookieJar(new CookieJar() {
                             private final java.util.Map<String, List<Cookie>> cookiesMap = new HashMap<String, List<Cookie>>();
@@ -69,7 +70,12 @@ public class ForgetActivity extends AppCompatActivity {
                             }
                         })
                         .addInterceptor(new HttpLoggingInterceptor()).build();
-                Request request = new Request.Builder().url(url).build();
+                FormBody formBody = new FormBody
+                        .Builder()
+                        .add("username",username)//设置参数名称和参数值
+                        .add("password",password)
+                        .build();
+                Request request = new Request.Builder().post(formBody).url(url).build();
                 httpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -92,7 +98,7 @@ public class ForgetActivity extends AppCompatActivity {
 
                                 int rescode = response.code();
                                 if (rescode == 200) {
-                                    Toast.makeText(ForgetActivity.this, "密码更改成功", Toast.LENGTH_SHORT);
+                                    //Toast.makeText(ForgetActivity.this, "密码更改成功", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(ForgetActivity.this, MainActivity.class);
                                     startActivity(intent);
                                 } else {
