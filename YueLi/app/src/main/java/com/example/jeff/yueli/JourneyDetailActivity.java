@@ -47,7 +47,7 @@ public class JourneyDetailActivity extends AppCompatActivity
                 Intent i=new Intent();
                 i.setClass(JourneyDetailActivity.this, MainActivity.class);
                 //一定要指定是第几个pager，因为要跳到ThreeFragment，这里填写2
-                i.putExtra("id",2);
+                i.putExtra("id",3);
                 startActivity(i);
             }
         });

@@ -42,17 +42,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         int id = getIntent().getIntExtra("id", 0);
-        if (id == 2) {
+        if (id == 3) {
             Fragment fragmen = new TripActivity();
             FragmentManager fmanger = getSupportFragmentManager();
             FragmentTransaction transaction = fmanger.beginTransaction();
             transaction.replace(R.id.viewPager, fragmen);
             transaction.commit();
-            vp.setCurrentItem(2);//
+            vp.setCurrentItem(3);//
             //帮助跳转到指定子fragment
             Intent i=new Intent();
             i.setClass(MainActivity.this,TripActivity.class);
-            i.putExtra("id",2);
+            i.putExtra("id",3);
         }
         super.onResume();
     }
