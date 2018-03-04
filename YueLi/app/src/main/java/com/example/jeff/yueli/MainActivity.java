@@ -39,28 +39,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<Fragment> fragmentList = new ArrayList<>();
     private FragmentAdapter fragmentAdapter;
     public ViewPager getVp() {return vp;}
-    @Override
-    protected void onResume() {
-        int id = getIntent().getIntExtra("id", 0);
-        if (id == 3) {
-            Fragment fragmen = new TripActivity();
-            FragmentManager fmanger = getSupportFragmentManager();
-            FragmentTransaction transaction = fmanger.beginTransaction();
-            transaction.replace(R.id.viewPager, fragmen);
-            transaction.commit();
-            vp.setCurrentItem(3);//
-            //帮助跳转到指定子fragment
-            Intent i=new Intent();
-            i.setClass(MainActivity.this,TripActivity.class);
-            i.putExtra("id",3);
-        }
-        super.onResume();
-    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         try {
             super.onCreate(savedInstanceState);
+            int i = getIntent().getIntExtra("id", -1);
             setContentView(R.layout.activity_main);
             Log.e("getIntoMain", "Successfully");
             initViews();
@@ -68,8 +53,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), fragmentList);
             vp.setOffscreenPageLimit(5);
             vp.setAdapter(fragmentAdapter);
-            vp.setCurrentItem(1);
-            changeTextColor(1);
+            if (i == -1) {
+                i = 1;
+            }
+            vp.setCurrentItem(i);
+            changeTextColor(i);
             //ViewPager的监听事件
             vp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override

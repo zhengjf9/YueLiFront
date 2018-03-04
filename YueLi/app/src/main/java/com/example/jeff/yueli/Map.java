@@ -1,7 +1,9 @@
 package com.example.jeff.yueli;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -45,11 +47,12 @@ public class Map  extends Fragment {
         View view = inflater.inflate(R.layout.map, container, false);
         try {
             markers = new ArrayList<>();
-            // 获取心情信息
-            spots = getSpots();
+
             initMap(view, savedInstanceState);
             Log.e("Map", "is OK");
             //心情添加到地图上的函数
+            // 获取心情信息
+            spots = getSpots();
             addMapPoint();
 
         }catch (Exception e) {
@@ -101,6 +104,11 @@ public class Map  extends Fragment {
     // 写这个函数是方便我把逻辑写下去，网络访问该怎么样还是怎么样
     List<spot> getSpots() {
         List<spot> spots1 = new ArrayList<>();
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.male_user_96px_cover);
+
+        Location l = aMap.getMyLocation();
+//        spot temp = new spot(bitmap, "dest", "location", l.getLatitude() + 0.3, l.getLongitude());
+//        spots1.add(temp);
         return spots1;
     }
 }
