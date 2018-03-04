@@ -30,6 +30,7 @@
         <activity android:name=".ForgetActivity">
 
         </activity>
+        <activity android:name=".JourneyDetailActivity"></activity>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />

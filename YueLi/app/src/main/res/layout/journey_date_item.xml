@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<TextView
+    android:id="@+id/day_num"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Day1"
+    android:textColor="@color/blue"
+    android:textSize="30dp"
+    android:textStyle="bold"
+    app:layout_constraintLeft_toLeftOf="parent"
+    android:layout_marginLeft="5dp"
+    />
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2018年2月22日"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toRightOf="@+id/day_num"
+        app:layout_constraintBottom_toBottomOf="@+id/day_num"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        />
+    <TextView
+        android:id="@+id/week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="周四"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toRightOf="@+id/date"
+        app:layout_constraintBottom_toBottomOf="@+id/day_num"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        />
+</android.support.constraint.ConstraintLayout>
+</FrameLayout>
