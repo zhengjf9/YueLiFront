@@ -1,24 +1,26 @@
 package com.example.jeff.yueli;
 
+import java.io.Serializable;
+
 /**
- * Created by xumuxin on 2018/3/2.
+ * Created by xumuxin on 2018/3/3.
  */
 
-public class signup {
-    private String nickname;
+public class User implements Serializable {
+    private int id;
 
-    private int user_id;
+    private String nickname;
 
     public String getnickname() {
         return nickname;
     }
     public int getuserid() {
-        return user_id;
+        return id;
     }
     public void setnickname(String name) {
         this.nickname = name;
     }
     public void setuserid(int id) {
-        this.user_id = id;
+        this.id = id;
     }
 }

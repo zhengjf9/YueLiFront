@@ -1,12 +1,19 @@
 package com.example.jeff.yueli;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.media.Image;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +22,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +40,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
         try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
             Log.e("getIntoMain", "Successfully");
             initViews();
-
+            verifyPermission(this);
             fragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), fragmentList);
             vp.setOffscreenPageLimit(5);
             vp.setAdapter(fragmentAdapter);
@@ -96,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentList.add(individualActivity);
     }
 
+
+
+
     public class FragmentAdapter extends FragmentPagerAdapter {
 
         List<Fragment> fragmentList = new ArrayList<Fragment>();
@@ -147,6 +160,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private static void verifyPermission(Activity activity) {
+        List<String> permissions = new ArrayList<>();
+        permissions.add("android.permission.INTERNET");
+        permissions.add("android.permission.WRITE_EXTERNAL_STORAGE");
+        permissions.add("android.permission.ACCESS_NETWORK_STATE");
+        permissions.add("android.permission.ACCESS_WIFI_STATE");
+        permissions.add("android.permission.READ_PHONE_STATE");
+        permissions.add("android.permission.ACCESS_COARSE_LOCATION");
+        for (String s : permissions) {
+            int p = ActivityCompat.checkSelfPermission(activity, s);
+            if (p != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, new String[] {s}, PackageManager.PERMISSION_GRANTED);
+            }
+        }
+    }
+
     /**
      * 点击底部Text 动态修改ViewPager的内容
      */
@@ -180,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             Log.e("jump", "wrong", e);
         }
-        Log.e("click function",String.valueOf(p));
+//        Log.e("click function",String.valueOf(p));
     }
 
 }
