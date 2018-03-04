@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +38,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ViewPager vp;
     private List<Fragment> fragmentList = new ArrayList<>();
     private FragmentAdapter fragmentAdapter;
-
+    public ViewPager getVp() {return vp;}
+    @Override
+    protected void onResume() {
+        int id = getIntent().getIntExtra("id", 0);
+        if (id == 2) {
+            Fragment fragmen = new TripActivity();
+            FragmentManager fmanger = getSupportFragmentManager();
+            FragmentTransaction transaction = fmanger.beginTransaction();
+            transaction.replace(R.id.viewPager, fragmen);
+            transaction.commit();
+            vp.setCurrentItem(2);//
+            //帮助跳转到指定子fragment
+            Intent i=new Intent();
+            i.setClass(MainActivity.this,TripActivity.class);
+            i.putExtra("id",2);
+        }
+        super.onResume();
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
 

@@ -9,11 +9,11 @@
         android:layout_height="46dp"
         android:background="@color/top_blue"
         />
-   <ImageView
+   <Button
        android:id="@+id/back"
        android:layout_width="30dp"
        android:layout_height="30dp"
-       android:src="@drawable/left_back"
+       android:background="@drawable/left_back"
        app:layout_constraintLeft_toLeftOf="parent"
        android:layout_marginLeft="5dp"
        app:layout_constraintTop_toTopOf="parent"

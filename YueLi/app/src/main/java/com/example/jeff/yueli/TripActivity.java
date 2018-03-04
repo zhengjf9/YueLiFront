@@ -65,7 +65,9 @@ public class TripActivity extends Fragment {
             @Override
             public void onItemClick(View view, int position)
             {
-                //Todo
+                Intent intent = new Intent(getActivity(), JourneyDetailActivity.class);
+                intent.putExtra("travel_id",mDatas.get(position).get("travel_id"));
+                startActivity(intent);
             }
 
             @Override
@@ -85,7 +87,7 @@ public class TripActivity extends Fragment {
 
         OkHttpClient httpClient = application.gethttpclient();
         User user = application.getUser();
-        Toast.makeText(getActivity().getApplicationContext(),String.valueOf(user.getuserid())  , Toast.LENGTH_LONG).show();
+       // Toast.makeText(getActivity().getApplicationContext(),String.valueOf(user.getuserid())  , Toast.LENGTH_LONG).show();
         String url="http://123.207.29.66:3009/api/travels?user_id="+String.valueOf(user.getuserid());
                 //"2";
                 //String.valueOf(yonghu.getuserid());
@@ -123,11 +125,13 @@ public class TripActivity extends Fragment {
                             temp.put("name", t.getnickname());
                             temp.put("like_num", String.valueOf(t.getfavoritecount()));
                             temp.put("comment_num", String.valueOf(t.getfavoritecount()));
+
+                            temp.put("travel_id",String.valueOf(t.gettravelid()));
                             mDatas.add(temp);
                         }
                         int rescode = response.code();
                         if (rescode == 200) {
-                            Toast.makeText(getActivity().getApplicationContext(),String.valueOf(travellist.get(0).getuserid())  , Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getActivity().getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
                         }
@@ -135,17 +139,6 @@ public class TripActivity extends Fragment {
                 });
             }
         });
-
-
-        Map<String, String> temp1 = new LinkedHashMap<String, String>();
-        temp1.put("title", "广州:羊城");
-        temp1.put("firstday","2018.3.1");
-        temp1.put("duration","4天");
-        temp1.put("location", "中国，广州");
-        temp1.put("name", "旅行者");
-        temp1.put("like_num", "99");
-        temp1.put("comment_num", "99");
-        mDatas.add(temp1);
 
     }
 
