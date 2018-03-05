@@ -73,11 +73,11 @@
             <requestFocus />
         </EditText>
     </RelativeLayout>
-    <ImageView
-        android:id="@+id/sent"
+    <Button
+        android:id="@+id/sendcomment"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:src="@drawable/sent_96px"
+        android:background="@drawable/sent_96px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="7dp"
