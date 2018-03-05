@@ -17,8 +17,10 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -37,10 +39,22 @@ public class JourneyDetailActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.journey_detail);
-        String t = (String)getIntent().getSerializableExtra("travel_id");
+        final  String t = (String)getIntent().getSerializableExtra("travel_id");
+        final Boolean favor = (Boolean) getIntent().getSerializableExtra("favorited");
 
         initData(t);
+       // Boolean favor = Boolean.getBoolean(b);
         Button back = (Button)findViewById(R.id.back);
+        Button comment = (Button)findViewById(R.id.comment);
+        final Button like = (Button)findViewById(R.id.like);
+
+        if (favor) {
+            like.setBackgroundResource(R.drawable.heart_48px_red);
+        } else {
+
+            like.setBackgroundResource(R.drawable.heart_48px_white);
+
+        }
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,13 +65,112 @@ public class JourneyDetailActivity extends AppCompatActivity
                 startActivity(i);
             }
         });
+
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent();
+                i.setClass(JourneyDetailActivity.this, JourneyCommentActivity.class);
+                //一定要指定是第几个pager，因为要跳到ThreeFragment，这里填写2
+                i.putExtra("travel_id",t);
+                startActivity(i);
+            }
+        });
+
+        like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyApplication application = (MyApplication)getApplication();
+                OkHttpClient httpClient = application.gethttpclient();
+                String url = "http://123.207.29.66:3009/api/travels/" + t + "/favorite";
+                if (!favor) {
+                    FormBody formBody = new FormBody
+                            .Builder()
+                            .build();
+                    Request request = new Request.Builder().post(formBody).url(url).build();
+                    httpClient.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                        }
+
+                        String string = null;
+
+                        @Override
+                        public void onResponse(Call call, final Response response) throws IOException {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
+                                    try {
+                                        string = response.body().string();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    int rescode = response.code();
+
+                                    if (rescode == 200) {
+                                        Toast.makeText(getApplicationContext(), "成功收藏", Toast.LENGTH_SHORT).show();
+                                        like.setBackgroundResource(R.drawable.heart_48px_red);
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "收藏失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                } else {
+                   // String url = "http://123.207.29.66:3009/api/travels/" + t + "/favorite";
+                    //FormEncodingBuilder builder=addParamToBuilder(reqbody, map);
+                   // RequestBody body = builder.build();
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .delete()
+                            .build();
+                    httpClient.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                        }
+
+                        String string = null;
+
+                        @Override
+                        public void onResponse(Call call, final Response response) throws IOException {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
+                                    try {
+                                        string = response.body().string();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    int rescode = response.code();
+
+                                    if (rescode == 200) {
+                                        Toast.makeText(getApplicationContext(), "取消收藏", Toast.LENGTH_SHORT).show();
+                                        like.setBackgroundResource(R.drawable.heart_48px_white);
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "取消失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                }
+
+            }
+        });
+
+
+
     }
     public void initData(String t){
         MyApplication application = (MyApplication)getApplication();
 
         OkHttpClient httpClient = application.gethttpclient();
         User user = application.getUser();
-        getIntent().getSerializableExtra("book");
+
         String url="http://123.207.29.66:3009/api/travels/"+t+"/travel-records";
         Request request = new Request.Builder().url(url).build();
 
