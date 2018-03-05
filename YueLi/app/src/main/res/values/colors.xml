@@ -10,4 +10,5 @@
     <color name="mood_blue">#1e90ff</color>
     <color name="green">#32b16c</color>
     <color name="top_blue">#00b7ee</color>
+    <color name="bottom_gray">#f7f7f7</color>
 </resources>
