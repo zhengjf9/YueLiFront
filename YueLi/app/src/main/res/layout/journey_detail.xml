@@ -19,31 +19,31 @@
        app:layout_constraintTop_toTopOf="parent"
        android:layout_marginTop="5dp"
        />
-    <ImageView
+    <Button
         android:id="@+id/comment"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/comment_48px_white"
+        android:background="@drawable/comment_48px_white"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="10dp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="5dp"
         />
-    <ImageView
+    <Button
         android:id="@+id/share"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/share_96px"
+        android:background="@drawable/share_96px"
         app:layout_constraintRight_toLeftOf="@+id/comment"
         android:layout_marginRight="10dp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="5dp"
         />
-    <ImageView
+    <Button
         android:id="@+id/like"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/heart_48px_white"
+        android:background="@drawable/heart_48px_white"
         app:layout_constraintRight_toLeftOf="@+id/share"
         android:layout_marginRight="10dp"
         app:layout_constraintTop_toTopOf="parent"

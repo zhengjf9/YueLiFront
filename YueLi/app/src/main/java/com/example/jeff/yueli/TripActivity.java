@@ -67,9 +67,9 @@ public class TripActivity extends Fragment {
             {
                 Intent intent = new Intent(getActivity(), JourneyDetailActivity.class);
                 intent.putExtra("travel_id",mDatas.get(position).get("travel_id"));
+                intent.putExtra("favorited",Boolean.valueOf(mDatas.get(position).get("favorited")));
                 startActivity(intent);
             }
-
             @Override
             public void onItemLongClick(View view, int position)
             {
@@ -87,7 +87,7 @@ public class TripActivity extends Fragment {
 
         OkHttpClient httpClient = application.gethttpclient();
         User user = application.getUser();
-       // Toast.makeText(getActivity().getApplicationContext(),String.valueOf(user.getuserid())  , Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity().getApplicationContext(),String.valueOf(user.getuserid())  , Toast.LENGTH_LONG).show();
         String url="http://123.207.29.66:3009/api/travels?user_id="+String.valueOf(user.getuserid());
                 //"2";
                 //String.valueOf(yonghu.getuserid());
@@ -120,13 +120,15 @@ public class TripActivity extends Fragment {
                             Map<String, String> temp = new LinkedHashMap<String, String>();
                             temp.put("title", t.gettitle());
                             temp.put("firstday", t.getFirst_day());
-                            temp.put("duration", "3天");
+                            temp.put("duration",  String.valueOf(t.getduration()));
                             temp.put("location", t.getlocation());
                             temp.put("name", t.getnickname());
+
                             temp.put("like_num", String.valueOf(t.getfavoritecount()));
-                            temp.put("comment_num", String.valueOf(t.getfavoritecount()));
+                            temp.put("comment_num", String.valueOf(t.getComment_count()));
 
                             temp.put("travel_id",String.valueOf(t.gettravelid()));
+                            temp.put("favorited",String.valueOf(t.getfavorited()));
                             mDatas.add(temp);
                         }
                         int rescode = response.code();
