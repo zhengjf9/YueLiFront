@@ -1,8 +1,10 @@
 <!-- 形状 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle" >
+    android:shape="rectangle"
+    >
 
-    <solid android:color="@color/mood_blue" />
+    <solid android:color="@color/mood_blue"
+        />
     <!-- 边框 -->
     <stroke
         android:width="1dip"
