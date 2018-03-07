@@ -60,8 +60,56 @@ public class AttentionCollectActivity extends AppCompatActivity {
         attention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
+                mDatas.clear();
+                MyApplication application = (MyApplication) getApplication();
+                OkHttpClient httpClient = application.gethttpclient();
+                final User user = application.getUser();
+                String url = "http://123.207.29.66:3009/api/users/"+String.valueOf(user.getuserid())+"/followers";
+                Request request = new Request.Builder().url(url).build();
+
+                httpClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                    }
+
+                    String string = null;
+                    @Override
+                    public void onResponse(Call call, final Response response) throws IOException {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    string = response.body().string();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                Gson gson = new Gson();
+                                Followers result = gson.fromJson(string, Followers.class);
+                                List<Followers.follow> followerlist = result.getdata();
+
+                                for (int i = 0; i < followerlist.size(); i++) {
+                                    Followers.follow t = followerlist.get(i);
+                                    Map<String, String> temp = new LinkedHashMap<String, String>();
+                                    temp.put("name", t.getnickname());
+                                    temp.put("signature",t.getsignature());
+                                    mDatas.add(temp);
+                                }
+                                int rescode = response.code();
+                                if (rescode == 200) {
+                                    Toast.makeText(getApplicationContext(), result.getmsg(), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(),
+                                            result.getmsg(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                });*/
                 attentionRecView.setVisibility(View.VISIBLE);
                 collectRecView.setVisibility(View.INVISIBLE);
+
             }
         });
         collect.setOnClickListener(new View.OnClickListener() {
@@ -74,11 +122,11 @@ public class AttentionCollectActivity extends AppCompatActivity {
     }
      public void initData(){
 
+
          MyApplication application = (MyApplication) getApplication();
 
          OkHttpClient httpClient = application.gethttpclient();
          final User user = application.getUser();
-
          String url = "http://123.207.29.66:3009/api/users/"+String.valueOf(user.getuserid())+"/followers";
          Request request = new Request.Builder().url(url).build();
 
@@ -90,38 +138,37 @@ public class AttentionCollectActivity extends AppCompatActivity {
              String string = null;
              @Override
              public void onResponse(Call call, final Response response) throws IOException {
+                 try {
+                     string = response.body().string();
+                 } catch (IOException e) {
+                     e.printStackTrace();
+                 }
+
+                 Gson gson = new Gson();
+                 Followers result = gson.fromJson(string, Followers.class);
+                 List<Followers.follow> followerlist = result.getdata();
+
+                 for (int i = 0; i < followerlist.size(); i++) {
+                     Followers.follow t = followerlist.get(i);
+                     Map<String, String> temp = new LinkedHashMap<String, String>();
+                     temp.put("name", t.getnickname());
+                     temp.put("signature",t.getsignature());
+                     mDatas.add(temp);
+                 }
                  runOnUiThread(new Runnable() {
                      @Override
                      public void run() {
-                         try {
-                             string = response.body().string();
-                         } catch (IOException e) {
-                             e.printStackTrace();
-                         }
 
-                         Gson gson = new Gson();
-                         Followers result = gson.fromJson(string, Followers.class);
-                         List<Followers.follow> followerlist = result.getdata();
-
-                         for (int i = 0; i < followerlist.size(); ) {
-                             Followers.follow t = followerlist.get(i);
-                             Map<String, String> temp = new LinkedHashMap<String, String>();
-                             temp.put("name", t.getnickname());
-                             temp.put("signature",t.getsignature());
-                             mDatas.add(temp);
-                         }
                          int rescode = response.code();
                          if (rescode == 200) {
-                             Toast.makeText(getApplicationContext(), result.getmsg(), Toast.LENGTH_SHORT).show();
+                          //   Toast.makeText(getApplicationContext(), result.getmsg(), Toast.LENGTH_SHORT).show();
                          } else {
-                             Toast.makeText(getApplicationContext(),
-                                     result.getmsg(), Toast.LENGTH_SHORT).show();
+                           //  Toast.makeText(getApplicationContext(), result.getmsg(), Toast.LENGTH_SHORT).show();
                          }
                      }
                  });
              }
          });
-
          url="http://123.207.29.66:3009/api/travels?user_id="+String.valueOf(user.getuserid());
          request = new Request.Builder().url(url).build();
 
@@ -132,41 +179,42 @@ public class AttentionCollectActivity extends AppCompatActivity {
              String string=null;
              @Override
              public void onResponse(Call call, final Response response) throws IOException {
+                 try {
+                     string = response.body().string();
+                 } catch (IOException e) {
+                     e.printStackTrace();
+                 }
+                 Gson gson = new Gson();
+                 Travel result = gson.fromJson(string,Travel.class);
+                 List<Travel.trip> travellist =  result.gettrips();
+
+                 for (int i = 0; i < travellist.size(); i++) {
+                     Travel.trip t = travellist.get(i);
+                     Map<String, String> temp = new LinkedHashMap<String, String>();
+                     temp.put("title", t.gettitle());
+                     temp.put("firstday", t.getFirst_day());
+                     temp.put("duration",  String.valueOf(t.getduration()));
+                     temp.put("location", t.getlocation());
+                     temp.put("name", t.getnickname());
+                     temp.put("like_num", String.valueOf(t.getfavoritecount()));
+                     temp.put("comment_num", String.valueOf(t.getComment_count()));
+                     temp.put("travel_id",String.valueOf(t.gettravelid()));
+                     temp.put("favorited",String.valueOf(t.getfavorited()));
+                     if (Boolean.valueOf(temp.get("favorited"))) {
+                         collectDatas.add(temp);
+                     }
+
+                 }
                 runOnUiThread(new Runnable() {
                      @Override
                      public void run() {
                          //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
-                         try {
-                             string = response.body().string();
-                         } catch (IOException e) {
-                             e.printStackTrace();
-                         }
-                         Gson gson = new Gson();
-                         Travel result = gson.fromJson(string,Travel.class);
-                         List<Travel.trip> travellist =  result.gettrips();
 
-                         for (int i = 0; i < travellist.size(); i++) {
-                             Travel.trip t = travellist.get(i);
-                             Map<String, String> temp = new LinkedHashMap<String, String>();
-                             temp.put("title", t.gettitle());
-                             temp.put("firstday", t.getFirst_day());
-                             temp.put("duration",  String.valueOf(t.getduration()));
-                             temp.put("location", t.getlocation());
-                             temp.put("name", t.getnickname());
-                             temp.put("like_num", String.valueOf(t.getfavoritecount()));
-                             temp.put("comment_num", String.valueOf(t.getComment_count()));
-                             temp.put("travel_id",String.valueOf(t.gettravelid()));
-                             temp.put("favorited",String.valueOf(t.getfavorited()));
-                             if (Boolean.valueOf(temp.get("favorited"))) {
-                                 collectDatas.add(temp);
-                             }
-
-                         }
                          int rescode = response.code();
                          if (rescode == 200) {
                              //Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();
                          } else {
-                             Toast.makeText(getApplicationContext(), result.getmsg(), Toast.LENGTH_SHORT).show();
+                             Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
                          }
                      }
                  });

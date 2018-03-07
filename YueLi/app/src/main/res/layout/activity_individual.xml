@@ -33,12 +33,11 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="10dp"
         />
-    <ImageView
+    <Button
         android:id="@+id/letter"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/letter_48px"
-        android:background="@drawable/shape_round_transparent"
+        android:background="@drawable/letter_48px"
         android:scaleType="fitXY"
         android:layout_marginRight="5dp"
         app:layout_constraintRight_toLeftOf="@+id/like"

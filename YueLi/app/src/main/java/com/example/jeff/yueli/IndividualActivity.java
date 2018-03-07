@@ -56,6 +56,7 @@ public class IndividualActivity extends Fragment {
         final Button trash = view.findViewById(R.id.trash);
         final Button launch = view.findViewById(R.id.launch);
         Button like = view.findViewById(R.id.like);
+        Button letter = view.findViewById(R.id.letter);
 
         trash.setVisibility(View.INVISIBLE);
         launch.setVisibility(View.INVISIBLE);
@@ -75,6 +76,14 @@ public class IndividualActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AttentionCollectActivity.class);
+                startActivity(intent);
+
+            }
+        });
+        letter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), InfoActivity.class);
                 startActivity(intent);
 
             }
