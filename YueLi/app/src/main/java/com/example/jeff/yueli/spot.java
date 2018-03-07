@@ -7,17 +7,41 @@ import android.graphics.Bitmap;
  */
 
 public class spot {
-    private User user;
     private Bitmap image;
+    private int ID;
+    private String name;
+    private String city;
     private String description;
-    private String local;
-    private double latitude, longtitude;
-    public spot(Bitmap img, String des, String l, double la, double lo) {
-        image = img;
-        description = des;
-        local = l;
-        latitude = la;
-        longtitude = lo;
+    private Object location;
+    private int rank;
+
+    public spot(int id, String n, String descri, String c, Object l, int r) {
+        ID = id;
+        name = n;
+        city = c;
+        description = descri;
+        location = l;
+        rank = r;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Bitmap getImage() {
@@ -28,15 +52,7 @@ public class spot {
         return description;
     }
 
-    public String getLocal() {
-        return local;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongtitude() {
-        return longtitude;
+    public Object getLocation() {
+        return location;
     }
 }

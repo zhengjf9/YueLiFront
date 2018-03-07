@@ -1,5 +1,7 @@
 package com.example.jeff.yueli;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 /**
@@ -8,8 +10,17 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     private int id;
-
+    private Bitmap bitmap;
     private String nickname;
+
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
 
     public String getnickname() {
         return nickname;
