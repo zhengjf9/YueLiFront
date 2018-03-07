@@ -33,6 +33,7 @@
         <activity android:name=".JourneyDetailActivity"></activity>
         <activity android:name=".JourneyCommentActivity"></activity>
         <activity android:name=".AttentionCollectActivity"></activity>
+        <activity android:name=".InfoActivity"></activity>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
