@@ -218,6 +218,8 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         c.setVisibility(View.VISIBLE);
         ImageView imageView = (ImageView)totalView.findViewById(R.id.markerImg);
         imageView.setImageBitmap(feelings.get(p).getImage());
+        ImageView userImage = (ImageView)c.findViewById(R.id.user_image);
+        userImage.setImageBitmap(myApplication.getUser().getBitmap());
     }
 
     // 地图点击事件
@@ -229,6 +231,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         // TODO Auto-generated method stub
         int p = findPosInMarkers(marker);
         changeInfo(p);
+
         return true;
     }
 
@@ -328,7 +331,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                 try {
                     String s = response.body().string();
                     InputStream in = response.body().byteStream();
-                    Bitmap bitmap = BitmapFactory.decodeStream(in);
+//                    Bitmap bitmap = BitmapFactory.decodeStream(in);
                     Gson gson = new Gson();
                     AllFeelings allFeelings = gson.fromJson(s, AllFeelings.class);
                     feelings = allFeelings.getFeelingsList();

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,82 +50,94 @@ public class JourneyCommentActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.journey_comment);
-        final String t = (String) getIntent().getSerializableExtra("travel_id");
+        try {
+            final String t = (String) getIntent().getSerializableExtra("travel_id");
 
-        initData(t);
+            initData(t);
+            Button back = findViewById(R.id.back);
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            Button send = (Button)findViewById(R.id.sendcomment);
+            send.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Intent i=new Intent();
+                    //i.setClass(JourneyDetailActivity.this, JourneyCommentActivity.class);
+                    //一定要指定是第几个pager，因为要跳到ThreeFragment，这里填写2
+                    // i.putExtra("travel_id",t);
+                    //startActivity(i);
+                    EditText review = (EditText)findViewById(R.id.name_input);
+                    final String pinglun = review.getText().toString();
+                    MyApplication application = (MyApplication)getApplication();
+                    OkHttpClient httpClient = application.gethttpclient();
 
-        Button send = (Button)findViewById(R.id.sendcomment);
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Intent i=new Intent();
-                //i.setClass(JourneyDetailActivity.this, JourneyCommentActivity.class);
-                //一定要指定是第几个pager，因为要跳到ThreeFragment，这里填写2
-                // i.putExtra("travel_id",t);
-                //startActivity(i);
-                EditText review = (EditText)findViewById(R.id.name_input);
-                final String pinglun = review.getText().toString();
-                MyApplication application = (MyApplication)getApplication();
-                OkHttpClient httpClient = application.gethttpclient();
-
-                String url = "http://123.207.29.66:3009/api/travels/"+t+"/comments";
+                    String url = "http://123.207.29.66:3009/api/travels/"+t+"/comments";
                 /*FormBody formBody = new FormBody
                         .Builder()
                         .add("reply_to_id",null)//设置参数名称和参数值
                         .add("content",pinglun)
                         .build();*/
-                //String tmp= "{\"reply_to_id\": null,\"content\":"+pinglun+"}";
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("reply_to_id", JSONObject.NULL);
-                    jsonObject.put("content", pinglun);
-                   // jsonObject.put("anyKey", "anyValue");
+                    //String tmp= "{\"reply_to_id\": null,\"content\":"+pinglun+"}";
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("reply_to_id", JSONObject.NULL);
+                        jsonObject.put("content", pinglun);
+                        // jsonObject.put("anyKey", "anyValue");
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                    RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+                    Request request = new Request.Builder().url(url)
+                            .post(body)
+                            .build();;
+                    httpClient.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                        }
+                        String string=null;
+                        @Override
+                        public void onResponse(Call call, final Response response) throws IOException {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
+                                    try {
+                                        string = response.body().string();
+                                        Gson gson = new Gson();
+                                        Type commenttype = new TypeToken<Result<reviewback>>(){}.getType();
+                                        Result<reviewback> commentresult = gson.fromJson(string, commenttype);
+                                        int rescode = response.code();
+                                        if (rescode == 200) {
+                                            Toast.makeText(getApplicationContext(),String.valueOf(commentresult.msg)   , Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), commentresult.msg , Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+
+                                }
+                            });
+                        }
+                    });
                 }
-                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-                Request request = new Request.Builder().url(url)
-                        .post(body)
-                        .build();;
-                httpClient.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                    }
-                    String string=null;
-                    @Override
-                    public void onResponse(Call call, final Response response) throws IOException {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
-                                try {
-                                    string = response.body().string();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+            });
 
-                                Gson gson = new Gson();
-                                Type commenttype = new TypeToken<Result<reviewback>>(){}.getType();
-                                Result<reviewback> commentresult = gson.fromJson(string, commenttype);
-                                int rescode = response.code();
-                                if (rescode == 200) {
-                                    Toast.makeText(getApplicationContext(),String.valueOf(commentresult.msg)   , Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), commentresult.msg , Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
-                });
-            }
-        });
+            final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
+            final HomeAdapter myAdapter = new HomeAdapter();
+            myRecView.setLayoutManager(new LinearLayoutManager(this));
+            myRecView.setAdapter(myAdapter);
+        } catch (Exception e) {
+            Log.e("Comment Activity", "Bug", e);
+        }
 
-        final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
-        final HomeAdapter myAdapter = new HomeAdapter();
-        myRecView.setLayoutManager(new LinearLayoutManager(this));
-        myRecView.setAdapter(myAdapter);
     }
 
     public void initData(String t) {
@@ -149,21 +162,17 @@ public class JourneyCommentActivity extends AppCompatActivity {
                         //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
                         try {
                             string = response.body().string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            Gson gson = new Gson();
+                            Comment result = gson.fromJson(string,Comment.class);
+                            //record result = gson.fromJson(string,record.class);
+                            List<Comment.review> reviewlist =  result.getreviews();
 
-                        Gson gson = new Gson();
-                        Comment result = gson.fromJson(string,Comment.class);
-                        //record result = gson.fromJson(string,record.class);
-                        List<Comment.review> reviewlist =  result.getreviews();
+                            for (int i = 0; i < reviewlist.size(); i++) {
+                                Comment.review t = reviewlist.get(i);
+                                Map<String, String> temp = new LinkedHashMap<String, String>();
 
-                        for (int i = 0; i < reviewlist.size(); i++) {
-                            Comment.review t = reviewlist.get(i);
-                            Map<String, String> temp = new LinkedHashMap<String, String>();
-
-                            temp.put("name", t.getnickname());
-                            temp.put("date",t.gettime());
+                                temp.put("name", t.getnickname());
+                                temp.put("date",t.gettime());
                             /*
                             SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
                             Calendar calendar = Calendar.getInstance();
@@ -177,19 +186,24 @@ public class JourneyCommentActivity extends AppCompatActivity {
                                     "周五", "周六" };
                             String wd=dayofweek[calendar.get(Calendar.DAY_OF_WEEK)-1];
                             temp.put("week", wd);*/
-                            temp.put("content",t.getcontent());
-                            mDatas.add(temp);
+                                temp.put("content",t.getcontent());
+                                mDatas.add(temp);
 
 
+                            }
+
+                            int rescode = response.code();
+
+                            if (rescode == 200) {
+                                Toast.makeText(getApplicationContext(),String.valueOf(reviewlist.size())   , Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "fail" , Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
 
-                        int rescode = response.code();
 
-                        if (rescode == 200) {
-                            Toast.makeText(getApplicationContext(),String.valueOf(reviewlist.size())   , Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "fail" , Toast.LENGTH_SHORT).show();
-                        }
                     }
                 });
             }
