@@ -1,10 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <com.amap.api.maps.MapView
         android:id="@+id/map"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </com.amap.api.maps.MapView>
-</LinearLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/info"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="45dp"
+        android:background="@color/white"
+        android:layout_width="300dp"
+        android:layout_height="150dp">
+        <ImageView
+            android:id="@+id/markerImg"
+
+            android:layout_marginLeft="20dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/markerImg"
+            android:src="@drawable/male_user_96px_cover"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+        <TextView
+            android:id="@+id/user_name"
+            app:layout_constraintLeft_toRightOf="@+id/user_image"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="mark"
+            android:layout_marginTop="30dp"
+            android:textSize="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            app:layout_constraintLeft_toRightOf="@+id/markerImg"
+            app:layout_constraintTop_toBottomOf="@+id/user_image"
+            android:id="@+id/descriptionOfMark"
+            android:text="aabbc"
+            android:layout_marginLeft="10dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

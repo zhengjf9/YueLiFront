@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
  */
 
 public class spot {
+    private User user;
     private Bitmap image;
     private String description;
     private String local;
