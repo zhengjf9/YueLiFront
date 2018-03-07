@@ -217,7 +217,7 @@ public class JourneyDetailActivity extends AppCompatActivity
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             Calendar calendar = Calendar.getInstance();
                             try {
-                                Date date = sdf.parse(travellist.get(0).gettime().substring(0, 10));
+                                Date date = sdf.parse(travellist.get(i).gettime().substring(0, 10));
                                 calendar.setTime(date);
                             } catch (ParseException e) {
                                 e.printStackTrace();
