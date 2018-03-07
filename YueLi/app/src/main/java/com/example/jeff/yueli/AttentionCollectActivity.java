@@ -19,7 +19,9 @@ import java.util.Map;
 
 public class AttentionCollectActivity extends AppCompatActivity {
     public List<java.util.Map<String, String>> mDatas =
-            new ArrayList<java.util.Map<String, String>>();
+            new ArrayList<java.util.Map<String, String>>();//关注的数据
+    public List<java.util.Map<String, String>> collectDatas =
+            new ArrayList<java.util.Map<String, String>>();//收藏的数据
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +31,16 @@ public class AttentionCollectActivity extends AppCompatActivity {
         final String t = (String) getIntent().getSerializableExtra("travel_id");
 
         initData();
-        final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
+        final RecyclerView attentionRecView = (RecyclerView) findViewById(R.id.attention_recyclerview);
         final HomeAdapter myAdapter = new HomeAdapter();
-        myRecView.setLayoutManager(new LinearLayoutManager(this));
-        myRecView.setAdapter(myAdapter);
+        attentionRecView.setLayoutManager(new LinearLayoutManager(this));
+        attentionRecView.setAdapter(myAdapter);
+        attentionRecView.setVisibility(View.INVISIBLE);
 
+        final RecyclerView collectRecView = (RecyclerView)findViewById(R.id.collect_recyclerview);
+        final JourneyItemAdapter myAdapter2 = new JourneyItemAdapter(this, collectDatas);
+        collectRecView.setLayoutManager(new LinearLayoutManager(this));
+        collectRecView.setAdapter(myAdapter2);
     }
      public void initData(){
          Map<String, String> temp = new LinkedHashMap<String, String>();
@@ -41,6 +48,17 @@ public class AttentionCollectActivity extends AppCompatActivity {
          temp.put("signature", "我是个性签名");
          mDatas.add(temp);
          mDatas.add(temp);
+
+         Map<String, String> temp1 = new LinkedHashMap<String, String>();
+         temp1.put("title", "上海:梦中城");
+         temp1.put("firstday", "2018-3-7");
+         temp1.put("duration",  "3天");
+         temp1.put("location", "上海");
+         temp1.put("name", "旅行者");
+         temp1.put("like_num", "99");
+         temp1.put("comment_num", "99");
+         collectDatas.add(temp1);
+         collectDatas.add(temp1);
      }
 
     class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
