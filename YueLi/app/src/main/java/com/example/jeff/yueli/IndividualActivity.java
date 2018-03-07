@@ -16,10 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -33,6 +30,10 @@ import okhttp3.Response;
 
 public class IndividualActivity extends Fragment {
     private List<DateInfo> dataInfoList = new ArrayList<>();
+    private List<java.util.Map<String, String>> trashDatas =
+            new ArrayList<java.util.Map<String, String>>();//草稿箱的数据
+    private List<java.util.Map<String, String>> launchDatas =
+            new ArrayList<java.util.Map<String, String>>();//已发布的数据
     public IndividualActivity() {
 
     }
@@ -46,6 +47,20 @@ public class IndividualActivity extends Fragment {
         final DateInfoAdapter myAdapter = new DateInfoAdapter(getContext(),dataInfoList);
         myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         myRecView.setAdapter(myAdapter);
+        myRecView.setVisibility(View.INVISIBLE);//心情页面暂时设置不可见
+
+        final RecyclerView trashRecView = (RecyclerView)view.findViewById(R.id.trash_recyclerview);
+        final JourneyItemAdapter trashAdapter = new JourneyItemAdapter(getContext(), trashDatas);
+        trashRecView.setLayoutManager(new LinearLayoutManager(getContext()));
+        trashRecView.setAdapter(trashAdapter);
+        trashRecView.setVisibility(View.INVISIBLE);
+
+        final RecyclerView launchRecView = (RecyclerView)view.findViewById(R.id.launch_recyclerview);
+        final JourneyItemAdapter launchAdapter = new JourneyItemAdapter(getContext(), launchDatas);
+        launchRecView.setLayoutManager(new LinearLayoutManager(getContext()));
+        launchRecView.setAdapter(launchAdapter);
+        //launchRecView.setVisibility(View.INVISIBLE);
+
         return view;
     }
     public void initDatas(){
@@ -140,5 +155,17 @@ public class IndividualActivity extends Fragment {
             dataInfoList.add(dateInfo);//将一天一天的数据push进dataInfoList
             // dataInfoList就是最后要的数据
         }*/
+        java.util.Map<String, String> temp1 = new LinkedHashMap<String, String>();
+        temp1.put("title", "上海:梦中城");
+        temp1.put("firstday", "2018-3-7");
+        temp1.put("duration",  "3天");
+        temp1.put("location", "上海");
+        temp1.put("name", "旅行者");
+        temp1.put("like_num", "99");
+        temp1.put("comment_num", "99");
+        trashDatas.add(temp1);
+        trashDatas.add(temp1);
+        launchDatas.add(temp1);
+        launchDatas.add(temp1);
     }
 }
