@@ -195,7 +195,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
                             int rescode = response.code();
 
                             if (rescode == 200) {
-                                Toast.makeText(getApplicationContext(),String.valueOf(reviewlist.size())   , Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getApplicationContext(),String.valueOf(reviewlist.size())   , Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(getApplicationContext(), "fail" , Toast.LENGTH_SHORT).show();
                             }
