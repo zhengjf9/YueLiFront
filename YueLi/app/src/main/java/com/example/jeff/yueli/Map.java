@@ -36,11 +36,19 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -56,7 +64,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
     private ArrayList<MarkerOptions> markeroptions;
     private List<Marker> markers;
     private MapView mapView;
-    private List<spot> spots; // 地图上心情的信息
+    private List<Feelings> feelings; // 地图上心情的信息
     private AMapLocation mapLocation;
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
@@ -67,6 +75,9 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
     private int pos;
     private int size;
     private View totalView;
+    private MyApplication myApplication;
+    private AMapLocation lastLocation;
+    private Boolean isUpdate;
     public Map() {
 
     }
@@ -80,7 +91,9 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         try {
             pos = -1;
             size = 0;
+            isUpdate =false;
             markers = new ArrayList<>();
+            myApplication = (MyApplication) getActivity().getApplication();
             ConstraintLayout c = (ConstraintLayout)(totalView.findViewById(R.id.info));
             c.setVisibility(View.GONE);
             c.setOnClickListener(new View.OnClickListener() {
@@ -126,17 +139,17 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
 
     private void addMapPoint(int p) {
         Log.e("getInto", "addMapPoint" + p);
-        Log.e("spots' sizes", spots.size() + "");
+        Log.e("feelings' sizes", feelings.size() + "");
         View circleImage = LayoutInflater.from(getActivity()).inflate(R.layout.circleimage, null);
         CircleImageView circleImageView = circleImage.findViewById(R.id.circle);
-        circleImageView.setImageBitmap(spots.get(p).getImage());
+        circleImageView.setImageBitmap(feelings.get(p).getImage());
         BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromView(circleImage);
 
         try {
 
 
 
-            for (int i = 0; i < spots.size(); ++i) {
+            for (int i = 0; i < feelings.size(); ++i) {
                 if (i == 0) {
                     i = p;
                 }
@@ -145,7 +158,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                 markerOptions.anchor(0.5f,0.5f);
                 Log.e("order", i + "");
                 markerOptions.icon(bitmapDescriptor);
-                markerOptions.position(new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongtitude()));
+                markerOptions.position(new LatLng(feelings.get(i).getLatitude(), feelings.get(i).getLongtitude()));
                 markers.add(aMap.addMarker(markerOptions));
                 markeroptions.add(markerOptions);
                 Log.e("order", i + "");
@@ -204,7 +217,9 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         ConstraintLayout c = (ConstraintLayout)totalView.findViewById(R.id.info);
         c.setVisibility(View.VISIBLE);
         ImageView imageView = (ImageView)totalView.findViewById(R.id.markerImg);
-        imageView.setImageBitmap(spots.get(p).getImage());
+        imageView.setImageBitmap(feelings.get(p).getImage());
+        ImageView userImage = (ImageView)c.findViewById(R.id.user_image);
+        userImage.setImageBitmap(myApplication.getUser().getBitmap());
     }
 
     // 地图点击事件
@@ -216,10 +231,13 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         // TODO Auto-generated method stub
         int p = findPosInMarkers(marker);
         changeInfo(p);
+
         return true;
     }
 
-
+    boolean isDiffBigEnouph(AMapLocation aMapLocation) {
+        return Math.abs(aMapLocation.getLatitude()-lastLocation.getLatitude()) >= 0.005 || Math.abs(aMapLocation.getLongitude()-lastLocation.getLongitude()) >= 0.005;
+    }
 
     private class MyAMapLocationListener implements AMapLocationListener {
 
@@ -228,48 +246,57 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
             if (aMapLocation != null) {
                 if (aMapLocation.getErrorCode() == 0) {
                     Log.e("位置：", aMapLocation.getLatitude() + " " + aMapLocation.getLongitude());
+                    if (lastLocation != null && !isDiffBigEnouph(aMapLocation)) {
 
-                    try {
-                        Observable<AMapLocation> observable = Observable.create(new Observable.OnSubscribe<AMapLocation>() {
-                            @Override
-                            public void call(Subscriber<? super AMapLocation> subscriber) {
-                                while (pos < size) {
-                                    Log.e("marker", markers.size() + "");
-                                    pos = pos + 1;
-                                    spots = getSpots();
-                                    size = spots.size();
-                                    addMapPoint(pos);
-                                    Log.e("endadd", "infor");
-                                    subscriber.onCompleted();
+                    } else {
+                        try {
+                            Observable<AMapLocation> observable = Observable.create(new Observable.OnSubscribe<AMapLocation>() {
+                                @Override
+                                public void call(Subscriber<? super AMapLocation> subscriber) {
+                                    if (isUpdate) {
+                                        pos = -1;
+                                        isUpdate = false;
+                                    }
+                                    while (pos < size) {
+                                        Log.e("marker", markers.size() + "");
+                                        pos = pos + 1;
+                                        getFeelings(aMapLocation);
+                                        size = feelings.size();
+                                        addMapPoint(pos);
+                                        Log.e("endadd", "infor");
+                                        subscriber.onCompleted();
+                                    }
                                 }
-                            }
-                        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
-                        Observer<AMapLocation> observer = new Observer<AMapLocation>() {
-                            @Override
-                            public void onCompleted() {
+                            }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+                            Observer<AMapLocation> observer = new Observer<AMapLocation>() {
+                                @Override
+                                public void onCompleted() {
 
 
-                                Log.e("process image", "OK");
-                            }
+                                    Log.e("process image", "OK");
+                                }
 
-                            @Override
-                            public void onError(Throwable e) {
+                                @Override
+                                public void onError(Throwable e) {
 
-                            }
+                                }
 
-                            @Override
-                            public void onNext(AMapLocation a) {
+                                @Override
+                                public void onNext(AMapLocation a) {
 
-                            }
-                        };
-                        observable.subscribe(observer);
+                                }
+                            };
+                            observable.subscribe(observer);
 
-                        Log.e("getInto", "success");
+                            Log.e("getInto", "success");
 
 
-                    } catch (Exception e) {
-                        Log.e("rxjava", "wrong", e);
+                        } catch (Exception e) {
+                            Log.e("rxjava", "wrong", e);
+                        }
+                        lastLocation = aMapLocation;
                     }
+
 
 
                 } else {
@@ -286,17 +313,47 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
 
     // 网络访问获取Spot相关信息
     // 写这个函数是方便我把逻辑写下去，网络访问该怎么样还是怎么样
-    List<spot> getSpots() {
+    List<Feelings> getFeelings(AMapLocation myLocation) {
+        List<Feelings> feelings1 = new ArrayList<>();
+
+        OkHttpClient okHttpClient = myApplication.gethttpclient();
+        String url = "http://123.207.29.66:3009/api/feelings?longitude=[" + (myLocation.getLongitude()-0.002) + "," + (myLocation.getLongitude()+0.002)
+                + "]&latitude=[" + (myLocation.getLatitude()-0.002) + "," + (myLocation.getLatitude()+0.002) + "]&user_id=" + myApplication.getUser().getuserid();
+        Request request = new Request.Builder().url(url).build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    String s = response.body().string();
+                    InputStream in = response.body().byteStream();
+//                    Bitmap bitmap = BitmapFactory.decodeStream(in);
+                    Gson gson = new Gson();
+                    AllFeelings allFeelings = gson.fromJson(s, AllFeelings.class);
+                    feelings = allFeelings.getFeelingsList();
+                    Log.e("update", s);
+                    isUpdate = true;
+                } catch (Exception e) {
+                    Log.e("get mood", "wrong", e);
+                }
+            }
+        });
         Log.e("start getSpots", "success");
-        List<spot> spots1 = new ArrayList<>();
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.shanghai, options);
-        spot temp = new spot(bit, "dest", "location", 23.065974 + 0.0003, 113.392575);
-        spots1.add(temp);
-        spot temp2 = new spot(bit, "dest", "location", 23.065974 + 0.002, 113.395875 + 0.002);
-        spots1.add(temp2);
-        spot temp3 = new spot(bit, "dest", "location", 23.065974 - 0.0005, 113.395875 + 0.002);
-        spots1.add(temp3);
-        return spots1;
+
+
+        Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.shanghai);
+
+        Feelings temp = new Feelings(myApplication.getUser(), bit, "dest", "location", 23.065974 + 0.0003, 113.392575);
+        feelings1.add(temp);
+        Feelings temp2 = new Feelings(myApplication.getUser(), bit, "dest", "location", 23.065974 + 0.002, 113.395875 + 0.002);
+        feelings1.add(temp2);
+        Feelings temp3 = new Feelings(myApplication.getUser(), bit, "dest", "location", 23.065974 - 0.0005, 113.395875 + 0.002);
+        feelings1.add(temp3);
+        feelings = feelings1;
+        return feelings1;
     }
 }
