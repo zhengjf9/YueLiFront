@@ -158,95 +158,75 @@ public class IndividualActivity extends Fragment {
 
 
         httpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-            }
+                                                @Override
+                                                public void onFailure(Call call, IOException e) {
+                                                }
 
-            String string = null;
+                                                String string = null;
 
-            @Override
-            public void onResponse(Call call, final Response response) throws IOException {
-                try {
-                    string = response.body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                                                @Override
+                                                public void onResponse(Call call, final Response response) throws IOException {
+                                                    try {
+                                                        string = response.body().string();
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
 
-                Gson gson = new Gson();
-                Mood result = gson.fromJson(string, Mood.class);
-<<<<<<< HEAD
-                List<Mood.xinqing> moodlist = result.getdata();
-=======
-                final List<Mood.xinqing> moodlist = result.getdata();
->>>>>>> f72709400ae18e97b036f8cd41ac4933d9b38344
+                                                    Gson gson = new Gson();
+                                                    Mood result = gson.fromJson(string, Mood.class);
+                                                    List<Mood.xinqing> moodlist = result.getdata();
 
-                for (int i = 0; i < moodlist.size(); ) {
-                    Mood.xinqing t = moodlist.get(i);
-                    DateInfo dateInfo = new DateInfo();//指的是某一天的标题，包括第几天，日期，星期。
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    Calendar calendar = Calendar.getInstance();
-                    Date date = null;
-                    try {
-                        date = sdf.parse(t.gettime().substring(0, 10));
-                        calendar.setTime(date);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    dateInfo.setDate(t.gettime().substring(0, 10));
-                    List<ContentInfo> contentInfoList = new ArrayList<>();//指的是这一天所有的心情
-                    Date tmpdate = date;
-                    while (tmpdate == date) {
-                        ContentInfo contentInfo = new ContentInfo();
-                        String location = String.valueOf(t.getlatitude()) + ", " + String.valueOf(t.getlongitude());
-                        contentInfo.setLocation(location);//contentInfo指一条心情
-                        contentInfo.setComment(t.getcontent());
-                        contentInfoList.add(contentInfo);
-                        i++;
-                        if (i < moodlist.size()) {
-                            t = moodlist.get(i);
-                        } else break;
-                    }
-<<<<<<< HEAD
-                    if (response.code() == 200)
-                        mnum = moodlist.size();
-=======
+                                                    for (int i = 0; i < moodlist.size(); ) {
+                                                        Mood.xinqing t = moodlist.get(i);
+                                                        DateInfo dateInfo = new DateInfo();//指的是某一天的标题，包括第几天，日期，星期。
 
->>>>>>> f72709400ae18e97b036f8cd41ac4933d9b38344
-                    dateInfo.setContentInfoList(contentInfoList);//将这一天的所有游记设置成标题的一个成员
-                    dataInfoList.add(dateInfo);;//将一天一天的数据push进dataInfoList
-                    // dataInfoList就是最后要的数据
-                }
-<<<<<<< HEAD
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                                        Calendar calendar = Calendar.getInstance();
+                                                        Date date = null;
+                                                        try {
+                                                            date = sdf.parse(t.gettime().substring(0, 10));
+                                                            calendar.setTime(date);
+                                                        } catch (ParseException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        dateInfo.setDate(t.gettime().substring(0, 10));
+                                                        List<ContentInfo> contentInfoList = new ArrayList<>();//指的是这一天所有的心情
+                                                        Date tmpdate = date;
+                                                        while (tmpdate == date) {
+                                                            ContentInfo contentInfo = new ContentInfo();
+                                                            String location = String.valueOf(t.getlatitude()) + ", " + String.valueOf(t.getlongitude());
+                                                            contentInfo.setLocation(location);//contentInfo指一条心情
+                                                            contentInfo.setComment(t.getcontent());
+                                                            contentInfoList.add(contentInfo);
+                                                            i++;
+                                                            if (i < moodlist.size()) {
+                                                                t = moodlist.get(i);
+                                                            } else break;
+                                                        }
+                                                        if (response.code() == 200)
+                                                            mnum = moodlist.size();
 
-                        int rescode = response.code();
-                        if (rescode == 200) {
+                                                        dateInfo.setContentInfoList(contentInfoList);//将这一天的所有游记设置成标题的一个成员
+                                                        dataInfoList.add(dateInfo);
+                                                        ;//将一天一天的数据push进dataInfoList
+                                                        // dataInfoList就是最后要的数据
+                                                    }
+                                                    getActivity().runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
 
-                                m.setText(String.valueOf(mnum));
-                           // Toast.makeText(getActivity().getApplicationContext(), "心情"+moodlist.size(), Toast.LENGTH_SHORT).show();
-=======
+                                                            int rescode = response.code();
+                                                            if (rescode == 200) {
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int rescode = response.code();
-                        if (rescode == 200) {
-                            mnum = moodlist.size();
-                            m.setText(String.valueOf(mnum));
-                            // Toast.makeText(getActivity().getApplicationContext(), "心情"+moodlist.size(), Toast.LENGTH_SHORT).show();
->>>>>>> f72709400ae18e97b036f8cd41ac4933d9b38344
-                        } else {
-                            //Toast.makeText(getActivity().getApplicationContext(),
-                            // "获取失败失败啊啊"+ String.valueOf(user.getuserid()), Toast.LENGTH_SHORT).show();
-                        }
+                                                                m.setText(String.valueOf(mnum));
+                                                            }
+                                                            // Toast.makeText(getActivity().getApplicationContext(), "心情"+moodlist.size(), Toast.LENGTH_SHORT).show();
 
-                    }
-                });
-            }
-        });
+                                                        }
+                                                    });
+                                                }
+                                            });
 
         url="http://123.207.29.66:3009/api/travels?user_id="+String.valueOf(user.getuserid());
         request = new Request.Builder().url(url).build();
