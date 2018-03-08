@@ -64,7 +64,7 @@ public class MyApplication extends Application {
     public AMapLocation getaMapLocation() {
         return aMapLocation;
     }
-
+    public int eid;
     public User getUser() {return user;}
     public void setUser(User u) {user = u;}
     public OkHttpClient gethttpclient() {return httpClient;}
