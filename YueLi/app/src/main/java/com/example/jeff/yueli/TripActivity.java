@@ -61,6 +61,14 @@ public class TripActivity extends Fragment {
         final JourneyItemAdapter myAdapter = new JourneyItemAdapter(getContext(), mDatas);
         myRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
         myRecView.setAdapter(myAdapter);
+        Button edit = view.findViewById(R.id.plus_icon);
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PostTrip.class);
+                startActivity(intent);
+            }
+        });
         myAdapter.setOnItemClickLitener(new OnItemClickLitener()
         {
 
@@ -97,36 +105,36 @@ public class TripActivity extends Fragment {
             String string=null;
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
+                try {
+                    string = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Gson gson = new Gson();
+                Travel result = gson.fromJson(string,Travel.class);
+                List<Travel.trip> travellist =  result.gettrips();
+
+                for (int i = 0; i < travellist.size(); i++) {
+                    Travel.trip t = travellist.get(i);
+                    Map<String, String> temp = new LinkedHashMap<String, String>();
+                    temp.put("user_id",String.valueOf(t.getuserid()));
+                    temp.put("title", t.gettitle());
+                    temp.put("firstday", t.getFirst_day());
+                    temp.put("duration",  String.valueOf(t.getduration()));
+                    temp.put("location", t.getlocation());
+                    temp.put("name", t.getnickname());
+
+                    temp.put("like_num", String.valueOf(t.getfavoritecount()));
+                    temp.put("comment_num", String.valueOf(t.getComment_count()));
+
+                    temp.put("travel_id",String.valueOf(t.gettravelid()));
+                    temp.put("favorited",String.valueOf(t.getfavorited()));
+                    mDatas.add(temp);
+                }
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                       //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
-                        try {
-                            string = response.body().string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        Gson gson = new Gson();
-                        Travel result = gson.fromJson(string,Travel.class);
-                        List<Travel.trip> travellist =  result.gettrips();
-
-                        for (int i = 0; i < travellist.size(); i++) {
-                            Travel.trip t = travellist.get(i);
-                            Map<String, String> temp = new LinkedHashMap<String, String>();
-                            temp.put("user_id",String.valueOf(t.getuserid()));
-                            temp.put("title", t.gettitle());
-                            temp.put("firstday", t.getFirst_day());
-                            temp.put("duration",  String.valueOf(t.getduration()));
-                            temp.put("location", t.getlocation());
-                            temp.put("name", t.getnickname());
-
-                            temp.put("like_num", String.valueOf(t.getfavoritecount()));
-                            temp.put("comment_num", String.valueOf(t.getComment_count()));
-
-                            temp.put("travel_id",String.valueOf(t.gettravelid()));
-                            temp.put("favorited",String.valueOf(t.getfavorited()));
-                            mDatas.add(temp);
-                        }
                         int rescode = response.code();
                         if (rescode == 200) {
                            // Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();

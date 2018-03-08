@@ -8,7 +8,7 @@ import android.graphics.Bitmap;
 
 public class spot {
     private Bitmap image;
-    private int ID;
+    private int spot_id;
     private String name;
     private String city;
     private String description;
@@ -17,7 +17,7 @@ public class spot {
     private boolean favorited;
 
     public spot(int id, String n, String descri, String c, Object l, int r) {
-        ID = id;
+        spot_id = id;
         name = n;
         city = c;
         description = descri;
@@ -38,7 +38,7 @@ public class spot {
     }
 
     public int getID() {
-        return ID;
+        return spot_id;
     }
 
     public String getCity() {

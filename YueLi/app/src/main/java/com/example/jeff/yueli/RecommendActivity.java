@@ -97,6 +97,7 @@ public class RecommendActivity extends Fragment {
             Log.e("getDownTime", e.getEventTime() + " " + e.getDownTime());
 
             Intent intent = new Intent(getActivity(), SpotDetailActivity.class);
+
             startActivity(intent);
             return super.onSingleTapUp(e);
         }
@@ -165,8 +166,6 @@ public class RecommendActivity extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     String string = response.body().string();
-
-
                     Gson gson = new Gson();
                     Spots spotsInfo = gson.fromJson(string, Spots.class);
                     spots = spotsInfo.getData();
