@@ -1,6 +1,7 @@
 package com.example.jeff.yueli;
 
 import android.content.Intent;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -67,6 +68,7 @@ public class IndividualActivity extends Fragment {
         final Button launch = view.findViewById(R.id.launch);
         Button like = view.findViewById(R.id.like);
         Button letter = view.findViewById(R.id.letter);
+        Button menu = view.findViewById(R.id.menu);
         final TextView moodnum = view.findViewById(R.id.mood_num);
         TextView tnum = view.findViewById(R.id.journey_num);
         TextView fans = view.findViewById(R.id.fans_num);
@@ -105,6 +107,7 @@ public class IndividualActivity extends Fragment {
 
             }
         });
+
 
         mood.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,5 +318,33 @@ public class IndividualActivity extends Fragment {
         trashDatas.add(temp1);
         trashDatas.add(temp1);
 
+    }
+    public void showDialog(View view){
+        final BottomSheetDialog dialog=new BottomSheetDialog(getContext());
+        View dialogView= LayoutInflater.from(getContext())
+                .inflate(R.layout.logout,null);
+        TextView logout= (TextView) dialogView.findViewById(R.id.logout);
+        TextView cancel= (TextView) dialogView.findViewById(R.id.cancel);
+
+        logout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+        {
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+            dialog.dismiss();
+        }
+        });
+        cancel.setOnClickListener(new View.OnClickListener()
+        {
+            @Override public void onClick(View v)
+        {
+            dialog.dismiss();
+        }
+        }
+        );
+        dialog.setContentView(dialogView);
+        dialog.show();
     }
 }

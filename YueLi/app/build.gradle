@@ -38,4 +38,5 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.android.support:design:24.1.1'
 }
