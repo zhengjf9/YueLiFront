@@ -60,7 +60,7 @@ public class RecommendActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         totalView = inflater.inflate(R.layout.activity_recommend, container, false);
 
-        which = 0;
+        which = 1;
         times = 0;
         myApplication = (MyApplication)getActivity().getApplication();
         myApplication.setCurrentPos(which);
@@ -104,7 +104,7 @@ public class RecommendActivity extends Fragment {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             if (e2.getY() - e1.getY() > verticalMinistance && Math.abs(velocityY) > minVelocity) {
-                if (which == 0) {
+                if (which == 1) {
                     first.setVisibility(View.GONE);
 
                     secondDest.setText(spots.get(0).getName());
@@ -113,7 +113,7 @@ public class RecommendActivity extends Fragment {
                     second.setVisibility(View.VISIBLE);
                     first.setAnimation(AnimationUtil.moveToViewBottom());
                     second.setAnimation(AnimationUtil.moveToViewLocation());
-                    which = 1;
+                    which = 0;
 
                 } else {
                     second.setVisibility(View.GONE);
@@ -125,9 +125,9 @@ public class RecommendActivity extends Fragment {
                     local.setText(spots.get(1).getCity());
                     second.setAnimation(AnimationUtil.moveToViewBottom());
                     first.setAnimation(AnimationUtil.moveToViewLocation());
-                    which = 0;
+                    which = 1;
                 }
-                myApplication.setCurrentPos(1-which);
+                myApplication.setCurrentPos(which);
                 times = times + 1;
             }
             if (times == 2) {

@@ -76,6 +76,7 @@ public class AddActivity extends Fragment {
     private void initViews() {
         addPic = (ImageView) totalView.findViewById(R.id.add);
         image = (ImageView)totalView.findViewById(R.id.feelingImage);
+
         Button send = (Button)totalView.findViewById(R.id.send);
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +86,9 @@ public class AddActivity extends Fragment {
                     OkHttpClient okHttpClient = myApplication.gethttpclient();
                     String url = "http://123.207.29.66:3009/api/feelings";
                     EditText con = (EditText) totalView.findViewById(R.id.edit);
+                    if (con.getText().toString().equals("") || imagePath.equals("")) {
+                        Toast.makeText(getActivity(), "内容或图片不能为空", Toast.LENGTH_SHORT).show();
+                    }
                     MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
                     File file = new File(imagePath);
                     RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);

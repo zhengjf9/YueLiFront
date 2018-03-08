@@ -77,6 +77,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
     private View totalView;
     private MyApplication myApplication;
     private AMapLocation lastLocation;
+    private BitmapDescriptor bitmapDescriptor;
     private Boolean isUpdate;
     public Map() {
 
@@ -141,13 +142,14 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         Log.e("getInto", "addMapPoint" + p);
         Log.e("feelings' sizes", feelings.size() + "");
 
+        View circleImage = LayoutInflater.from(getActivity()).inflate(R.layout.circleimage, null);
+        CircleImageView circleImageView = circleImage.findViewById(R.id.circle);
+        circleImageView.setImageResource(R.drawable.shanghai);
+
+        Log.e("finish", "add image");
+        bitmapDescriptor = BitmapDescriptorFactory.fromView(circleImage);
         try {
-            View circleImage = LayoutInflater.from(getActivity()).inflate(R.layout.circleimage, null);
-            CircleImageView circleImageView = circleImage.findViewById(R.id.circle);
 
-
-            Log.e("finish", "add image");
-            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromView(circleImage);
 
             for (int i = 0; i < feelings.size(); ++i) {
                 if (i == 0) {
@@ -159,6 +161,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                 Log.e("order", i + "");
                 markerOptions.icon(bitmapDescriptor);
                 markerOptions.position(new LatLng(feelings.get(i).getLatitude(), feelings.get(i).getLongtitude()));
+                Log.e("marks' La and Lo", feelings.get(i).getLatitude() + " " + feelings.get(i).getLongtitude());
                 markers.add(aMap.addMarker(markerOptions));
                 markeroptions.add(markerOptions);
                 Log.e("order", i + "");
@@ -174,6 +177,8 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
 
     // 初始化定位
     private void init() {
+
+
         //初始化定位
         mLocationClient = new AMapLocationClient(getActivity().getApplicationContext());
         //设置定位回调监听
@@ -220,7 +225,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         imageView.setImageBitmap(feelings.get(p).getImage());
         ImageView userImage = (ImageView)c.findViewById(R.id.user_image);
         TextView username = (TextView)c.findViewById(R.id.user_name);
-        username.setText(feelings.get(p).getUser().getnickname());
+        username.setText(feelings.get(p).getNickname());
         TextView content = (TextView)c.findViewById(R.id.descriptionOfMark);
         content.setText(feelings.get(p).getContent());
     }
@@ -257,14 +262,14 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                                 @Override
                                 public void call(Subscriber<? super AMapLocation> subscriber) {
                                     Log.e("readdy for update", ""+isUpdate);
-                                    if (isUpdate) {
+                                    if (pos == size) {
 
                                         isUpdate = false;
                                         Log.e("update", "OK");
                                     }
                                     while (pos < size) {
-                                        Log.e("marker", feelings.size() + "");
                                         pos = pos + 1;
+                                        Log.e("marker", feelings.size() + " " + pos);
 
 
                                         addMapPoint(pos);
@@ -296,11 +301,6 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                             Log.e("getInto", "success");
 
                         }
-//                        if (lastLocation != null && !isDiffBigEnouph(aMapLocation)) {
-//
-//                        } else {
-//                        }
-
                         lastLocation = aMapLocation;
                         myApplication.setaMapLocation(lastLocation);
                     } catch (Exception e) {
@@ -333,24 +333,24 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         for (int i = 0; i < t.size(); ++i) {
             isSame = false;
             for (int j = 0; j < size; ++j) {
-                if (t.get(i).equals(feelings.get(j))) {
+                if (t.get(i).getFeeling_id() == feelings.get(j).getFeeling_id()) {
                     isSame = true;
                     break;
                 }
             }
             if (!isSame) {
                 feelings.add(t.get(i));
-                Log.e("add feelings", "success");
+                Log.e("add_feelings", "success");
             }
             isSame = false;
         }
         this.size = feelings.size();
-        Log.e("after adding feelings", "" + this.size);
+        Log.e("after_adding_feelings", "" + this.size);
         return !(size == feelings.size());
     }
 
     // 网络访问获取Spot相关信息
-    // 写这个函数是方便我把逻辑写下去，网络访问该怎么样还是怎么样
+
     List<Feelings> getFeelings(AMapLocation myLocation) {
         List<Feelings> feelings1 = new ArrayList<>();
 
@@ -374,10 +374,14 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                     Gson gson = new Gson();
                     AllFeelings allFeelings = gson.fromJson(s, AllFeelings.class);
                     List<Feelings> temp = allFeelings.getFeelingsList();
+                    if (temp == null) {
+                        Log.e("update_info", s);
+                        return;
+                    }
+                    Log.e("update_infos", s + " " + temp.size());
                     if(addTheDifferentOne(temp)) {
                         isUpdate = true;
                     }
-                    Log.e("update info", s);
 
                 } catch (Exception e) {
                     Log.e("get mood", "wrong", e);

@@ -7,10 +7,10 @@ import java.util.List;
  */
 
 public class AllFeelings {
-    private List<Feelings> feelingsList;
+    private List<Feelings> data;
     private String msg;
     public AllFeelings(List<Feelings> f, String m) {
-        feelingsList = f;
+        data = f;
         msg = m;
     }
 
@@ -19,6 +19,6 @@ public class AllFeelings {
     }
 
     public List<Feelings> getFeelingsList() {
-        return feelingsList;
+        return data;
     }
 }
