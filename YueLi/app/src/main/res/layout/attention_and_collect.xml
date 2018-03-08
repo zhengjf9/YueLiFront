@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ImageView
+    <Button
         android:id="@+id/back"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/left_black_back"
+        android:background="@drawable/left_black_back"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="15dp"

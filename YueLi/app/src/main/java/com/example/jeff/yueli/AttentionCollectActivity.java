@@ -1,5 +1,6 @@
 package com.example.jeff.yueli;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,6 +58,17 @@ public class AttentionCollectActivity extends AppCompatActivity {
 
         Button attention = findViewById(R.id.attention);
         Button collect = findViewById(R.id.collect);
+        Button back = findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.setClass(AttentionCollectActivity.this, MainActivity.class);
+                //一定要指定是第几个pager，因为要跳到ThreeFragment，这里填写2
+                i.putExtra("id", 4);
+                startActivity(i);
+            }
+        });
         attention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
