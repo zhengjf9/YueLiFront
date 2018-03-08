@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, SpotDetailActivity.class);
+                Intent intent = new Intent(LoginActivity.this, MapMoodActivity.class);
                 startActivity(intent);
             }
         });
