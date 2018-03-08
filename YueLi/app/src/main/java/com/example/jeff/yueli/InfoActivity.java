@@ -1,5 +1,6 @@
 package com.example.jeff.yueli;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +42,17 @@ public class InfoActivity extends AppCompatActivity {
         final HomeAdapter myAdapter = new HomeAdapter();
         myRecView.setLayoutManager(new LinearLayoutManager(this));
         myRecView.setAdapter(myAdapter);
+        Button back = findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.setClass(InfoActivity.this, MainActivity.class);
+                //一定要指定是第几个pager，因为要跳到ThreeFragment，这里填写2
+                i.putExtra("id", 4);
+                startActivity(i);
+            }
+        });
     }
     public void initDatas(){
         MyApplication application = (MyApplication) getApplication();
@@ -75,7 +88,7 @@ public class InfoActivity extends AppCompatActivity {
                         c++;
                     }
                     else if (t.gettype().equals( "favorite-travel")) {
-                        xinxi = "您的 " + String.valueOf(t.getcontent().getid()) +" 游记被" +t.getcontent().getSender() + "收藏了";
+                        xinxi = "您的 " + String.valueOf(t.getcontent().getname()) +" 游记被" +t.getcontent().getSender() + "收藏了";
                         c++;
                     }
                     else if (t.gettype().equals("comment-travel")) {
@@ -104,13 +117,6 @@ public class InfoActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
-
-
-/*
-
-
-                        }*/
                         int rescode = response.code();
                         if (rescode == 200) {
                             Toast.makeText(getApplicationContext(),String.valueOf(result.getdata().size())  , Toast.LENGTH_SHORT).show();
