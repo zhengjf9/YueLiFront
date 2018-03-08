@@ -25,9 +25,18 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private AddActivity addActivity;
@@ -40,11 +49,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentAdapter fragmentAdapter;
     public ViewPager getVp() {return vp;}
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         try {
             super.onCreate(savedInstanceState);
+            MyApplication application = (MyApplication)getApplication();
+            OkHttpClient httpClient = application.gethttpclient();
+            User user = application.getUser();
+            String url = "http://123.207.29.66:3009/api/users/"+String.valueOf(user.getuserid());
+            Request request = new Request.Builder().url(url).build();
+            httpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {}
+                String string=null;
+                @Override
+                public void onResponse(Call call, final Response response) throws IOException {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                string = response.body().string();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            Gson gson = new Gson();
+                            Type Usertype = new TypeToken<Result<User>>(){}.getType();
+                            Result<User> userresult = gson.fromJson(string, Usertype);
+                            User u = userresult.data;
+                            // Toast.makeText(LoginActivity.this, String.valueOf(loginresult.data.getuserid()), Toast.LENGTH_SHORT).show();
+                            int rescode = response.code();
+                            if (rescode == 200) {
+
+                                MyApplication application = (MyApplication)getApplication();
+                                User nu = new User(); nu.setuserid(application.getUser().getuserid());
+                                nu.setnickname(application.getUser().getnickname());
+                                nu.setSignature(u.getSignature());
+                                application.setUser(nu);
+
+                            } else {
+
+                            }
+                        }
+                    });
+                }
+            });
+
             int i = getIntent().getIntExtra("id", -1);
             setContentView(R.layout.activity_main);
             Log.e("getIntoMain", "Successfully");

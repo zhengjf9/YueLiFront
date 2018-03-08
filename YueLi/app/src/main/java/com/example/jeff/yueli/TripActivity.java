@@ -84,15 +84,10 @@ public class TripActivity extends Fragment {
     public void initData(){
         //获取网络数据
         MyApplication application = (MyApplication)getActivity().getApplication();
-
         OkHttpClient httpClient = application.gethttpclient();
         User user = application.getUser();
         Toast.makeText(getActivity().getApplicationContext(),String.valueOf(user.getuserid())  , Toast.LENGTH_LONG).show();
-        String url="http://123.207.29.66:3009/api/travels?user_id="+String.valueOf(user.getuserid());
-                //"2";
-                //String.valueOf(yonghu.getuserid());
-
-
+        String url="http://123.207.29.66:3009/api/travels";//?user_id="+String.valueOf(user.getuserid());
         Request request = new Request.Builder().url(url).build();
 
         httpClient.newCall(request).enqueue(new Callback() {
@@ -118,6 +113,7 @@ public class TripActivity extends Fragment {
                         for (int i = 0; i < travellist.size(); i++) {
                             Travel.trip t = travellist.get(i);
                             Map<String, String> temp = new LinkedHashMap<String, String>();
+                            temp.put("user_id",String.valueOf(t.getuserid()));
                             temp.put("title", t.gettitle());
                             temp.put("firstday", t.getFirst_day());
                             temp.put("duration",  String.valueOf(t.getduration()));

@@ -12,7 +12,7 @@ public class User implements Serializable {
     private int id;
     private Bitmap bitmap;
     private String nickname;
-
+    private String signature;
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
@@ -25,11 +25,17 @@ public class User implements Serializable {
     public String getnickname() {
         return nickname;
     }
+    public String getSignature() {
+        return signature;
+    }
     public int getuserid() {
         return id;
     }
     public void setnickname(String name) {
         this.nickname = name;
+    }
+    public void setSignature(String name) {
+        this.signature = name;
     }
     public void setuserid(int id) {
         this.id = id;

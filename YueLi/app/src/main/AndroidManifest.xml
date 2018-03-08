@@ -34,6 +34,8 @@
         <activity android:name=".JourneyCommentActivity"></activity>
         <activity android:name=".AttentionCollectActivity"></activity>
         <activity android:name=".InfoActivity"></activity>
+        <activity android:name=".SpotDetailActivity"></activity>
+        <activity android:name=".MapMoodActivity"></activity>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />

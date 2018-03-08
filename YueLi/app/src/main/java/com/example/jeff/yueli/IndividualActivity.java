@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -37,6 +38,11 @@ public class IndividualActivity extends Fragment {
             new ArrayList<java.util.Map<String, String>>();//草稿箱的数据
     private List<java.util.Map<String, String>> launchDatas =
             new ArrayList<java.util.Map<String, String>>();//已发布的数据
+    private int mnum;
+    private int tripnum;
+    private int fannum;
+
+
     public IndividualActivity() {
 
     }
@@ -45,7 +51,10 @@ public class IndividualActivity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_individual, container, false);
-        initDatas();
+
+        MyApplication application = (MyApplication) getActivity().getApplication();
+        OkHttpClient httpClient = application.gethttpclient();
+        final User user = application.getUser();
         final RecyclerView myRecView = (RecyclerView) view.findViewById(R.id.outer_recyclerview);
         final DateInfoAdapter myAdapter = new DateInfoAdapter(getContext(),dataInfoList);
         myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -53,10 +62,18 @@ public class IndividualActivity extends Fragment {
        // myRecView.setVisibility(View.INVISIBLE);//心情页面暂时设置不可见
         Button mood = view.findViewById(R.id.mood_title);
         Button journey = view.findViewById(R.id.journey_title);
+        TextView name = view.findViewById(R.id.name);
         final Button trash = view.findViewById(R.id.trash);
         final Button launch = view.findViewById(R.id.launch);
         Button like = view.findViewById(R.id.like);
         Button letter = view.findViewById(R.id.letter);
+        final TextView moodnum = view.findViewById(R.id.mood_num);
+        TextView tnum = view.findViewById(R.id.journey_num);
+        TextView fans = view.findViewById(R.id.fans_num);
+        TextView sig = view.findViewById(R.id.signaure);
+        sig.setText(user.getSignature());
+        name.setText(user.getnickname());
+        initDatas(moodnum,fans,tnum);
 
         trash.setVisibility(View.INVISIBLE);
         launch.setVisibility(View.INVISIBLE);
@@ -129,12 +146,10 @@ public class IndividualActivity extends Fragment {
 
         return view;
     }
-    public void initDatas(){
+    public void initDatas(final TextView m, final TextView f, final TextView t){
         MyApplication application = (MyApplication) getActivity().getApplication();
-
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
-
         String url = "http://123.207.29.66:3009/api/feelings?user_id="+String.valueOf(user.getuserid()) ;
         Request request = new Request.Builder().url(url).build();
 
@@ -195,7 +210,9 @@ public class IndividualActivity extends Fragment {
                         }
                         int rescode = response.code();
                         if (rescode == 200) {
-                            Toast.makeText(getActivity().getApplicationContext(), "心情"+moodlist.size(), Toast.LENGTH_SHORT).show();
+                                mnum = moodlist.size();
+                                m.setText(String.valueOf(mnum));
+                           // Toast.makeText(getActivity().getApplicationContext(), "心情"+moodlist.size(), Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getActivity().getApplicationContext(),
                                     "获取失败失败啊啊"+ String.valueOf(user.getuserid()), Toast.LENGTH_SHORT).show();
@@ -246,10 +263,41 @@ public class IndividualActivity extends Fragment {
                         }
                         int rescode = response.code();
                         if (rescode == 200) {
+                            tripnum = travellist.size();
+                            t.setText(String.valueOf(tripnum));
                             // Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getActivity().getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
                         }
+                    }
+                });
+            }
+        });
+        //获取粉丝数量
+        url = "http://123.207.29.66:3009/api/users/"+String.valueOf(user.getuserid())+"/followers";
+        request = new Request.Builder().url(url).build();
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            String string = null;
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                try {
+                    string = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Gson gson = new Gson();
+                        Followers result = gson.fromJson(string, Followers.class);
+                        List<Followers.follow> followerlist = result.getdata();
+                        fannum = followerlist.size();
+                        f.setText(String.valueOf(fannum));
                     }
                 });
             }
