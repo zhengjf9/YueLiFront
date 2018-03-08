@@ -37,10 +37,9 @@ public class Notifications {
 
 
         public static class Content {
-            @SerializedName(value = "user_id", alternate = {"feeling_id"})
+           @SerializedName(value = "travel_id", alternate = {"feeling_id","user_id"})
             private int travel_id;
-
-            @SerializedName("content")
+           @SerializedName(value = "title", alternate = {"content"})
             private String title;
 
             private int sender_id;
