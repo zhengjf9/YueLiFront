@@ -5,6 +5,8 @@ package com.example.jeff.yueli;
  */
 import android.app.Application;
 
+import com.amap.api.location.AMapLocation;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,15 @@ public class MyApplication extends Application {
             .addInterceptor(new HttpLoggingInterceptor()).build();
     private User user;
 
+    private AMapLocation aMapLocation;
+
+    public void setaMapLocation(AMapLocation aMapLocation) {
+        this.aMapLocation = aMapLocation;
+    }
+
+    public AMapLocation getaMapLocation() {
+        return aMapLocation;
+    }
 
     public User getUser() {return user;}
     public void setUser(User u) {user = u;}

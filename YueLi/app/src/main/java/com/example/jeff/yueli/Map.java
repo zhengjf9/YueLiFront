@@ -142,12 +142,12 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         Log.e("feelings' sizes", feelings.size() + "");
         View circleImage = LayoutInflater.from(getActivity()).inflate(R.layout.circleimage, null);
         CircleImageView circleImageView = circleImage.findViewById(R.id.circle);
-        circleImageView.setImageBitmap(feelings.get(p).getImage());
+
+
+        Log.e("finish", "add image");
         BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromView(circleImage);
 
         try {
-
-
 
             for (int i = 0; i < feelings.size(); ++i) {
                 if (i == 0) {
@@ -246,21 +246,22 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
             if (aMapLocation != null) {
                 if (aMapLocation.getErrorCode() == 0) {
                     Log.e("位置：", aMapLocation.getLatitude() + " " + aMapLocation.getLongitude());
-                    if (lastLocation != null && !isDiffBigEnouph(aMapLocation)) {
-
-                    } else {
+                    getFeelings(aMapLocation);
+                    if (isUpdate) {
                         try {
                             Observable<AMapLocation> observable = Observable.create(new Observable.OnSubscribe<AMapLocation>() {
                                 @Override
                                 public void call(Subscriber<? super AMapLocation> subscriber) {
+                                    Log.e("readdy for update", ""+isUpdate);
                                     if (isUpdate) {
-                                        pos = -1;
+
                                         isUpdate = false;
+                                        Log.e("update", "OK");
                                     }
                                     while (pos < size) {
                                         Log.e("marker", markers.size() + "");
                                         pos = pos + 1;
-                                        getFeelings(aMapLocation);
+
                                         size = feelings.size();
                                         addMapPoint(pos);
                                         Log.e("endadd", "infor");
@@ -294,8 +295,14 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                         } catch (Exception e) {
                             Log.e("rxjava", "wrong", e);
                         }
-                        lastLocation = aMapLocation;
                     }
+                    if (lastLocation != null && !isDiffBigEnouph(aMapLocation)) {
+
+                    } else {
+                    }
+                    getFeelings(aMapLocation);
+                    lastLocation = aMapLocation;
+                    myApplication.setaMapLocation(lastLocation);
 
 
 
@@ -309,7 +316,28 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         }
     }
 
-
+    private boolean addTheDifferentOne(List<Feelings> t) {
+        int size = feelings.size();
+        if (size == 0) {
+            feelings = t;
+            return true;
+        }
+        boolean isSame;
+        for (int i = 0; i < t.size(); ++i) {
+            isSame = false;
+            for (int j = 0; j < size; ++j) {
+                if (t.get(i).equals(feelings.get(j))) {
+                    isSame = true;
+                    break;
+                }
+            }
+            if (!isSame) {
+                feelings.add(t.get(i));
+            }
+            isSame = false;
+        }
+        return !(size == feelings.size());
+    }
 
     // 网络访问获取Spot相关信息
     // 写这个函数是方便我把逻辑写下去，网络访问该怎么样还是怎么样
@@ -334,26 +362,18 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
 //                    Bitmap bitmap = BitmapFactory.decodeStream(in);
                     Gson gson = new Gson();
                     AllFeelings allFeelings = gson.fromJson(s, AllFeelings.class);
-                    feelings = allFeelings.getFeelingsList();
-                    Log.e("update", s);
-                    isUpdate = true;
+                    List<Feelings> temp = allFeelings.getFeelingsList();
+                    if(addTheDifferentOne(temp)) {
+                        isUpdate = true;
+                    }
+                    Log.e("update", "finish");
+
                 } catch (Exception e) {
                     Log.e("get mood", "wrong", e);
                 }
             }
         });
         Log.e("start getSpots", "success");
-
-
-        Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.shanghai);
-
-        Feelings temp = new Feelings(myApplication.getUser(), bit, "dest", "location", 23.065974 + 0.0003, 113.392575);
-        feelings1.add(temp);
-        Feelings temp2 = new Feelings(myApplication.getUser(), bit, "dest", "location", 23.065974 + 0.002, 113.395875 + 0.002);
-        feelings1.add(temp2);
-        Feelings temp3 = new Feelings(myApplication.getUser(), bit, "dest", "location", 23.065974 - 0.0005, 113.395875 + 0.002);
-        feelings1.add(temp3);
-        feelings = feelings1;
         return feelings1;
     }
 }

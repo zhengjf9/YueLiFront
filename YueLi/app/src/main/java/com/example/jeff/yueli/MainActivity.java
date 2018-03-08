@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (pos) {
             case 2:
                 add.setImageResource(R.drawable.plus_cover);
+
                 break;
             case 4:
                 individual.setImageResource(R.drawable.male_user_96px_cover);

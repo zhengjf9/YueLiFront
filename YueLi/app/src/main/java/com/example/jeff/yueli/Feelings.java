@@ -22,6 +22,10 @@ public class Feelings {
         longtitude = lo;
     }
 
+    public void setFeeling_id(int feeling_id) {
+        this.feeling_id = feeling_id;
+    }
+
     public Bitmap getImage() {
         return image;
     }

@@ -152,7 +152,7 @@ public class RecommendActivity extends Fragment {
                 try {
                     String string = response.body().string();
 
-                    Log.e("info in responce", string);
+
                     Gson gson = new Gson();
                     Spots spotsInfo = gson.fromJson(string, Spots.class);
                     spots = spotsInfo.getData();
