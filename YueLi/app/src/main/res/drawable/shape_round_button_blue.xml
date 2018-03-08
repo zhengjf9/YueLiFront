@@ -11,11 +11,11 @@
         android:color="@android:color/transparent" />
     <!-- 内填充颜色 -->
     <padding
-        android:bottom="10dp"
-        android:left="10dp"
-        android:right="10dp"
-        android:top="10dp" />
+        android:bottom="0dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="0dp" />
     <!-- 圆角 -->
-    <corners android:radius="50dp" />
+    <corners android:radius="5dp" />
 
 </shape>
