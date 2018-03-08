@@ -1,5 +1,6 @@
 package com.example.jeff.yueli;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -17,6 +19,7 @@ import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -47,8 +50,16 @@ public class IndividualActivity extends Fragment {
         final DateInfoAdapter myAdapter = new DateInfoAdapter(getContext(),dataInfoList);
         myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         myRecView.setAdapter(myAdapter);
-        myRecView.setVisibility(View.INVISIBLE);//心情页面暂时设置不可见
+       // myRecView.setVisibility(View.INVISIBLE);//心情页面暂时设置不可见
+        Button mood = view.findViewById(R.id.mood_title);
+        Button journey = view.findViewById(R.id.journey_title);
+        final Button trash = view.findViewById(R.id.trash);
+        final Button launch = view.findViewById(R.id.launch);
+        Button like = view.findViewById(R.id.like);
+        Button letter = view.findViewById(R.id.letter);
 
+        trash.setVisibility(View.INVISIBLE);
+        launch.setVisibility(View.INVISIBLE);
         final RecyclerView trashRecView = (RecyclerView)view.findViewById(R.id.trash_recyclerview);
         final JourneyItemAdapter trashAdapter = new JourneyItemAdapter(getContext(), trashDatas);
         trashRecView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -59,7 +70,62 @@ public class IndividualActivity extends Fragment {
         final JourneyItemAdapter launchAdapter = new JourneyItemAdapter(getContext(), launchDatas);
         launchRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         launchRecView.setAdapter(launchAdapter);
-        //launchRecView.setVisibility(View.INVISIBLE);
+        launchRecView.setVisibility(View.INVISIBLE);
+
+        like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AttentionCollectActivity.class);
+                startActivity(intent);
+
+            }
+        });
+        letter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), InfoActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        mood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trashRecView.setVisibility(View.INVISIBLE);
+                launchRecView.setVisibility(View.INVISIBLE);
+                myRecView.setVisibility(View.VISIBLE);
+                trash.setVisibility(View.INVISIBLE);
+                launch.setVisibility(View.INVISIBLE);
+
+            }
+        });
+        journey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myRecView.setVisibility(View.INVISIBLE);
+                trashRecView.setVisibility(View.INVISIBLE);
+                launchRecView.setVisibility(View.VISIBLE);
+                trash.setVisibility(View.VISIBLE);
+                launch.setVisibility(View.VISIBLE);
+            }
+        });
+        launch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myRecView.setVisibility(View.INVISIBLE);
+                trashRecView.setVisibility(View.INVISIBLE);
+                launchRecView.setVisibility(View.VISIBLE);
+            }
+        });
+        trash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myRecView.setVisibility(View.INVISIBLE);
+                launchRecView.setVisibility(View.INVISIBLE);
+                trashRecView.setVisibility(View.VISIBLE);
+            }
+        });
 
         return view;
     }
@@ -89,13 +155,6 @@ public class IndividualActivity extends Fragment {
                             string = response.body().string();
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }
-                        int rescode = response.code();
-                        if (rescode == 200) {
-                            Toast.makeText(getActivity().getApplicationContext(), string, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    "获取失败失败啊啊"+ String.valueOf(user.getuserid()), Toast.LENGTH_SHORT).show();
                         }
 
                         Gson gson = new Gson();
@@ -134,27 +193,68 @@ public class IndividualActivity extends Fragment {
                             dataInfoList.add(dateInfo);;//将一天一天的数据push进dataInfoList
                             // dataInfoList就是最后要的数据
                         }
-
+                        int rescode = response.code();
+                        if (rescode == 200) {
+                            Toast.makeText(getActivity().getApplicationContext(), "心情"+moodlist.size(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    "获取失败失败啊啊"+ String.valueOf(user.getuserid()), Toast.LENGTH_SHORT).show();
+                        }
 
                     }
                 });
             }
         });
-/*
-        for (int i = 0; i < 6; i++) {//比如总共6天
-            DateInfo dateInfo = new DateInfo();//指的是某一天的标题，包括日期。
-            dateInfo.setDate("一月二十四日");
-            List<ContentInfo> contentInfoList = new ArrayList<>();//指的是这一天所有的心情
-            for (int j = 0; j < 3; j++) {//比如说，每一天都发了3条
-                ContentInfo contentInfo = new ContentInfo();
-                contentInfo.setLocation("上海，中国");//contentInfo指一条心情
-                contentInfo.setComment("啦啦啦啦");
-                contentInfoList.add(contentInfo);
+
+        url="http://123.207.29.66:3009/api/travels?user_id="+String.valueOf(user.getuserid());
+        request = new Request.Builder().url(url).build();
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
             }
-            dateInfo.setContentInfoList(contentInfoList);//将这一天的所有心情设置成标题的一个成员
-            dataInfoList.add(dateInfo);//将一天一天的数据push进dataInfoList
-            // dataInfoList就是最后要的数据
-        }*/
+            String string=null;
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
+                        try {
+                            string = response.body().string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Gson gson = new Gson();
+                        Travel result = gson.fromJson(string,Travel.class);
+                        List<Travel.trip> travellist =  result.gettrips();
+
+                        for (int i = 0; i < travellist.size(); i++) {
+                            Travel.trip t = travellist.get(i);
+                            Map<String, String> temp = new LinkedHashMap<String, String>();
+                            temp.put("title", t.gettitle());
+                            temp.put("firstday", t.getFirst_day());
+                            temp.put("duration",  String.valueOf(t.getduration()));
+                            temp.put("location", t.getlocation());
+                            temp.put("name", t.getnickname());
+
+                            temp.put("like_num", String.valueOf(t.getfavoritecount()));
+                            temp.put("comment_num", String.valueOf(t.getComment_count()));
+
+                            temp.put("travel_id",String.valueOf(t.gettravelid()));
+                            temp.put("favorited",String.valueOf(t.getfavorited()));
+                            launchDatas.add(temp);
+                        }
+                        int rescode = response.code();
+                        if (rescode == 200) {
+                            // Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        // 草稿箱
         java.util.Map<String, String> temp1 = new LinkedHashMap<String, String>();
         temp1.put("title", "上海:梦中城");
         temp1.put("firstday", "2018-3-7");
@@ -165,7 +265,6 @@ public class IndividualActivity extends Fragment {
         temp1.put("comment_num", "99");
         trashDatas.add(temp1);
         trashDatas.add(temp1);
-        launchDatas.add(temp1);
-        launchDatas.add(temp1);
+
     }
 }
