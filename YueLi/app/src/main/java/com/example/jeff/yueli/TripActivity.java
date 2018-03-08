@@ -55,6 +55,7 @@ public class TripActivity extends Fragment {
        // String user= getActivity().getIntent().getStringExtra("user");
        // User yonghu=new Gson().fromJson(user,User.class);
 
+        mDatas.clear();
         initData();
 
         final RecyclerView myRecView = (RecyclerView)view.findViewById(R.id.my_recyclerview);
