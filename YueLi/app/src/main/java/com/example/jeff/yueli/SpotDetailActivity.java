@@ -14,6 +14,8 @@ import android.widget.TextView;
 import java.util.*;
 import java.util.Map;
 
+import okhttp3.OkHttpClient;
+
 /**
  * Created by jeff on 18-3-8.
  */
@@ -23,12 +25,16 @@ public class SpotDetailActivity extends AppCompatActivity {
             new ArrayList<java.util.Map<String, String>>();
     public List<java.util.Map<String, String>> shopDatas =
             new ArrayList<java.util.Map<String, String>>();
+    private spot currentSpot;
+    private MyApplication myApplication;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spot_detail);
         initDatas();
+        myApplication = (MyApplication)getApplication();
+        initViews();
         final RecyclerView spotRecView = (RecyclerView)findViewById(R.id.left_recyclerview);
         final JourneyItemAdapter myAdapter2 = new JourneyItemAdapter(this, spotDatas);
         spotRecView.setLayoutManager(new LinearLayoutManager(this));
@@ -41,6 +47,47 @@ public class SpotDetailActivity extends AppCompatActivity {
         myRecView.setAdapter(myAdapter);
 
     }
+
+    private void initViews() {
+        TextView spotName = (TextView)findViewById(R.id.spot_name);
+        TextView location = (TextView)findViewById(R.id.location);
+        TextView descr = (TextView)findViewById(R.id.description);
+        TextView leftTitle = (TextView)findViewById(R.id.left_title);
+        TextView rightTitle = (TextView)findViewById(R.id.right_title);
+        leftTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View leftLine = (View)findViewById(R.id.left_line);
+                View rightLine = (View) findViewById(R.id.right_line);
+                RecyclerView leftRecyc = (RecyclerView)findViewById(R.id.left_recyclerview);
+                RecyclerView rightRecyc = (RecyclerView)findViewById(R.id.right_recyclerview);
+                leftLine.setVisibility(View.VISIBLE);
+                rightLine.setVisibility(View.GONE);
+                leftRecyc.setVisibility(View.VISIBLE);
+                rightRecyc.setVisibility(View.GONE);
+            }
+        });
+        rightTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View leftLine = (View)findViewById(R.id.left_line);
+                View rightLine = (View) findViewById(R.id.right_line);
+                RecyclerView leftRecyc = (RecyclerView)findViewById(R.id.left_recyclerview);
+                RecyclerView rightRecyc = (RecyclerView)findViewById(R.id.right_recyclerview);
+                leftLine.setVisibility(View.GONE);
+                rightLine.setVisibility(View.VISIBLE);
+                leftRecyc.setVisibility(View.GONE);
+                rightRecyc.setVisibility(View.VISIBLE);
+            }
+        });
+        currentSpot = myApplication.getSpots().get(myApplication.getCurrentPos());
+        spotName.setText(currentSpot.getName());
+        location.setText(currentSpot.getCity());
+        descr.setText(currentSpot.getDescription());
+    }
+
+
+
     public void initDatas(){
         Map<String, String> temp1 = new LinkedHashMap<String, String>();
         temp1.put("title", "上海:梦中城");
@@ -121,5 +168,12 @@ public class SpotDetailActivity extends AppCompatActivity {
                 description = (TextView) view.findViewById(R.id.description);
             }
         }
+    }
+
+
+    // 判断经典是否被收藏
+    void getInfoAboutFavorite() {
+        OkHttpClient okHttpClient = myApplication.gethttpclient();
+        String url = "http://123.207.29.66:3009/api/spots/" + currentSpot.getID();
     }
 }

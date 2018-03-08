@@ -89,8 +89,8 @@ public class AddActivity extends Fragment {
                     File file = new File(imagePath);
                     RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
                     requestBody.addFormDataPart("photo", file.getName(), body);
-                    requestBody.addFormDataPart("longitude", (myApplication.getaMapLocation().getLongitude() + Math.random() / 100) + "")
-                            .addFormDataPart("latitude", (myApplication.getaMapLocation().getLatitude() + Math.random() / 100) + "")
+                    requestBody.addFormDataPart("longitude", (myApplication.getaMapLocation().getLongitude() + Math.random() / 500) + "")
+                            .addFormDataPart("latitude", (myApplication.getaMapLocation().getLatitude() + Math.random() / 500) + "")
                             .addFormDataPart("content", con.getText().toString());
                     Request request = new Request.Builder().url(url).post(requestBody.build()).build();
                     okHttpClient.newCall(request).enqueue(new Callback() {
@@ -107,7 +107,7 @@ public class AddActivity extends Fragment {
                                     String s = response.body().string();
                                     Gson gson = new Gson();
                                     Feelings f = gson.fromJson(s, Feelings.class);
-                                    Log.e("id", f.getFeeling_id()+"");
+                                    Log.e("id", f.getFeeling_id()+ " " + s);
                                     Intent intent = new Intent(getActivity(), MainActivity.class);
                                     startActivity(intent);
                                 }

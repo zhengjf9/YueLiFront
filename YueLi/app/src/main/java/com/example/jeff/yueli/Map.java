@@ -140,14 +140,14 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
     private void addMapPoint(int p) {
         Log.e("getInto", "addMapPoint" + p);
         Log.e("feelings' sizes", feelings.size() + "");
-        View circleImage = LayoutInflater.from(getActivity()).inflate(R.layout.circleimage, null);
-        CircleImageView circleImageView = circleImage.findViewById(R.id.circle);
-
-
-        Log.e("finish", "add image");
-        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromView(circleImage);
 
         try {
+            View circleImage = LayoutInflater.from(getActivity()).inflate(R.layout.circleimage, null);
+            CircleImageView circleImageView = circleImage.findViewById(R.id.circle);
+
+
+            Log.e("finish", "add image");
+            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromView(circleImage);
 
             for (int i = 0; i < feelings.size(); ++i) {
                 if (i == 0) {
@@ -219,7 +219,10 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         ImageView imageView = (ImageView)totalView.findViewById(R.id.markerImg);
         imageView.setImageBitmap(feelings.get(p).getImage());
         ImageView userImage = (ImageView)c.findViewById(R.id.user_image);
-        userImage.setImageBitmap(myApplication.getUser().getBitmap());
+        TextView username = (TextView)c.findViewById(R.id.user_name);
+        username.setText(feelings.get(p).getUser().getnickname());
+        TextView content = (TextView)c.findViewById(R.id.descriptionOfMark);
+        content.setText(feelings.get(p).getContent());
     }
 
     // 地图点击事件
@@ -246,9 +249,10 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
             if (aMapLocation != null) {
                 if (aMapLocation.getErrorCode() == 0) {
                     Log.e("位置：", aMapLocation.getLatitude() + " " + aMapLocation.getLongitude());
-                    getFeelings(aMapLocation);
-                    if (isUpdate) {
-                        try {
+                    try {
+
+                        getFeelings(aMapLocation);
+                        if (isUpdate) {
                             Observable<AMapLocation> observable = Observable.create(new Observable.OnSubscribe<AMapLocation>() {
                                 @Override
                                 public void call(Subscriber<? super AMapLocation> subscriber) {
@@ -259,10 +263,10 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                                         Log.e("update", "OK");
                                     }
                                     while (pos < size) {
-                                        Log.e("marker", markers.size() + "");
+                                        Log.e("marker", feelings.size() + "");
                                         pos = pos + 1;
 
-                                        size = feelings.size();
+
                                         addMapPoint(pos);
                                         Log.e("endadd", "infor");
                                         subscriber.onCompleted();
@@ -291,18 +295,17 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
 
                             Log.e("getInto", "success");
 
-
-                        } catch (Exception e) {
-                            Log.e("rxjava", "wrong", e);
                         }
-                    }
-                    if (lastLocation != null && !isDiffBigEnouph(aMapLocation)) {
+//                        if (lastLocation != null && !isDiffBigEnouph(aMapLocation)) {
+//
+//                        } else {
+//                        }
 
-                    } else {
+                        lastLocation = aMapLocation;
+                        myApplication.setaMapLocation(lastLocation);
+                    } catch (Exception e) {
+                        Log.e("getFeelings", "wrong", e);
                     }
-                    getFeelings(aMapLocation);
-                    lastLocation = aMapLocation;
-                    myApplication.setaMapLocation(lastLocation);
 
 
 
@@ -317,9 +320,13 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
     }
 
     private boolean addTheDifferentOne(List<Feelings> t) {
+        if (feelings == null) {
+            feelings = new ArrayList<>();
+        }
         int size = feelings.size();
         if (size == 0) {
             feelings = t;
+            Log.e("add feelings first", "success");
             return true;
         }
         boolean isSame;
@@ -333,9 +340,12 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
             }
             if (!isSame) {
                 feelings.add(t.get(i));
+                Log.e("add feelings", "success");
             }
             isSame = false;
         }
+        this.size = feelings.size();
+        Log.e("after adding feelings", "" + this.size);
         return !(size == feelings.size());
     }
 
@@ -346,7 +356,8 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
 
         OkHttpClient okHttpClient = myApplication.gethttpclient();
         String url = "http://123.207.29.66:3009/api/feelings?longitude=[" + (myLocation.getLongitude()-0.002) + "," + (myLocation.getLongitude()+0.002)
-                + "]&latitude=[" + (myLocation.getLatitude()-0.002) + "," + (myLocation.getLatitude()+0.002) + "]&user_id=" + myApplication.getUser().getuserid();
+                + "]&latitude=[" + (myLocation.getLatitude()-0.002) + "," + (myLocation.getLatitude()+0.002) + "]";
+        Log.e("url", url);
         Request request = new Request.Builder().url(url).build();
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -366,14 +377,14 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                     if(addTheDifferentOne(temp)) {
                         isUpdate = true;
                     }
-                    Log.e("update", "finish");
+                    Log.e("update info", s);
 
                 } catch (Exception e) {
                     Log.e("get mood", "wrong", e);
                 }
             }
         });
-        Log.e("start getSpots", "success");
+        Log.e("start getFeelings", "success");
         return feelings1;
     }
 }

@@ -94,28 +94,28 @@ public class LoginActivity extends AppCompatActivity {
                             public void run() {
                                 try {
                                     string = response.body().string();
+                                    Gson gson = new Gson();
+                                    Type logintype = new TypeToken<Result<signin>>(){}.getType();
+                                    Result<signin> loginresult = gson.fromJson(string, logintype);
+                                    signin denglu = loginresult.data;
+                                    // Toast.makeText(LoginActivity.this, String.valueOf(loginresult.data.getuserid()), Toast.LENGTH_SHORT).show();
+                                    int rescode = response.code();
+                                    if (rescode == 200) {
+                                        //Toast.makeText(LoginActivity.this, loginresult.msg, Toast.LENGTH_SHORT).show();
+                                        User u = new User();
+                                        u.setuserid(denglu.getuserid());
+                                        u.setnickname(denglu.getnickname());
+                                        MyApplication application = (MyApplication)getApplication();
+                                        application.setUser(u);
+
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                    } else {
+
+                                        Toast.makeText(LoginActivity.this, loginresult.msg, Toast.LENGTH_SHORT).show();
+                                    }
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                }
-                                Gson gson = new Gson();
-                                Type logintype = new TypeToken<Result<signin>>(){}.getType();
-                                Result<signin> loginresult = gson.fromJson(string, logintype);
-                                signin denglu = loginresult.data;
-                               // Toast.makeText(LoginActivity.this, String.valueOf(loginresult.data.getuserid()), Toast.LENGTH_SHORT).show();
-                                int rescode = response.code();
-                                if (rescode == 200) {
-                                    //Toast.makeText(LoginActivity.this, loginresult.msg, Toast.LENGTH_SHORT).show();
-                                    User u = new User();
-                                    u.setuserid(denglu.getuserid());
-                                    u.setnickname(denglu.getnickname());
-                                    MyApplication application = (MyApplication)getApplication();
-                                    application.setUser(u);
-
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                } else {
-
-                                    Toast.makeText(LoginActivity.this, loginresult.msg, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

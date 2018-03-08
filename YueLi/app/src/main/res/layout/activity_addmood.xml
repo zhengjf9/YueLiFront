@@ -97,11 +97,8 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         app:layout_constraintTop_toBottomOf="@+id/top"
-<<<<<<< HEAD
 
-=======
-        android:background="@null"
->>>>>>> d2b6a02ae27861770eea3d6684626e6807d3d53a
+
         android:hint="请输入您此刻的心情"
         android:gravity="top"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -14,6 +14,7 @@ public class spot {
     private String description;
     private Object location;
     private int rank;
+    private boolean favorited;
 
     public spot(int id, String n, String descri, String c, Object l, int r) {
         ID = id;
@@ -24,6 +25,14 @@ public class spot {
         rank = r;
     }
 
+    public void setFavorited(boolean favorited) {
+        this.favorited = favorited;
+    }
+
+    public boolean getFavorited() {
+        return favorited;
+    }
+    
     public void setImage(Bitmap image) {
         this.image = image;
     }

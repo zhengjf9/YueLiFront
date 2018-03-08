@@ -35,10 +35,30 @@ public class MyApplication extends Application {
             .addInterceptor(new HttpLoggingInterceptor()).build();
     private User user;
 
+    private List<spot> spots;
+
+    private int currentPos;
+
     private AMapLocation aMapLocation;
 
     public void setaMapLocation(AMapLocation aMapLocation) {
         this.aMapLocation = aMapLocation;
+    }
+
+    public void setCurrentPos(int currentPos) {
+        this.currentPos = currentPos;
+    }
+
+    public int getCurrentPos() {
+        return currentPos;
+    }
+
+    public void setSpots(List<spot> spots) {
+        this.spots = spots;
+    }
+
+    public List<spot> getSpots() {
+        return spots;
     }
 
     public AMapLocation getaMapLocation() {

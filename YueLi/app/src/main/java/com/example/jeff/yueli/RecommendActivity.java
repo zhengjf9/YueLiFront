@@ -30,6 +30,11 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by XDDN2 on 2018/3/2.
@@ -54,9 +59,11 @@ public class RecommendActivity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         totalView = inflater.inflate(R.layout.activity_recommend, container, false);
+
         which = 0;
         times = 0;
         myApplication = (MyApplication)getActivity().getApplication();
+        myApplication.setCurrentPos(which);
         getRecommandedSpot();
         initViews();
         return totalView;
@@ -66,7 +73,9 @@ public class RecommendActivity extends Fragment {
     private void initViews() {
         gestureDetector = new GestureDetector(getActivity(), new LearnGestureListener());
         first = totalView.findViewById(R.id.firstSpot);
+
         second = totalView.findViewById(R.id.secondSpot);
+
         firstDest = (TextView)first.findViewById(R.id.firstDestination);
         firstDesc = first.findViewById(R.id.firstDescription);
         secondDest = (TextView)second.findViewById(R.id.secondDestination);
@@ -82,15 +91,19 @@ public class RecommendActivity extends Fragment {
 
     //设置手势识别监听器
     public class LearnGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Log.e("getDownTime", e.getEventTime() + " " + e.getDownTime());
+
+            Intent intent = new Intent(getActivity(), SpotDetailActivity.class);
+            startActivity(intent);
+            return super.onSingleTapUp(e);
+        }
+
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (e1.getX() - e2.getX() > verticalMinistance && Math.abs(velocityX) > minVelocity) {
-
-            } else if (e2.getX() - e1.getX() > verticalMinistance && Math.abs(velocityX) > minVelocity) {
-
-            } else if (e1.getY() - e2.getY() > verticalMinistance && Math.abs(velocityY) > minVelocity) {
-
-            } else if (e2.getY() - e1.getY() > verticalMinistance && Math.abs(velocityY) > minVelocity) {
+            if (e2.getY() - e1.getY() > verticalMinistance && Math.abs(velocityY) > minVelocity) {
                 if (which == 0) {
                     first.setVisibility(View.GONE);
 
@@ -114,6 +127,7 @@ public class RecommendActivity extends Fragment {
                     first.setAnimation(AnimationUtil.moveToViewLocation());
                     which = 0;
                 }
+                myApplication.setCurrentPos(1-which);
                 times = times + 1;
             }
             if (times == 2) {
@@ -156,10 +170,40 @@ public class RecommendActivity extends Fragment {
                     Gson gson = new Gson();
                     Spots spotsInfo = gson.fromJson(string, Spots.class);
                     spots = spotsInfo.getData();
+                    myApplication.setSpots(spots);
                     int rescode = response.code();
                     if (rescode == 200) {
                         Log.e("first spot", spots.get(0).getName());
+                        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+                            @Override
+                            public void call(Subscriber<? super String> subscriber) {
 
+                                subscriber.onNext("");
+                                subscriber.onCompleted();
+                            }
+                        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+                        Observer<String> observer = new Observer<String>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(String s) {
+                                firstDest.setText(spots.get(1).getName());
+
+                                firstDesc.setText(spots.get(1).getDescription());
+                                local.setText(spots.get(1).getCity());
+                                second.setAnimation(AnimationUtil.moveToViewBottom());
+                                first.setAnimation(AnimationUtil.moveToViewLocation());
+                            }
+                        };
+                        observable.subscribe(observer);
                     } else {
 
                     }
