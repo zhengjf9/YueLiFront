@@ -67,33 +67,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String string=null;
                 @Override
                 public void onResponse(Call call, final Response response) throws IOException {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                string = response.body().string();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            Gson gson = new Gson();
-                            Type Usertype = new TypeToken<Result<User>>(){}.getType();
-                            Result<User> userresult = gson.fromJson(string, Usertype);
-                            User u = userresult.data;
-                            // Toast.makeText(LoginActivity.this, String.valueOf(loginresult.data.getuserid()), Toast.LENGTH_SHORT).show();
-                            int rescode = response.code();
-                            if (rescode == 200) {
 
-                                MyApplication application = (MyApplication)getApplication();
-                                User nu = new User(); nu.setuserid(application.getUser().getuserid());
-                                nu.setnickname(application.getUser().getnickname());
-                                nu.setSignature(u.getSignature());
-                                application.setUser(nu);
+                    try {
+                        string = response.body().string();
+                        Gson gson = new Gson();
+                        Type Usertype = new TypeToken<Result<User>>(){}.getType();
+                        Result<User> userresult = gson.fromJson(string, Usertype);
+                        User u = userresult.data;
+                        // Toast.makeText(LoginActivity.this, String.valueOf(loginresult.data.getuserid()), Toast.LENGTH_SHORT).show();
+                        int rescode = response.code();
+                        if (rescode == 200) {
 
-                            } else {
+                            MyApplication application = (MyApplication)getApplication();
+                            User nu = new User();
+                            nu.setuserid(application.getUser().getuserid());
+                            nu.setnickname(application.getUser().getnickname());
+                            nu.setSignature(u.getSignature());
+                            application.setUser(nu);
 
-                            }
+                        } else {
+
                         }
-                    });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
             });
 
@@ -202,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (pos) {
             case 2:
                 add.setImageResource(R.drawable.plus_cover);
+
                 break;
             case 4:
                 individual.setImageResource(R.drawable.male_user_96px_cover);

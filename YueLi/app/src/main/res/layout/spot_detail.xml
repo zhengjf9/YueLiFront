@@ -241,17 +241,17 @@
         android:layout_marginTop="3dp"
         app:layout_constraintLeft_toRightOf="@+id/mystar4"
         />
+
     <TextView
         android:id="@+id/left_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="相关游记"
-        app:layout_constraintTop_toBottomOf="@id/middle"
-        android:textSize="18dp"
-        android:textColor="@color/black"
         android:layout_marginLeft="60dp"
+        android:text="相关游记"
+        android:textColor="@color/black"
+        android:textSize="18dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@id/middle" />
     <TextView
         android:id="@+id/right_title"
         android:layout_width="wrap_content"
@@ -268,6 +268,7 @@
         android:layout_width="100dp"
         android:layout_height="3dp"
         android:background="@color/mood_blue"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/left_title"
         app:layout_constraintLeft_toLeftOf="@+id/left_title"
         app:layout_constraintRight_toRightOf="@+id/left_title"
