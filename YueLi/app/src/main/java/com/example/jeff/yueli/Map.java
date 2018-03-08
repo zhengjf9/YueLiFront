@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -115,9 +116,12 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         return totalView;
     }
 
+
+
     // 初始化地图以及获取定位信息
     private void initMap(View view, Bundle savedInstanceState) {
         mapView = (MapView) view.findViewById(R.id.map);
+
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         aMap = mapView.getMap();
         aMap.setOnMarkerClickListener(this);
@@ -219,6 +223,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
     }
 
     void changeInfo(int p) {
+        final int fpos = p;
         ConstraintLayout c = (ConstraintLayout)totalView.findViewById(R.id.info);
         c.setVisibility(View.VISIBLE);
         ImageView imageView = (ImageView)totalView.findViewById(R.id.markerImg);
@@ -228,6 +233,14 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         username.setText(feelings.get(p).getNickname());
         TextView content = (TextView)c.findViewById(R.id.descriptionOfMark);
         content.setText(feelings.get(p).getContent());
+        c.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MapMoodActivity.class);
+                myApplication.setCurrentFeelings(feelings.get(fpos));
+                startActivity(intent);
+            }
+        });
     }
 
     // 地图点击事件
@@ -243,9 +256,6 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         return true;
     }
 
-    boolean isDiffBigEnouph(AMapLocation aMapLocation) {
-        return Math.abs(aMapLocation.getLatitude()-lastLocation.getLatitude()) >= 0.005 || Math.abs(aMapLocation.getLongitude()-lastLocation.getLongitude()) >= 0.005;
-    }
 
     private class MyAMapLocationListener implements AMapLocationListener {
 
@@ -379,6 +389,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                         return;
                     }
                     Log.e("update_infos", s + " " + temp.size());
+                    Log.e("times", temp.get(0).getTime() + "");
                     if(addTheDifferentOne(temp)) {
                         isUpdate = true;
                     }
