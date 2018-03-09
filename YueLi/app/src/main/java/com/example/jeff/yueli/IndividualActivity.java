@@ -15,9 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -25,6 +27,7 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -75,7 +78,7 @@ public class IndividualActivity extends Fragment {
         TextView sig = view.findViewById(R.id.signaure);
         sig.setText(user.getSignature());
         name.setText(user.getnickname());
-        initDatas(moodnum,fans,tnum);
+
 
         trash.setVisibility(View.INVISIBLE);
         launch.setVisibility(View.INVISIBLE);
@@ -87,6 +90,7 @@ public class IndividualActivity extends Fragment {
 
         final RecyclerView launchRecView = (RecyclerView)view.findViewById(R.id.launch_recyclerview);
         final JourneyItemAdapter launchAdapter = new JourneyItemAdapter(getContext(), launchDatas);
+        initDatas(moodnum,fans,tnum,launchAdapter,trashAdapter,myAdapter);
         launchAdapter.setOnItemClickLitener(new OnItemClickLitener()
         {
 
@@ -172,7 +176,8 @@ public class IndividualActivity extends Fragment {
 
         return view;
     }
-    public void initDatas(final TextView m, final TextView f, final TextView t){
+    public void initDatas(final TextView m, final TextView f, final TextView t,
+    final JourneyItemAdapter a, final JourneyItemAdapter b,final DateInfoAdapter c) {
         MyApplication application = (MyApplication) getActivity().getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
@@ -232,13 +237,14 @@ public class IndividualActivity extends Fragment {
 
                                                         dateInfo.setContentInfoList(contentInfoList);//将这一天的所有游记设置成标题的一个成员
                                                         dataInfoList.add(dateInfo);
+
                                                         ;//将一天一天的数据push进dataInfoList
                                                         // dataInfoList就是最后要的数据
                                                     }
                                                     getActivity().runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
-
+                                                            c.notifyDataSetChanged();
                                                             int rescode = response.code();
                                                             if (rescode == 200) {
 
@@ -285,11 +291,13 @@ public class IndividualActivity extends Fragment {
                     temp.put("travel_id",String.valueOf(t.gettravelid()));
                     temp.put("favorited",String.valueOf(t.getfavorited()));
                     launchDatas.add(temp);
+
                 }
                 final int rescode = response.code();
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        a.notifyDataSetChanged();
                         //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
                         if (rescode == 200) {
                             tripnum = travellist.size();
@@ -342,6 +350,7 @@ public class IndividualActivity extends Fragment {
         temp1.put("comment_num", "99");
         trashDatas.add(temp1);
         trashDatas.add(temp1);
+        b.notifyDataSetChanged();
 
     }
     public void showDialog(){
@@ -350,15 +359,47 @@ public class IndividualActivity extends Fragment {
                 .inflate(R.layout.logout,null);
         TextView logout= (TextView) dialogView.findViewById(R.id.logout);
         TextView cancel= (TextView) dialogView.findViewById(R.id.cancel);
-
+        dialog.setContentView(dialogView);
+        dialog.show();
         logout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
         {
-            Intent intent = new Intent(getContext(), LoginActivity.class);
-            startActivity(intent);
-            dialog.dismiss();
+
+            String url="http://123.207.29.66:3009/api/users/logout";
+
+            MyApplication application = (MyApplication)getActivity().getApplication();
+            OkHttpClient httpClient = application.gethttpclient();
+            FormBody formBody = new FormBody
+                    .Builder()
+                    .build();
+            Request request = new Request.Builder().post(formBody).url(url).build();
+            httpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                }
+                String string=null;
+                @Override
+                public void onResponse(Call call, final Response response) throws IOException {
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
+                            if (response.code() == 200) {
+                                Toast.makeText(getActivity(), "退出成功", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getContext(), LoginActivity.class);
+                                startActivity(intent);
+                                dialog.dismiss();
+                            } else {}
+                        }
+                    });
+
+                }
+            });
+
+
         }
         });
         cancel.setOnClickListener(new View.OnClickListener()
@@ -369,7 +410,6 @@ public class IndividualActivity extends Fragment {
         }
         }
         );
-        dialog.setContentView(dialogView);
-        dialog.show();
+
     }
 }

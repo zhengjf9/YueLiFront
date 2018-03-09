@@ -116,8 +116,8 @@ public class SpotCommentActivity extends AppCompatActivity{
         final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
         final CommentItemAdapter myAdapter = new CommentItemAdapter(this, mDatas);
 
-        initData();
-        myAdapter.notifyDataSetChanged();
+        initData(myAdapter);
+
 
         myRecView.setLayoutManager(new LinearLayoutManager(this));
         myRecView.setAdapter(myAdapter);
@@ -125,7 +125,7 @@ public class SpotCommentActivity extends AppCompatActivity{
 
     }
 
-    public void initData() {
+    public void initData(final CommentItemAdapter adapter) {
         mDatas.clear();
         MyApplication application = (MyApplication)getApplication();
         OkHttpClient httpClient = application.gethttpclient();
@@ -139,38 +139,40 @@ public class SpotCommentActivity extends AppCompatActivity{
             String string=null;
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
+                try {
+                    string = response.body().string();
+                    Gson gson = new Gson();
+
+                    Comment result = gson.fromJson(string,Comment.class);
+                    //record result = gson.fromJson(string,record.class);
+                    List<Comment.review> reviewlist =  result.getreviews();
+
+                    for (int i = 0; i < reviewlist.size(); i++) {
+                        Comment.review t = reviewlist.get(i);
+                        Map<String, String> temp = new LinkedHashMap<String, String>();
+                        temp.put("user_id",String.valueOf(t.getuserid()));
+                        temp.put("name", t.getnickname());
+                        temp.put("date",t.gettime());
+                        temp.put("content",t.getcontent());
+                        mDatas.add(temp);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
-                        try {
-                            string = response.body().string();
-                            Gson gson = new Gson();
+                        adapter.notifyDataSetChanged();
 
-                            Comment result = gson.fromJson(string,Comment.class);
-                            //record result = gson.fromJson(string,record.class);
-                            List<Comment.review> reviewlist =  result.getreviews();
-
-                            for (int i = 0; i < reviewlist.size(); i++) {
-                                Comment.review t = reviewlist.get(i);
-                                Map<String, String> temp = new LinkedHashMap<String, String>();
-                                temp.put("user_id",String.valueOf(t.getuserid()));
-                                temp.put("name", t.getnickname());
-                                temp.put("date",t.gettime());
-                                temp.put("content",t.getcontent());
-                                mDatas.add(temp);
-                            }
-
-                            int rescode = response.code();
-
+                        int rescode = response.code();
                             if (rescode == 200) {
-                                 Toast.makeText(getApplicationContext(),String.valueOf(reviewlist.size())   , Toast.LENGTH_SHORT).show();
+                                 Toast.makeText(getApplicationContext(),"获取评论成功"   , Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(getApplicationContext(), "fail" , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "获取评论失败" , Toast.LENGTH_SHORT).show();
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+
 
 
                     }

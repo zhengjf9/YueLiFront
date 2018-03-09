@@ -50,11 +50,11 @@ public class JourneyDetailActivity extends AppCompatActivity
         final String t = (String) getIntent().getSerializableExtra("travel_id");
         final Boolean favor = (Boolean) getIntent().getSerializableExtra("favorited");
 
-        initData(t);
+
 
         final RecyclerView myRecView = (RecyclerView) findViewById(R.id.outer_recyclerview);
         final ParentInfoAdapter myAdapter = new ParentInfoAdapter(this, dataInfoList);
-        myAdapter.notifyDataSetChanged();
+        initData(t,myAdapter);
         myRecView.setLayoutManager(new LinearLayoutManager(this));
         myRecView.setAdapter(myAdapter);
 
@@ -177,7 +177,7 @@ public class JourneyDetailActivity extends AppCompatActivity
         });
     }
 
-    public void initData(String t) {
+    public void initData(String t,final ParentInfoAdapter a) {
 
         MyApplication application = (MyApplication) getApplication();
 
@@ -196,58 +196,61 @@ public class JourneyDetailActivity extends AppCompatActivity
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
+                try {
+                    string = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Gson gson = new Gson();
+                record result = gson.fromJson(string, record.class);
+                List<record.Rec> travellist = result.gettrips();
+
+                for (int i = 0; i < travellist.size(); ) {
+                    record.Rec t = travellist.get(i);
+                    ParentInfo parentInfo = new ParentInfo();//指的是某一天的标题，包括第几天，日期，星期。
+                    int day_num = t.getday();
+                    parentInfo.setDay_num("Day" + String.valueOf(day_num));
+                    parentInfo.setDate(t.gettime());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Calendar calendar = Calendar.getInstance();
+                    try {
+                        Date date = sdf.parse(travellist.get(i).gettime().substring(0, 10));
+                        calendar.setTime(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    String[] dayofweek = new String[]{"周日", "周一", "周二", "周三", "周四",
+                            "周五", "周六"};
+                    String wd = dayofweek[calendar.get(Calendar.DAY_OF_WEEK) - 1];
+                    parentInfo.setWeek(wd);
+                    List<ChildInfo> childInfoList = new ArrayList<>();//指的是这一天所有的游记
+                    while (t.getday() == day_num) {
+                        ChildInfo childInfo = new ChildInfo();
+                        childInfo.setWord(t.getcontent());//childInfo指一条游记
+                        childInfo.setLocation(t.getspotname());
+                        childInfoList.add(childInfo);
+                        i++;
+                        if (i < travellist.size()) {
+                            t = travellist.get(i);
+                        } else break;
+                    }
+                    parentInfo.setItemList(childInfoList);//将这一天的所有游记设置成标题的一个成员
+                    dataInfoList.add(parentInfo);//将一天一天的数据push进dataInfoList
+                    // dataInfoList就是最后要的数据
+
+                }
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
-                        try {
-                            string = response.body().string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        Gson gson = new Gson();
-                        record result = gson.fromJson(string, record.class);
-                        List<record.Rec> travellist = result.gettrips();
-
-                        for (int i = 0; i < travellist.size(); ) {
-                            record.Rec t = travellist.get(i);
-                            ParentInfo parentInfo = new ParentInfo();//指的是某一天的标题，包括第几天，日期，星期。
-                            int day_num = t.getday();
-                            parentInfo.setDay_num("Day" + String.valueOf(day_num));
-                            parentInfo.setDate(t.gettime());
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            Calendar calendar = Calendar.getInstance();
-                            try {
-                                Date date = sdf.parse(travellist.get(i).gettime().substring(0, 10));
-                                calendar.setTime(date);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            String[] dayofweek = new String[]{"周日", "周一", "周二", "周三", "周四",
-                                    "周五", "周六"};
-                            String wd = dayofweek[calendar.get(Calendar.DAY_OF_WEEK) - 1];
-                            parentInfo.setWeek(wd);
-                            List<ChildInfo> childInfoList = new ArrayList<>();//指的是这一天所有的游记
-                            while (t.getday() == day_num) {
-                                ChildInfo childInfo = new ChildInfo();
-                                childInfo.setWord(t.getcontent());//childInfo指一条游记
-                                childInfo.setLocation(t.getspotname());
-                                childInfoList.add(childInfo);
-                                i++;
-                                if (i < travellist.size()) {
-                                    t = travellist.get(i);
-                                } else break;
-                            }
-                            parentInfo.setItemList(childInfoList);//将这一天的所有游记设置成标题的一个成员
-                            dataInfoList.add(parentInfo);//将一天一天的数据push进dataInfoList
-                            // dataInfoList就是最后要的数据
-                        }
+                        a.notifyDataSetChanged();
 
                         int rescode = response.code();
                         if (rescode == 200) {
-                            Toast.makeText(getApplicationContext(), result.getmsg(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "获取游记详情成功", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), result.getmsg(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "获取游记详情失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
