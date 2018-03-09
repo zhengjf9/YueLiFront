@@ -10,11 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:background="@color/mood_blue" />
-    <ImageView
+    <Button
         android:id="@+id/back"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/left_back"
+        android:background="@drawable/left_back"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="15dp"
@@ -153,20 +153,20 @@
        android:textColor="@color/gray"
         android:layout_marginRight="10dp"
         />
-    <ImageView
+    <Button
         android:id="@+id/comment_icon"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:src="@drawable/comment_gray_48px"
+        android:background="@drawable/comment_gray_48px"
         app:layout_constraintTop_toBottomOf="@+id/description"
         app:layout_constraintRight_toLeftOf="@+id/comment_num"
         android:layout_marginRight="5dp"
         />
-    <ImageView
+    <Button
         android:id="@+id/like"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:src="@drawable/heart_gray_48px"
+        android:background="@drawable/heart_gray_48px"
         app:layout_constraintBottom_toBottomOf="@+id/comment_icon"
         app:layout_constraintRight_toLeftOf="@+id/comment_icon"
         android:layout_marginRight="25dp"

@@ -37,9 +37,11 @@ public class InfoActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.individual_info);
-        initDatas();
+
         final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
         final HomeAdapter myAdapter = new HomeAdapter();
+        initDatas(myAdapter);
+        myAdapter.notifyDataSetChanged();
         myRecView.setLayoutManager(new LinearLayoutManager(this));
         myRecView.setAdapter(myAdapter);
         Button back = findViewById(R.id.back);
@@ -54,7 +56,7 @@ public class InfoActivity extends AppCompatActivity {
             }
         });
     }
-    public void initDatas(){
+    public void initDatas(final HomeAdapter a){
         MyApplication application = (MyApplication) getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
@@ -117,6 +119,7 @@ public class InfoActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        a.notifyDataSetChanged();
                         int rescode = response.code();
                         if (rescode == 200) {
                             Toast.makeText(getApplicationContext(),String.valueOf(result.getdata().size())  , Toast.LENGTH_SHORT).show();

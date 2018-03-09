@@ -1,5 +1,6 @@
 package com.example.jeff.yueli;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,13 +9,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,6 +26,7 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -37,24 +42,179 @@ public class SpotDetailActivity extends AppCompatActivity {
             new ArrayList<java.util.Map<String, String>>();
     private spot currentSpot;
     private MyApplication myApplication;
+    private int pinglunshu;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spot_detail);
-        initDatas();
+
         myApplication = (MyApplication)getApplication();
         initViews();
         final RecyclerView spotRecView = (RecyclerView)findViewById(R.id.left_recyclerview);
         final JourneyItemAdapter myAdapter2 = new JourneyItemAdapter(this, spotDatas);
+
         spotRecView.setLayoutManager(new LinearLayoutManager(this));
         spotRecView.setAdapter(myAdapter2);
         spotRecView.setVisibility(View.INVISIBLE);
 
         final RecyclerView myRecView = (RecyclerView) findViewById(R.id.right_recyclerview);
         final HomeAdapter myAdapter = new HomeAdapter();
+        initDatas(myAdapter,myAdapter2);
+
+
+
         myRecView.setLayoutManager(new LinearLayoutManager(this));
         myRecView.setAdapter(myAdapter);
+        Button comment = findViewById(R.id.comment_icon);
+        Button back = findViewById(R.id.back);
+        final Button like = findViewById(R.id.like);
+        final TextView cnum = findViewById(R.id.comment_num);
+        MyApplication application = (MyApplication) getApplication();
+        OkHttpClient httpClient = application.gethttpclient();
+        final User user = application.getUser();
+        final int spotid = application.getSpots().get(application.getCurrentPos()).getID();
+
+
+     //   cnum.setText(String.valueOf(myApplication.getSpots().get(myApplication.getCurrentPos()).getComment_count()));
+        boolean favor = myApplication.getSpots().get(myApplication.getCurrentPos()).getFavorited();
+        if (favor) {
+            like.setBackgroundResource(R.drawable.heart_48px_red);
+        } else {
+            like.setBackgroundResource(R.drawable.heart_gray_48px);
+        }
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.setClass(SpotDetailActivity.this, MainActivity.class);
+                //一定要指定是第几个pager，因为要跳到ThreeFragment，这里填写2
+                i.putExtra("id", 0);
+                startActivity(i);
+            }
+        });
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.setClass(SpotDetailActivity.this, SpotCommentActivity.class);
+                //一定要指定是第几个pager，因为要跳到ThreeFragment，这里填写2
+                i.putExtra("spot_id", spotid);
+                startActivity(i);
+            }
+        });
+
+        like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OkHttpClient httpClient = myApplication.gethttpclient();
+                String url = "http://123.207.29.66:3009/api/spots/"+String.valueOf(spotid)+"/favorite";
+                boolean favor = myApplication.getSpots().get(myApplication.getCurrentPos()).getFavorited();
+                if (!favor) {
+                    FormBody formBody = new FormBody
+                            .Builder()
+                            .add("spot_id",String.valueOf(spotid))
+                            .build();
+                    Request request = new Request.Builder().post(formBody).url(url).build();
+                    httpClient.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                        }
+                        String string = null;
+                        @Override
+                        public void onResponse(Call call, final Response response) throws IOException {
+                            try {
+                                string = response.body().string();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            final int rescode = response.code();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (rescode == 200) {
+                                        Toast.makeText(getApplicationContext(), "成功收藏", Toast.LENGTH_SHORT).show();
+                                        myApplication.getSpots().get(myApplication.getCurrentPos()).setFavorited(true);
+                                        like.setBackgroundResource(R.drawable.heart_48px_red);
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "收藏失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .delete()
+                            .build();
+                    httpClient.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                        }
+                        String string = null;
+
+                        @Override
+                        public void onResponse(Call call, final Response response) throws IOException {
+                            //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
+                            try {
+                                string = response.body().string();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            final int rescode = response.code();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (rescode == 200) {
+                                        Toast.makeText(getApplicationContext(), "取消收藏", Toast.LENGTH_SHORT).show();
+                                        myApplication.getSpots().get(myApplication.getCurrentPos()).setFavorited(false);
+                                        like.setBackgroundResource(R.drawable.heart_gray_48px);
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "取消失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+        String url = "http://123.207.29.66:3009/api/spots/"+String.valueOf(spotid);
+
+        Request request = new Request.Builder().url(url).build();
+            httpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {}
+                String string = null;
+                @Override
+                public void onResponse(Call call, final Response response) throws IOException {
+                    try {
+                        string = response.body().string();
+                        Gson gson = new Gson();
+                        Type logintype = new TypeToken<Result<spot>>(){}.getType();
+                        Result<spot> loginresult = gson.fromJson(string, logintype);
+                        spot denglu = loginresult.data;
+                        pinglunshu = denglu.getComment_count();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    final int rescode = response.code();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (rescode == 200) {
+
+                                cnum.setText(String.valueOf(pinglunshu));
+                            } else {
+                                Toast.makeText(getApplicationContext(), "获取评论数失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            });
+
 
     }
 
@@ -99,7 +259,7 @@ public class SpotDetailActivity extends AppCompatActivity {
 
 
 
-    public void initDatas(){
+    public void initDatas(final HomeAdapter a1, final JourneyItemAdapter a2){
         MyApplication application = (MyApplication) getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();

@@ -15,8 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+<<<<<<< HEAD
+=======
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+>>>>>>> master
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -24,6 +30,7 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -47,16 +54,15 @@ public class IndividualActivity extends Fragment {
 
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_individual, container, false);
-
         MyApplication application = (MyApplication) getActivity().getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
         final CustomRecyclerView myRecView = (CustomRecyclerView) view.findViewById(R.id.outer_recyclerview);
         final DateInfoAdapter myAdapter = new DateInfoAdapter(getContext(),dataInfoList);
+        myAdapter.notifyDataSetChanged();
         myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         myRecView.setAdapter(myAdapter);
        // myRecView.setVisibility(View.INVISIBLE);//心情页面暂时设置不可见
@@ -74,7 +80,7 @@ public class IndividualActivity extends Fragment {
         TextView sig = view.findViewById(R.id.signaure);
         sig.setText(user.getSignature());
         name.setText(user.getnickname());
-        initDatas(moodnum,fans,tnum);
+
 
         trash.setVisibility(View.INVISIBLE);
         launch.setVisibility(View.INVISIBLE);
@@ -88,6 +94,25 @@ public class IndividualActivity extends Fragment {
         trashRecView.setVisibility(View.INVISIBLE);
         final CustomRecyclerView launchRecView = (CustomRecyclerView)view.findViewById(R.id.launch_recyclerview);
         final JourneyItemAdapter launchAdapter = new JourneyItemAdapter(getContext(), launchDatas);
+        initDatas(moodnum,fans,tnum,launchAdapter,trashAdapter,myAdapter);
+        launchAdapter.setOnItemClickLitener(new OnItemClickLitener()
+        {
+
+            @Override
+            public void onItemClick(View view, int position)
+            {
+                Intent intent = new Intent(getActivity(), JourneyDetailActivity.class);
+                intent.putExtra("travel_id",launchDatas.get(position).get("travel_id"));
+                intent.putExtra("favorited",Boolean.valueOf(launchDatas.get(position).get("favorited")));
+                startActivity(intent);
+            }
+            @Override
+            public void onItemLongClick(View view, int position)
+            {
+                //Todo
+                //myAdapter.removeData(position);
+            }
+        });
         launchRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         launchRecView.setAdapter(launchAdapter);
         launchRecView.setVisibility(View.INVISIBLE);
@@ -156,7 +181,8 @@ public class IndividualActivity extends Fragment {
 
         return view;
     }
-    public void initDatas(final TextView m, final TextView f, final TextView t){
+    public void initDatas(final TextView m, final TextView f, final TextView t,
+    final JourneyItemAdapter a, final JourneyItemAdapter b,final DateInfoAdapter c) {
         MyApplication application = (MyApplication) getActivity().getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
@@ -216,13 +242,14 @@ public class IndividualActivity extends Fragment {
 
                                                         dateInfo.setContentInfoList(contentInfoList);//将这一天的所有游记设置成标题的一个成员
                                                         dataInfoList.add(dateInfo);
+
                                                         ;//将一天一天的数据push进dataInfoList
                                                         // dataInfoList就是最后要的数据
                                                     }
                                                     getActivity().runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
-
+                                                            c.notifyDataSetChanged();
                                                             int rescode = response.code();
                                                             if (rescode == 200) {
 
@@ -244,36 +271,39 @@ public class IndividualActivity extends Fragment {
             String string=null;
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
+                try {
+                    string = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Gson gson = new Gson();
+                Travel result = gson.fromJson(string,Travel.class);
+                final List<Travel.trip> travellist =  result.gettrips();
+
+                for (int i = 0; i < travellist.size(); i++) {
+                    Travel.trip t = travellist.get(i);
+                    Map<String, String> temp = new LinkedHashMap<String, String>();
+                    temp.put("user_id", String.valueOf(t.getuserid()));
+                    temp.put("title", t.gettitle());
+                    temp.put("firstday", t.getFirst_day());
+                    temp.put("duration",  String.valueOf(t.getduration()));
+                    temp.put("location", t.getlocation());
+                    temp.put("name", t.getnickname());
+
+                    temp.put("like_num", String.valueOf(t.getfavoritecount()));
+                    temp.put("comment_num", String.valueOf(t.getComment_count()));
+
+                    temp.put("travel_id",String.valueOf(t.gettravelid()));
+                    temp.put("favorited",String.valueOf(t.getfavorited()));
+                    launchDatas.add(temp);
+
+                }
+                final int rescode = response.code();
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        a.notifyDataSetChanged();
                         //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
-                        try {
-                            string = response.body().string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        Gson gson = new Gson();
-                        Travel result = gson.fromJson(string,Travel.class);
-                        List<Travel.trip> travellist =  result.gettrips();
-
-                        for (int i = 0; i < travellist.size(); i++) {
-                            Travel.trip t = travellist.get(i);
-                            Map<String, String> temp = new LinkedHashMap<String, String>();
-                            temp.put("title", t.gettitle());
-                            temp.put("firstday", t.getFirst_day());
-                            temp.put("duration",  String.valueOf(t.getduration()));
-                            temp.put("location", t.getlocation());
-                            temp.put("name", t.getnickname());
-
-                            temp.put("like_num", String.valueOf(t.getfavoritecount()));
-                            temp.put("comment_num", String.valueOf(t.getComment_count()));
-
-                            temp.put("travel_id",String.valueOf(t.gettravelid()));
-                            temp.put("favorited",String.valueOf(t.getfavorited()));
-                            launchDatas.add(temp);
-                        }
-                        int rescode = response.code();
                         if (rescode == 200) {
                             tripnum = travellist.size();
                             t.setText(String.valueOf(tripnum));
@@ -325,6 +355,7 @@ public class IndividualActivity extends Fragment {
         temp1.put("comment_num", "99");
         trashDatas.add(temp1);
         trashDatas.add(temp1);
+        b.notifyDataSetChanged();
 
     }
     public void showDialog(){
@@ -333,15 +364,47 @@ public class IndividualActivity extends Fragment {
                 .inflate(R.layout.logout,null);
         TextView logout= (TextView) dialogView.findViewById(R.id.logout);
         TextView cancel= (TextView) dialogView.findViewById(R.id.cancel);
-
+        dialog.setContentView(dialogView);
+        dialog.show();
         logout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
         {
-            Intent intent = new Intent(getContext(), LoginActivity.class);
-            startActivity(intent);
-            dialog.dismiss();
+
+            String url="http://123.207.29.66:3009/api/users/logout";
+
+            MyApplication application = (MyApplication)getActivity().getApplication();
+            OkHttpClient httpClient = application.gethttpclient();
+            FormBody formBody = new FormBody
+                    .Builder()
+                    .build();
+            Request request = new Request.Builder().post(formBody).url(url).build();
+            httpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                }
+                String string=null;
+                @Override
+                public void onResponse(Call call, final Response response) throws IOException {
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
+                            if (response.code() == 200) {
+                                Toast.makeText(getActivity(), "退出成功", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getContext(), LoginActivity.class);
+                                startActivity(intent);
+                                dialog.dismiss();
+                            } else {}
+                        }
+                    });
+
+                }
+            });
+
+
         }
         });
         cancel.setOnClickListener(new View.OnClickListener()
@@ -352,7 +415,6 @@ public class IndividualActivity extends Fragment {
         }
         }
         );
-        dialog.setContentView(dialogView);
-        dialog.show();
+
     }
 }

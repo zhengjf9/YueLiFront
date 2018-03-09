@@ -53,7 +53,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
         try {
             final String t = (String) getIntent().getSerializableExtra("travel_id");
 
-            initData(t);
+
             Button back = findViewById(R.id.back);
             back.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -130,8 +130,26 @@ public class JourneyCommentActivity extends AppCompatActivity {
                 }
             });
 
+
             final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
             final CommentItemAdapter myAdapter = new CommentItemAdapter(this, mDatas);
+            initData(t,myAdapter);
+            myAdapter.notifyDataSetChanged();
+            myAdapter.setOnItemClickLitener(new OnItemClickLitener()
+            {
+
+                @Override
+                public void onItemClick(View view, int position)
+                {
+
+                }
+                @Override
+                public void onItemLongClick(View view, int position)
+                {
+                    //Todo
+                    //myAdapter.removeData(position);
+                }
+            });
             myRecView.setLayoutManager(new LinearLayoutManager(this));
             myRecView.setAdapter(myAdapter);
         } catch (Exception e) {
@@ -140,7 +158,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
 
     }
 
-    public void initData(String t) {
+    public void initData(String t,final CommentItemAdapter a) {
         mDatas.clear();
         MyApplication application = (MyApplication)getApplication();
         OkHttpClient httpClient = application.gethttpclient();
@@ -156,52 +174,42 @@ public class JourneyCommentActivity extends AppCompatActivity {
             String string=null;
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
-                runOnUiThread(new Runnable() {
+                try {
+                    string = response.body().string();
+                    Gson gson = new Gson();
+
+                    Comment result = gson.fromJson(string,Comment.class);
+                    //record result = gson.fromJson(string,record.class);
+                    List<Comment.review> reviewlist =  result.getreviews();
+
+                    for (int i = 0; i < reviewlist.size(); i++) {
+                        Comment.review t = reviewlist.get(i);
+                        Map<String, String> temp = new LinkedHashMap<String, String>();
+
+                        temp.put("name", t.getnickname());
+                        temp.put("date",t.gettime());
+                        temp.put("user_id",String.valueOf(t.getuserid()));
+                        temp.put("content",t.getcontent());
+                        mDatas.add(temp);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                    runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        a.notifyDataSetChanged();
                         //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
-                        try {
-                            string = response.body().string();
-                            Gson gson = new Gson();
-                            Comment result = gson.fromJson(string,Comment.class);
-                            //record result = gson.fromJson(string,record.class);
-                            List<Comment.review> reviewlist =  result.getreviews();
-
-                            for (int i = 0; i < reviewlist.size(); i++) {
-                                Comment.review t = reviewlist.get(i);
-                                Map<String, String> temp = new LinkedHashMap<String, String>();
-
-                                temp.put("name", t.getnickname());
-                                temp.put("date",t.gettime());
-                            /*
-                            SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
-                            Calendar calendar = Calendar.getInstance();
-                            try {
-                                Date date = sdf.parse(travellist.get(0).gettime().substring(0,10));
-                                calendar.setTime(date);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            String[] dayofweek = new String[] { "周日", "周一", "周二", "周三", "周四",
-                                    "周五", "周六" };
-                            String wd=dayofweek[calendar.get(Calendar.DAY_OF_WEEK)-1];
-                            temp.put("week", wd);*/
-                                temp.put("content",t.getcontent());
-                                mDatas.add(temp);
-
-
-                            }
 
                             int rescode = response.code();
 
                             if (rescode == 200) {
                                // Toast.makeText(getApplicationContext(),String.valueOf(reviewlist.size())   , Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(getApplicationContext(), "fail" , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "journey comment fail" , Toast.LENGTH_SHORT).show();
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
 
 
                     }

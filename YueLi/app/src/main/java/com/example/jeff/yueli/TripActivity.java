@@ -51,15 +51,13 @@ public class TripActivity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_trip, container,false);
-
-       // String user= getActivity().getIntent().getStringExtra("user");
-       // User yonghu=new Gson().fromJson(user,User.class);
-
         mDatas.clear();
-        initData();
+
 
         final RecyclerView myRecView = (RecyclerView)view.findViewById(R.id.my_recyclerview);
         final JourneyItemAdapter myAdapter = new JourneyItemAdapter(getContext(), mDatas);
+        initData(myAdapter);
+        myAdapter.notifyDataSetChanged();
         myRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
         myRecView.setAdapter(myAdapter);
         Button edit = view.findViewById(R.id.plus_icon);
@@ -90,7 +88,7 @@ public class TripActivity extends Fragment {
         });
         return view;
     }
-    public void initData(){
+    public void initData(final JourneyItemAdapter adapter){
         //获取网络数据
         MyApplication application = (MyApplication)getActivity().getApplication();
         OkHttpClient httpClient = application.gethttpclient();
@@ -131,13 +129,16 @@ public class TripActivity extends Fragment {
                     temp.put("travel_id",String.valueOf(t.gettravelid()));
                     temp.put("favorited",String.valueOf(t.getfavorited()));
                     mDatas.add(temp);
+
                 }
+
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                       //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
                         int rescode = response.code();
                         if (rescode == 200) {
+                            adapter.notifyDataSetChanged();
                            // Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getActivity().getApplicationContext(), "try", Toast.LENGTH_SHORT).show();

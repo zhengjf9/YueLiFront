@@ -9,10 +9,11 @@ import java.io.Serializable;
  */
 
 public class User implements Serializable {
-    private int id;
+    private int user_id;
     private Bitmap bitmap;
     private String nickname;
     private String signature;
+    private boolean followed;
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
@@ -29,8 +30,9 @@ public class User implements Serializable {
         return signature;
     }
     public int getuserid() {
-        return id;
+        return user_id;
     }
+    public boolean getfollowd() {return followed;}
     public void setnickname(String name) {
         this.nickname = name;
     }
@@ -38,6 +40,7 @@ public class User implements Serializable {
         this.signature = name;
     }
     public void setuserid(int id) {
-        this.id = id;
+        this.user_id = id;
     }
+    public void setFollowed(boolean b) {followed=b;}
 }
