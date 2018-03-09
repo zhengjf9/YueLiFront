@@ -119,16 +119,7 @@
         android:textSize="60px"
         android:layout_marginLeft="5dp"
         />
-    <ImageView
-        android:id="@+id/search_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/search_96px"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="15dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="15dp"
-        />
+
     <View
         android:id="@+id/bottom"
         android:layout_width="match_parent"

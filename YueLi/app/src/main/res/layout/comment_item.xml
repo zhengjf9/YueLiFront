@@ -9,11 +9,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ImageView
+    <Button
         android:id="@+id/avator"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/male_user_96px"
+        android:background="@drawable/male_user_96px"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="20dp"

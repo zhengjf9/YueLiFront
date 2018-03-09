@@ -40,6 +40,7 @@ public class InfoActivity extends AppCompatActivity {
         initDatas();
         final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
         final HomeAdapter myAdapter = new HomeAdapter();
+        myAdapter.notifyDataSetChanged();
         myRecView.setLayoutManager(new LinearLayoutManager(this));
         myRecView.setAdapter(myAdapter);
         Button back = findViewById(R.id.back);

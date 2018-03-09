@@ -53,6 +53,7 @@ public class MapMoodActivity extends AppCompatActivity {
             initViews();
             final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
             final CommentItemAdapter myAdapter = new CommentItemAdapter(this, mDatas);
+            myAdapter.notifyDataSetChanged();
             myRecView.setLayoutManager(new LinearLayoutManager(this));
             myRecView.setAdapter(myAdapter);
         } catch (Exception e) {
