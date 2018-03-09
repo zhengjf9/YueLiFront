@@ -63,7 +63,7 @@ public class JourneyDetailActivity extends AppCompatActivity
         final Button like = (Button) findViewById(R.id.like);
 
         if (favor) {
-            like.setBackgroundResource(R.drawable.heart_48px_red);
+            like.setBackgroundResource(R.drawable.heart_red);
         } else {
 
             like.setBackgroundResource(R.drawable.heart_48px_white);
@@ -124,7 +124,7 @@ public class JourneyDetailActivity extends AppCompatActivity
 
                                     if (rescode == 200) {
                                         Toast.makeText(getApplicationContext(), "成功收藏", Toast.LENGTH_SHORT).show();
-                                        like.setBackgroundResource(R.drawable.heart_48px_red);
+                                        like.setBackgroundResource(R.drawable.heart_red);
                                     } else {
                                         Toast.makeText(getApplicationContext(), "收藏失败", Toast.LENGTH_SHORT).show();
                                     }
@@ -162,7 +162,7 @@ public class JourneyDetailActivity extends AppCompatActivity
 
                                     if (rescode == 200) {
                                         Toast.makeText(getApplicationContext(), "取消收藏", Toast.LENGTH_SHORT).show();
-                                        like.setBackgroundResource(R.drawable.heart_48px_white);
+                                        like.setBackgroundResource(R.drawable.heart_red);
                                     } else {
                                         Toast.makeText(getApplicationContext(), "取消失败", Toast.LENGTH_SHORT).show();
                                     }
@@ -248,9 +248,9 @@ public class JourneyDetailActivity extends AppCompatActivity
 
                         int rescode = response.code();
                         if (rescode == 200) {
-                            Toast.makeText(getApplicationContext(), "获取游记详情成功", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getApplicationContext(), "获取游记详情成功", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), "获取游记详情失败", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getApplicationContext(), "获取游记详情失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

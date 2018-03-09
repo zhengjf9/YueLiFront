@@ -10,7 +10,7 @@
     android:id="@+id/avator"
     android:layout_width="80dp"
     android:layout_height="80dp"
-    android:src="@drawable/male_user_96px"
+    android:src="@drawable/avator"
     app:layout_constraintTop_toTopOf="parent"
     android:layout_marginTop="20dp"
     app:layout_constraintLeft_toLeftOf="parent"
