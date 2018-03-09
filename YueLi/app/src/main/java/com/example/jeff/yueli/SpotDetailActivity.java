@@ -15,8 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -40,6 +42,7 @@ public class SpotDetailActivity extends AppCompatActivity {
             new ArrayList<java.util.Map<String, String>>();
     private spot currentSpot;
     private MyApplication myApplication;
+    private int pinglunshu;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,12 +65,14 @@ public class SpotDetailActivity extends AppCompatActivity {
         Button comment = findViewById(R.id.comment_icon);
         Button back = findViewById(R.id.back);
         final Button like = findViewById(R.id.like);
-        TextView cnum = findViewById(R.id.comment_num);
+        final TextView cnum = findViewById(R.id.comment_num);
         MyApplication application = (MyApplication) getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
         final int spotid = application.getSpots().get(application.getCurrentPos()).getID();
-        cnum.setText(String.valueOf(myApplication.getSpots().get(myApplication.getCurrentPos()).getComment_count()));
+
+
+     //   cnum.setText(String.valueOf(myApplication.getSpots().get(myApplication.getCurrentPos()).getComment_count()));
         boolean favor = myApplication.getSpots().get(myApplication.getCurrentPos()).getFavorited();
         if (favor) {
             like.setBackgroundResource(R.drawable.heart_48px_red);
@@ -172,6 +177,39 @@ public class SpotDetailActivity extends AppCompatActivity {
                 }
             }
         });
+        String url = "http://123.207.29.66:3009/api/spots/"+String.valueOf(spotid);
+
+        Request request = new Request.Builder().url(url).build();
+            httpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {}
+                String string = null;
+                @Override
+                public void onResponse(Call call, final Response response) throws IOException {
+                    try {
+                        string = response.body().string();
+                        Gson gson = new Gson();
+                        Type logintype = new TypeToken<Result<spot>>(){}.getType();
+                        Result<spot> loginresult = gson.fromJson(string, logintype);
+                        spot denglu = loginresult.data;
+                        pinglunshu = denglu.getComment_count();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    final int rescode = response.code();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (rescode == 200) {
+
+                                cnum.setText(String.valueOf(pinglunshu));
+                            } else {
+                                Toast.makeText(getApplicationContext(), "获取评论数失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            });
 
 
     }

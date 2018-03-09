@@ -40,7 +40,7 @@ public class SpotCommentActivity extends AppCompatActivity{
     public String spotid;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.spot_comment);
@@ -87,25 +87,25 @@ public class SpotCommentActivity extends AppCompatActivity{
                     String string=null;
                     @Override
                     public void onResponse(Call call, final Response response) throws IOException {
+                        try {
+                            string = response.body().string();
+                            Gson gson = new Gson();
+                            Type commenttype = new TypeToken<Result<reviewback>>(){}.getType();
+                            Result<reviewback> commentresult = gson.fromJson(string, commenttype);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
-                                try {
-                                    string = response.body().string();
-                                    Gson gson = new Gson();
-                                    Type commenttype = new TypeToken<Result<reviewback>>(){}.getType();
-                                    Result<reviewback> commentresult = gson.fromJson(string, commenttype);
-                                    int rescode = response.code();
-                                    if (rescode == 200) {
-                                        Toast.makeText(getApplicationContext(),String.valueOf(commentresult.msg)   , Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), commentresult.msg , Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                int rescode = response.code();
+                                if (rescode == 200) {
+                                    Toast.makeText(getApplicationContext(),"评论成功"   , Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "评论失败" , Toast.LENGTH_SHORT).show();
                                 }
-
 
                             }
                         });
@@ -115,25 +115,13 @@ public class SpotCommentActivity extends AppCompatActivity{
         });
         final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
         final CommentItemAdapter myAdapter = new CommentItemAdapter(this, mDatas);
+
+        initData();
         myAdapter.notifyDataSetChanged();
-        myAdapter.setOnItemClickLitener(new OnItemClickLitener()
-        {
 
-            @Override
-            public void onItemClick(View view, int position)
-            {
+        myRecView.setLayoutManager(new LinearLayoutManager(this));
+        myRecView.setAdapter(myAdapter);
 
-            }
-            @Override
-            public void onItemLongClick(View view, int position)
-            {
-                //Todo
-                //myAdapter.removeData(position);
-            }
-        });
-            myRecView.setLayoutManager(new LinearLayoutManager(this));
-            myRecView.setAdapter(myAdapter);
-            initData();
 
     }
 
@@ -171,8 +159,6 @@ public class SpotCommentActivity extends AppCompatActivity{
                                 temp.put("date",t.gettime());
                                 temp.put("content",t.getcontent());
                                 mDatas.add(temp);
-
-
                             }
 
                             int rescode = response.code();
