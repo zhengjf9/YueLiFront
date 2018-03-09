@@ -97,7 +97,13 @@ public class PostTrip extends AppCompatActivity {
                                                 int rescode = response.code();
                                                 if (rescode == 200) {
                                                     //application.eid=denglu.getComment_id();
-                                                    Toast.makeText(PostTrip.this, String.valueOf(rescode), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(PostTrip.this, "发布游记成功", Toast.LENGTH_SHORT).show();
+
+                                                    Intent i = new Intent();
+                                                    i.setClass(PostTrip.this, MainActivity.class);
+                                                    //一定要指定是第几个pager，因为要跳到ThreeFragment，这里填写2
+                                                    i.putExtra("id", 4);
+                                                    startActivity(i);
                                                 } else {
                                                     Toast.makeText(PostTrip.this, String.valueOf(rescode), Toast.LENGTH_SHORT).show();
                                                 }

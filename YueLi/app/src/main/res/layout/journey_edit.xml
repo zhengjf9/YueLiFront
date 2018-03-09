@@ -180,6 +180,7 @@
         />
     <ImageView
         android:id="@+id/add_button"
+        android:visibility="gone"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@drawable/add"

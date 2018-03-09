@@ -52,7 +52,13 @@ public class JourneyCommentActivity extends AppCompatActivity {
         setContentView(R.layout.journey_comment);
         try {
             final String t = (String) getIntent().getSerializableExtra("travel_id");
+            final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
+            final CommentItemAdapter myAdapter = new CommentItemAdapter(this, mDatas);
+            initData(t,myAdapter);
+            myAdapter.notifyDataSetChanged();
 
+            myRecView.setLayoutManager(new LinearLayoutManager(this));
+            myRecView.setAdapter(myAdapter);
 
             Button back = findViewById(R.id.back);
             back.setOnClickListener(new View.OnClickListener() {
@@ -76,12 +82,6 @@ public class JourneyCommentActivity extends AppCompatActivity {
                     OkHttpClient httpClient = application.gethttpclient();
 
                     String url = "http://123.207.29.66:3009/api/travels/"+t+"/comments";
-                /*FormBody formBody = new FormBody
-                        .Builder()
-                        .add("reply_to_id",null)//设置参数名称和参数值
-                        .add("content",pinglun)
-                        .build();*/
-                    //String tmp= "{\"reply_to_id\": null,\"content\":"+pinglun+"}";
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put("reply_to_id", JSONObject.NULL);
@@ -115,6 +115,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
                                         int rescode = response.code();
                                         if (rescode == 200) {
                                             Toast.makeText(getApplicationContext(),String.valueOf(commentresult.msg)   , Toast.LENGTH_SHORT).show();
+                                            initData(t,myAdapter);
                                         } else {
                                             Toast.makeText(getApplicationContext(), commentresult.msg , Toast.LENGTH_SHORT).show();
                                         }
@@ -131,27 +132,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
             });
 
 
-            final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
-            final CommentItemAdapter myAdapter = new CommentItemAdapter(this, mDatas);
-            initData(t,myAdapter);
-            myAdapter.notifyDataSetChanged();
-            myAdapter.setOnItemClickLitener(new OnItemClickLitener()
-            {
 
-                @Override
-                public void onItemClick(View view, int position)
-                {
-
-                }
-                @Override
-                public void onItemLongClick(View view, int position)
-                {
-                    //Todo
-                    //myAdapter.removeData(position);
-                }
-            });
-            myRecView.setLayoutManager(new LinearLayoutManager(this));
-            myRecView.setAdapter(myAdapter);
         } catch (Exception e) {
             Log.e("Comment Activity", "Bug", e);
         }

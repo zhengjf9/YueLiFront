@@ -93,7 +93,7 @@ public class TripActivity extends Fragment {
         MyApplication application = (MyApplication)getActivity().getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         User user = application.getUser();
-        Toast.makeText(getActivity().getApplicationContext(),String.valueOf(user.getuserid())  , Toast.LENGTH_LONG).show();
+      //  Toast.makeText(getActivity().getApplicationContext(),String.valueOf(user.getuserid())  , Toast.LENGTH_LONG).show();
         String url="http://123.207.29.66:3009/api/travels";//?user_id="+String.valueOf(user.getuserid());
         Request request = new Request.Builder().url(url).build();
 
