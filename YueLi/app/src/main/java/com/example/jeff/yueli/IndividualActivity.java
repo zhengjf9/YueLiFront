@@ -48,14 +48,13 @@ public class IndividualActivity extends Fragment {
 
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_individual, container, false);
-
         MyApplication application = (MyApplication) getActivity().getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
+
         final RecyclerView myRecView = (RecyclerView) view.findViewById(R.id.outer_recyclerview);
         final DateInfoAdapter myAdapter = new DateInfoAdapter(getContext(),dataInfoList);
         myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
