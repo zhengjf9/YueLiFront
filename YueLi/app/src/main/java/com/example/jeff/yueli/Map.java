@@ -127,7 +127,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         aMap.setOnMarkerClickListener(this);
         //禁止地图缩放和移动
         aMap.getUiSettings().setScrollGesturesEnabled(false);
-//        aMap.getUiSettings().setZoomGesturesEnabled(false);
+        aMap.getUiSettings().setZoomGesturesEnabled(false);
         //设置缩放比例
         aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         // 实现定位
@@ -330,6 +330,8 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
     }
 
     private boolean addTheDifferentOne(List<Feelings> t) {
+        if (t == null)
+            return false;
         if (feelings == null) {
             feelings = new ArrayList<>();
         }
