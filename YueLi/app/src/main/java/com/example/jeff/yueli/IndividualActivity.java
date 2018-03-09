@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -56,7 +55,7 @@ public class IndividualActivity extends Fragment {
         MyApplication application = (MyApplication) getActivity().getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
-        final RecyclerView myRecView = (RecyclerView) view.findViewById(R.id.outer_recyclerview);
+        final CustomRecyclerView myRecView = (CustomRecyclerView) view.findViewById(R.id.outer_recyclerview);
         final DateInfoAdapter myAdapter = new DateInfoAdapter(getContext(),dataInfoList);
         myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         myRecView.setAdapter(myAdapter);
@@ -79,17 +78,20 @@ public class IndividualActivity extends Fragment {
 
         trash.setVisibility(View.INVISIBLE);
         launch.setVisibility(View.INVISIBLE);
-        final RecyclerView trashRecView = (RecyclerView)view.findViewById(R.id.trash_recyclerview);
+        final CustomRecyclerView trashRecView = (CustomRecyclerView)view.findViewById(R.id.trash_recyclerview);
         final JourneyItemAdapter trashAdapter = new JourneyItemAdapter(getContext(), trashDatas);
-        trashRecView.setLayoutManager(new LinearLayoutManager(getContext()));
+       trashRecView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+        //trashRecView.addHeaderView(headerView);
         trashRecView.setAdapter(trashAdapter);
         trashRecView.setVisibility(View.INVISIBLE);
-
-        final RecyclerView launchRecView = (RecyclerView)view.findViewById(R.id.launch_recyclerview);
+        final CustomRecyclerView launchRecView = (CustomRecyclerView)view.findViewById(R.id.launch_recyclerview);
         final JourneyItemAdapter launchAdapter = new JourneyItemAdapter(getContext(), launchDatas);
         launchRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         launchRecView.setAdapter(launchAdapter);
         launchRecView.setVisibility(View.INVISIBLE);
+        //launchRecView.addHeaderView(headerView);
 
         like.setOnClickListener(new View.OnClickListener() {
             @Override
