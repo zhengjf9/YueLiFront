@@ -16,7 +16,7 @@ import java.util.List;
  * Created by jeff on 18-3-7.
  */
 
-class JourneyItemAdapter extends RecyclerView.Adapter<JourneyItemAdapter.MyViewHolder>
+public class JourneyItemAdapter extends RecyclerView.Adapter<JourneyItemAdapter.MyViewHolder>
 {
 
     private Context context;

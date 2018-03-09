@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -210,7 +213,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         app:layout_constraintTop_toBottomOf="@+id/middle"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="42dp"
         android:background="@color/gray"
         />
     <Button
@@ -220,10 +223,9 @@
         android:text="心情"
         android:textColor="@color/black"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/line"
-        android:layout_marginBottom="7dp"
+        app:layout_constraintTop_toBottomOf="@id/middle"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="100dp"
+        android:layout_marginLeft="96dp"
         />
     <Button
         android:id="@+id/journey_title"
@@ -232,30 +234,29 @@
         android:text="游记"
         android:textColor="@color/black"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/line"
-        android:layout_marginBottom="7dp"
+        app:layout_constraintTop_toBottomOf="@id/middle"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="100dp"
+        android:layout_marginRight="96dp"
         />
-    <View
-        android:id="@+id/mood_line"
-        android:layout_width="70dp"
-        android:layout_height="4dp"
-        android:background="@color/mood_blue"
-        app:layout_constraintBottom_toBottomOf="@id/line"
-        app:layout_constraintLeft_toLeftOf="@id/mood_title"
-        app:layout_constraintRight_toRightOf="@+id/mood_title"
-        />
-    <View
-        android:id="@+id/journey_line"
-        android:layout_width="70dp"
-        android:layout_height="4dp"
-        android:background="@color/mood_blue"
-        app:layout_constraintBottom_toBottomOf="@id/line"
-        app:layout_constraintLeft_toLeftOf="@id/journey_title"
-        app:layout_constraintRight_toRightOf="@+id/journey_title"
-        />
-    <android.support.v7.widget.RecyclerView
+    <!--<View-->
+        <!--android:id="@+id/mood_line"-->
+        <!--android:layout_width="70dp"-->
+        <!--android:layout_height="4dp"-->
+        <!--android:background="@color/mood_blue"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/line"-->
+        <!--app:layout_constraintLeft_toLeftOf="@id/mood_title"-->
+        <!--app:layout_constraintRight_toRightOf="@+id/mood_title"-->
+        <!--/>-->
+    <!--<View-->
+        <!--android:id="@+id/journey_line"-->
+        <!--android:layout_width="70dp"-->
+        <!--android:layout_height="4dp"-->
+        <!--android:background="@color/mood_blue"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/line"-->
+        <!--app:layout_constraintLeft_toLeftOf="@id/journey_title"-->
+        <!--app:layout_constraintRight_toRightOf="@+id/journey_title"-->
+        <!--/>-->
+    <com.example.jeff.yueli.CustomRecyclerView
         android:id="@+id/outer_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -286,13 +287,13 @@
         app:layout_constraintLeft_toRightOf="@+id/trash"
         />
     </android.support.constraint.ConstraintLayout>
-    <android.support.v7.widget.RecyclerView
+    <com.example.jeff.yueli.CustomRecyclerView
         android:id="@+id/trash_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/shift_button"
         />
-    <android.support.v7.widget.RecyclerView
+    <com.example.jeff.yueli.CustomRecyclerView
         android:id="@+id/launch_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -303,3 +304,4 @@
 
 
 </android.support.constraint.ConstraintLayout>
+</FrameLayout>
