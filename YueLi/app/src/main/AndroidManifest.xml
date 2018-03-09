@@ -44,7 +44,11 @@
         <activity android:name=".InfoActivity" />
         <activity android:name=".SpotDetailActivity" />
         <activity android:name=".MapMoodActivity" />
-        <activity android:name=".PostTrip" />
+
+        <activity android:name=".PostTrip"></activity>
+        <activity android:name=".SpotCommentActivity"></activity>
+        <activity android:name=".IndividualOtherActivity"></activity>
+
     </application>
 
 </manifest>
