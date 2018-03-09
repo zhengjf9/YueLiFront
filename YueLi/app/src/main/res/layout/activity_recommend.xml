@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@id/firstDescription"
-            android:text="科帕卡巴纳海滩1"
+            android:text="科帕卡巴纳海滩"
             android:textSize="70px"
             android:textColor="@color/white"
             app:layout_constraintLeft_toLeftOf="parent"
