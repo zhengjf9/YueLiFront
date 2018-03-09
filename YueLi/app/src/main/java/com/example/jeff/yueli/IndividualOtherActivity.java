@@ -124,7 +124,7 @@ public class IndividualOtherActivity extends AppCompatActivity {
             }
         });
 
-        initDatas(moodnum,fans,tnum);
+
         trash.setVisibility(View.INVISIBLE);
         launch.setVisibility(View.INVISIBLE);
 
@@ -136,6 +136,7 @@ public class IndividualOtherActivity extends AppCompatActivity {
 
         final RecyclerView launchRecView = (RecyclerView)findViewById(R.id.launch_recyclerview);
         final JourneyItemAdapter launchAdapter = new JourneyItemAdapter(this, launchDatas);
+        initDatas(moodnum,fans,tnum,launchAdapter,trashAdapter,myAdapter);
         launchAdapter.setOnItemClickLitener(new OnItemClickLitener()
         {
 
@@ -243,7 +244,8 @@ public class IndividualOtherActivity extends AppCompatActivity {
 
 
     }
-    public void initDatas(final TextView m, final TextView f, final TextView t){
+    public void initDatas(final TextView m, final TextView f, final TextView t,
+                          final JourneyItemAdapter a, final JourneyItemAdapter b,final DateInfoAdapter c){
 
 
         String url = "http://123.207.29.66:3009/api/feelings?user_id="+String.valueOf(otherid) ;
@@ -302,13 +304,14 @@ public class IndividualOtherActivity extends AppCompatActivity {
 
                     dateInfo.setContentInfoList(contentInfoList);//将这一天的所有游记设置成标题的一个成员
                     dataInfoList.add(dateInfo);
+
                     ;//将一天一天的数据push进dataInfoList
                     // dataInfoList就是最后要的数据
                 }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
+                        c.notifyDataSetChanged();
                         int rescode = response.code();
                         if (rescode == 200) {
 
@@ -354,11 +357,13 @@ public class IndividualOtherActivity extends AppCompatActivity {
                     temp.put("travel_id",String.valueOf(t.gettravelid()));
                     temp.put("favorited",String.valueOf(t.getfavorited()));
                     launchDatas.add(temp);
+
                 }
                 final int rescode = response.code();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        a.notifyDataSetChanged();
                         //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
                         if (rescode == 200) {
                             tripnum = travellist.size();
@@ -411,6 +416,7 @@ public class IndividualOtherActivity extends AppCompatActivity {
         temp1.put("comment_num", "99");
         trashDatas.add(temp1);
         trashDatas.add(temp1);
+        b.notifyDataSetChanged();
 
     }
 

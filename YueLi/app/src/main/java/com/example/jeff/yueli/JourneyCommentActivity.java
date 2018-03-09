@@ -53,7 +53,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
         try {
             final String t = (String) getIntent().getSerializableExtra("travel_id");
 
-            initData(t);
+
             Button back = findViewById(R.id.back);
             back.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -133,6 +133,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
 
             final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
             final CommentItemAdapter myAdapter = new CommentItemAdapter(this, mDatas);
+            initData(t,myAdapter);
             myAdapter.notifyDataSetChanged();
             myAdapter.setOnItemClickLitener(new OnItemClickLitener()
             {
@@ -157,7 +158,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
 
     }
 
-    public void initData(String t) {
+    public void initData(String t,final CommentItemAdapter a) {
         mDatas.clear();
         MyApplication application = (MyApplication)getApplication();
         OkHttpClient httpClient = application.gethttpclient();
@@ -191,6 +192,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
                         temp.put("content",t.getcontent());
                         mDatas.add(temp);
                     }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -198,6 +200,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        a.notifyDataSetChanged();
                         //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
 
                             int rescode = response.code();

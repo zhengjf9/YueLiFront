@@ -389,7 +389,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                         return;
                     }
                     Log.e("update_infos", s + " " + temp.size());
-                    Log.e("times", temp.get(0).getTime() + "");
+
                     if(addTheDifferentOne(temp)) {
                         isUpdate = true;
                     }

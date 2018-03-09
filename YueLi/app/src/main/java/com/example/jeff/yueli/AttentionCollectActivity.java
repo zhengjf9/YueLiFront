@@ -44,7 +44,7 @@ public class AttentionCollectActivity extends AppCompatActivity {
         setContentView(R.layout.attention_and_collect);
         final String t = (String) getIntent().getSerializableExtra("travel_id");
 
-        initData();
+
         final RecyclerView attentionRecView = (RecyclerView) findViewById(R.id.attention_recyclerview);
         final HomeAdapter myAdapter = new HomeAdapter();
         myAdapter.notifyDataSetChanged();
@@ -56,7 +56,7 @@ public class AttentionCollectActivity extends AppCompatActivity {
         final JourneyItemAdapter myAdapter2 = new JourneyItemAdapter(this, collectDatas);
         collectRecView.setLayoutManager(new LinearLayoutManager(this));
         collectRecView.setAdapter(myAdapter2);
-
+        initData(myAdapter,myAdapter2);
         Button attention = findViewById(R.id.attention);
         Button collect = findViewById(R.id.collect);
         Button back = findViewById(R.id.back);
@@ -133,7 +133,7 @@ public class AttentionCollectActivity extends AppCompatActivity {
             }
         });
     }
-     public void initData(){
+     public void initData(final HomeAdapter a, final JourneyItemAdapter b){
 
 
          MyApplication application = (MyApplication) getApplication();
@@ -168,10 +168,11 @@ public class AttentionCollectActivity extends AppCompatActivity {
                      temp.put("signature",t.getsignature());
                      mDatas.add(temp);
                  }
+
                  runOnUiThread(new Runnable() {
                      @Override
                      public void run() {
-
+                         a.notifyDataSetChanged();
                          int rescode = response.code();
                          if (rescode == 200) {
                           //   Toast.makeText(getApplicationContext(), result.getmsg(), Toast.LENGTH_SHORT).show();
@@ -218,11 +219,12 @@ public class AttentionCollectActivity extends AppCompatActivity {
                      }
 
                  }
+
                 runOnUiThread(new Runnable() {
                      @Override
                      public void run() {
                          //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
-
+                         b.notifyDataSetChanged();
                          int rescode = response.code();
                          if (rescode == 200) {
                              //Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();

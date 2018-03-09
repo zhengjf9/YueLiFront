@@ -48,18 +48,22 @@ public class SpotDetailActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spot_detail);
-        initDatas();
+
         myApplication = (MyApplication)getApplication();
         initViews();
         final RecyclerView spotRecView = (RecyclerView)findViewById(R.id.left_recyclerview);
         final JourneyItemAdapter myAdapter2 = new JourneyItemAdapter(this, spotDatas);
+
         spotRecView.setLayoutManager(new LinearLayoutManager(this));
         spotRecView.setAdapter(myAdapter2);
         spotRecView.setVisibility(View.INVISIBLE);
 
         final RecyclerView myRecView = (RecyclerView) findViewById(R.id.right_recyclerview);
         final HomeAdapter myAdapter = new HomeAdapter();
-        myAdapter.notifyDataSetChanged();
+        initDatas(myAdapter,myAdapter2);
+
+
+
         myRecView.setLayoutManager(new LinearLayoutManager(this));
         myRecView.setAdapter(myAdapter);
         Button comment = findViewById(R.id.comment_icon);
@@ -255,7 +259,7 @@ public class SpotDetailActivity extends AppCompatActivity {
 
 
 
-    public void initDatas(){
+    public void initDatas(final HomeAdapter a1, final JourneyItemAdapter a2){
         MyApplication application = (MyApplication) getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
