@@ -79,7 +79,7 @@ public class SpotDetailActivity extends AppCompatActivity {
      //   cnum.setText(String.valueOf(myApplication.getSpots().get(myApplication.getCurrentPos()).getComment_count()));
         boolean favor = myApplication.getSpots().get(myApplication.getCurrentPos()).getFavorited();
         if (favor) {
-            like.setBackgroundResource(R.drawable.heart_48px_red);
+            like.setBackgroundResource(R.drawable.heart_red);
         } else {
             like.setBackgroundResource(R.drawable.heart_gray_48px);
         }
@@ -136,7 +136,7 @@ public class SpotDetailActivity extends AppCompatActivity {
                                     if (rescode == 200) {
                                         Toast.makeText(getApplicationContext(), "成功收藏", Toast.LENGTH_SHORT).show();
                                         myApplication.getSpots().get(myApplication.getCurrentPos()).setFavorited(true);
-                                        like.setBackgroundResource(R.drawable.heart_48px_red);
+                                        like.setBackgroundResource(R.drawable.heart_red);
                                     } else {
                                         Toast.makeText(getApplicationContext(), "收藏失败", Toast.LENGTH_SHORT).show();
                                     }
@@ -208,7 +208,7 @@ public class SpotDetailActivity extends AppCompatActivity {
 
                                 cnum.setText(String.valueOf(pinglunshu));
                             } else {
-                                Toast.makeText(getApplicationContext(), "获取评论数失败", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "获取评论数失败", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

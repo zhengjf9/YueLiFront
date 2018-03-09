@@ -64,7 +64,7 @@
         android:id="@+id/pic"
         android:layout_width="0dp"
         android:layout_height="150dp"
-        android:background="@color/gray"
+        android:background="@drawable/background"
         app:layout_constraintTop_toBottomOf="@+id/description"
         app:layout_constraintLeft_toLeftOf="@+id/description"
         app:layout_constraintRight_toRightOf="@+id/description"

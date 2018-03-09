@@ -7,7 +7,7 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="170dp"
-        android:background="@color/blue"
+        android:background="@drawable/shang"
         app:layout_constraintTop_toTopOf="parent"
         />
 

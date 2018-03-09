@@ -23,7 +23,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="100dp"
-        android:layout_marginTop="10dp"
         />
     <Button
         android:id="@+id/collect"
@@ -35,7 +34,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="100dp"
-        android:layout_marginTop="10dp"
         />
     <View
         android:id="@+id/line"
@@ -44,24 +42,6 @@
         android:background="@color/gray"
         app:layout_constraintTop_toBottomOf="@+id/back"
         android:layout_marginTop="10dp"
-        />
-    <View
-        android:id="@+id/attention_line"
-        android:layout_width="80dp"
-        android:layout_height="4dp"
-        android:background="@color/mood_blue"
-        app:layout_constraintBottom_toBottomOf="@id/line"
-        app:layout_constraintLeft_toLeftOf="@id/attention"
-        app:layout_constraintRight_toRightOf="@+id/attention"
-        />
-    <View
-        android:id="@+id/collect_line"
-        android:layout_width="80dp"
-        android:layout_height="4dp"
-        android:background="@color/mood_blue"
-        app:layout_constraintBottom_toBottomOf="@id/line"
-        app:layout_constraintLeft_toLeftOf="@id/collect"
-        app:layout_constraintRight_toRightOf="@+id/collect"
         />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/attention_recyclerview"

@@ -220,6 +220,7 @@ public class IndividualActivity extends Fragment {
                 myRecView.setVisibility(View.INVISIBLE);
                 trashRecView.setVisibility(View.INVISIBLE);
                 launchRecView.setVisibility(View.VISIBLE);
+
             }
         });
         trash.setOnClickListener(new View.OnClickListener() {
