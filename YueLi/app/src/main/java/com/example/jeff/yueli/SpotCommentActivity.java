@@ -46,6 +46,14 @@ public class SpotCommentActivity extends AppCompatActivity{
             setContentView(R.layout.spot_comment);
             spotid = String.valueOf(getIntent().getSerializableExtra("spot_id"));
             Button send = (Button)findViewById(R.id.sendcomment);
+            final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
+            final CommentItemAdapter myAdapter = new CommentItemAdapter(this, mDatas);
+
+            initData(myAdapter);
+
+
+        myRecView.setLayoutManager(new LinearLayoutManager(this));
+        myRecView.setAdapter(myAdapter);
             Button back = findViewById(R.id.back);
             back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +100,9 @@ public class SpotCommentActivity extends AppCompatActivity{
                             Gson gson = new Gson();
                             Type commenttype = new TypeToken<Result<reviewback>>(){}.getType();
                             Result<reviewback> commentresult = gson.fromJson(string, commenttype);
-
+                            if (response.code() == 200) {
+                                initData(myAdapter);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -103,6 +113,7 @@ public class SpotCommentActivity extends AppCompatActivity{
                                 int rescode = response.code();
                                 if (rescode == 200) {
                                     Toast.makeText(getApplicationContext(),"评论成功"   , Toast.LENGTH_SHORT).show();
+
                                 } else {
                                     Toast.makeText(getApplicationContext(), "评论失败" , Toast.LENGTH_SHORT).show();
                                 }
@@ -113,14 +124,7 @@ public class SpotCommentActivity extends AppCompatActivity{
                 });
             }
         });
-        final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
-        final CommentItemAdapter myAdapter = new CommentItemAdapter(this, mDatas);
 
-        initData(myAdapter);
-
-
-        myRecView.setLayoutManager(new LinearLayoutManager(this));
-        myRecView.setAdapter(myAdapter);
 
 
     }
