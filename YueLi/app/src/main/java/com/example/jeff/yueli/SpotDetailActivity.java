@@ -10,11 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by jeff on 18-3-8.
@@ -54,6 +64,7 @@ public class SpotDetailActivity extends AppCompatActivity {
         TextView descr = (TextView)findViewById(R.id.description);
         TextView leftTitle = (TextView)findViewById(R.id.left_title);
         TextView rightTitle = (TextView)findViewById(R.id.right_title);
+
         leftTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,6 +100,58 @@ public class SpotDetailActivity extends AppCompatActivity {
 
 
     public void initDatas(){
+        MyApplication application = (MyApplication) getApplication();
+        OkHttpClient httpClient = application.gethttpclient();
+        final User user = application.getUser();
+        int spotid = application.getSpots().get(application.getCurrentPos()).getID();
+        String url = "http://123.207.29.66:3009/api/travels?spot_id="+String.valueOf(spotid) ;
+        Request request = new Request.Builder().url(url).build();
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            String string=null;
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
+                try {
+                    string = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Gson gson = new Gson();
+                Travel result = gson.fromJson(string,Travel.class);
+                List<Travel.trip> travellist =  result.gettrips();
+
+                for (int i = 0; i < travellist.size(); i++) {
+                    Travel.trip t = travellist.get(i);
+                    Map<String, String> temp = new LinkedHashMap<String, String>();
+                    temp.put("user_id",String.valueOf(t.getuserid()));
+                    temp.put("title", t.gettitle());
+                    temp.put("firstday", t.getFirst_day());
+                    temp.put("duration",  String.valueOf(t.getduration()));
+                    temp.put("location", t.getlocation());
+                    temp.put("name", t.getnickname());
+                    temp.put("like_num", String.valueOf(t.getfavoritecount()));
+                    temp.put("comment_num", String.valueOf(t.getComment_count()));
+                    temp.put("travel_id",String.valueOf(t.gettravelid()));
+                    temp.put("favorited",String.valueOf(t.getfavorited()));
+                    spotDatas.add(temp);
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int rescode = response.code();
+                        if (rescode == 200) {
+                            // Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();
+                        } else {
+                           // Toast.makeText(getActivity().getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        /*
         Map<String, String> temp1 = new LinkedHashMap<String, String>();
         temp1.put("title", "上海:梦中城");
         temp1.put("firstday", "2018-3-7");
@@ -99,7 +162,7 @@ public class SpotDetailActivity extends AppCompatActivity {
         temp1.put("comment_num", "99");
         spotDatas.add(temp1);
         spotDatas.add(temp1);
-
+*/
         Map<String, String> temp = new LinkedHashMap<String, String>();
         temp.put("name", "星巴克");
         temp.put("description", "咖啡店咖啡店");

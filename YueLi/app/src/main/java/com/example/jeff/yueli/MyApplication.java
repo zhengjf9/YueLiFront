@@ -38,8 +38,17 @@ public class MyApplication extends Application {
     private List<spot> spots;
 
     private int currentPos;
+    private Feelings currentFeelings;
 
     private AMapLocation aMapLocation;
+
+    public void setCurrentFeelings(Feelings currentFeelings) {
+        this.currentFeelings = currentFeelings;
+    }
+
+    public Feelings getCurrentFeelings() {
+        return currentFeelings;
+    }
 
     public void setaMapLocation(AMapLocation aMapLocation) {
         this.aMapLocation = aMapLocation;
@@ -64,7 +73,7 @@ public class MyApplication extends Application {
     public AMapLocation getaMapLocation() {
         return aMapLocation;
     }
-
+    public int eid;
     public User getUser() {return user;}
     public void setUser(User u) {user = u;}
     public OkHttpClient gethttpclient() {return httpClient;}

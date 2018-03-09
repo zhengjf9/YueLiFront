@@ -9,11 +9,11 @@
         android:layout_height="54dp"
         android:background="@color/top_blue"
         />
-    <ImageView
-        android:id="@+id/search_icon"
+    <Button
+        android:id="@+id/plus_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/plus_white_96px"
+        android:background="@drawable/plus_white_96px"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginRight="10dp"
