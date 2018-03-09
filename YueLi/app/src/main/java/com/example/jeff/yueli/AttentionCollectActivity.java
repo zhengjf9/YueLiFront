@@ -47,6 +47,7 @@ public class AttentionCollectActivity extends AppCompatActivity {
         initData();
         final RecyclerView attentionRecView = (RecyclerView) findViewById(R.id.attention_recyclerview);
         final HomeAdapter myAdapter = new HomeAdapter();
+        myAdapter.notifyDataSetChanged();
         attentionRecView.setLayoutManager(new LinearLayoutManager(this));
         attentionRecView.setAdapter(myAdapter);
         attentionRecView.setVisibility(View.INVISIBLE);

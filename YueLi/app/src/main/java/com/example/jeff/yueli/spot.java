@@ -15,6 +15,7 @@ public class spot {
     private Object location;
     private int rank;
     private boolean favorited;
+    private int comment_count;
 
     public spot(int id, String n, String descri, String c, Object l, int r) {
         spot_id = id;
@@ -24,6 +25,7 @@ public class spot {
         location = l;
         rank = r;
     }
+
 
     public void setFavorited(boolean favorited) {
         this.favorited = favorited;
@@ -36,6 +38,9 @@ public class spot {
     public void setImage(Bitmap image) {
         this.image = image;
     }
+
+    public void setComment_count(int c) {comment_count = c;}
+
 
     public int getID() {
         return spot_id;
@@ -64,4 +69,6 @@ public class spot {
     public Object getLocation() {
         return location;
     }
+
+    public int getComment_count() {return comment_count;}
 }

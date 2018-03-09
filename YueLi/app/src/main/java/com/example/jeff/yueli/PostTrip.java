@@ -30,8 +30,8 @@ public class PostTrip extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.journey_edit);
         Button s = findViewById(R.id.send);
-        EditText e = findViewById(R.id.title);
-        final String t = e.getText().toString();
+        final EditText e = findViewById(R.id.title);
+       // final String t = e.getText().toString();
         final EditText ed = findViewById(R.id.edit);
         s.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +41,7 @@ public class PostTrip extends AppCompatActivity {
                 final User user = application.getUser();
                 int spotid = application.getSpots().get(application.getCurrentPos()).getID();
                 String url = "http://123.207.29.66:3009/api/travels";
+                String t = e.getText().toString();
                 FormBody formBody = new FormBody
                         .Builder()
                         .add("title",t)//设置参数名称和参数值

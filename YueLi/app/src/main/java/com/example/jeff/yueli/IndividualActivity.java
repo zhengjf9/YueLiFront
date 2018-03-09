@@ -48,16 +48,16 @@ public class IndividualActivity extends Fragment {
 
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_individual, container, false);
-
         MyApplication application = (MyApplication) getActivity().getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
+
         final RecyclerView myRecView = (RecyclerView) view.findViewById(R.id.outer_recyclerview);
         final DateInfoAdapter myAdapter = new DateInfoAdapter(getContext(),dataInfoList);
+        myAdapter.notifyDataSetChanged();
         myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         myRecView.setAdapter(myAdapter);
        // myRecView.setVisibility(View.INVISIBLE);//心情页面暂时设置不可见
@@ -87,6 +87,24 @@ public class IndividualActivity extends Fragment {
 
         final RecyclerView launchRecView = (RecyclerView)view.findViewById(R.id.launch_recyclerview);
         final JourneyItemAdapter launchAdapter = new JourneyItemAdapter(getContext(), launchDatas);
+        launchAdapter.setOnItemClickLitener(new OnItemClickLitener()
+        {
+
+            @Override
+            public void onItemClick(View view, int position)
+            {
+                Intent intent = new Intent(getActivity(), JourneyDetailActivity.class);
+                intent.putExtra("travel_id",launchDatas.get(position).get("travel_id"));
+                intent.putExtra("favorited",Boolean.valueOf(launchDatas.get(position).get("favorited")));
+                startActivity(intent);
+            }
+            @Override
+            public void onItemLongClick(View view, int position)
+            {
+                //Todo
+                //myAdapter.removeData(position);
+            }
+        });
         launchRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         launchRecView.setAdapter(launchAdapter);
         launchRecView.setVisibility(View.INVISIBLE);
@@ -242,36 +260,37 @@ public class IndividualActivity extends Fragment {
             String string=null;
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
+                try {
+                    string = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Gson gson = new Gson();
+                Travel result = gson.fromJson(string,Travel.class);
+                final List<Travel.trip> travellist =  result.gettrips();
+
+                for (int i = 0; i < travellist.size(); i++) {
+                    Travel.trip t = travellist.get(i);
+                    Map<String, String> temp = new LinkedHashMap<String, String>();
+                    temp.put("user_id", String.valueOf(t.getuserid()));
+                    temp.put("title", t.gettitle());
+                    temp.put("firstday", t.getFirst_day());
+                    temp.put("duration",  String.valueOf(t.getduration()));
+                    temp.put("location", t.getlocation());
+                    temp.put("name", t.getnickname());
+
+                    temp.put("like_num", String.valueOf(t.getfavoritecount()));
+                    temp.put("comment_num", String.valueOf(t.getComment_count()));
+
+                    temp.put("travel_id",String.valueOf(t.gettravelid()));
+                    temp.put("favorited",String.valueOf(t.getfavorited()));
+                    launchDatas.add(temp);
+                }
+                final int rescode = response.code();
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         //  Toast.makeText(getActivity().getApplicationContext(), "TestRes", Toast.LENGTH_SHORT).show();
-                        try {
-                            string = response.body().string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        Gson gson = new Gson();
-                        Travel result = gson.fromJson(string,Travel.class);
-                        List<Travel.trip> travellist =  result.gettrips();
-
-                        for (int i = 0; i < travellist.size(); i++) {
-                            Travel.trip t = travellist.get(i);
-                            Map<String, String> temp = new LinkedHashMap<String, String>();
-                            temp.put("title", t.gettitle());
-                            temp.put("firstday", t.getFirst_day());
-                            temp.put("duration",  String.valueOf(t.getduration()));
-                            temp.put("location", t.getlocation());
-                            temp.put("name", t.getnickname());
-
-                            temp.put("like_num", String.valueOf(t.getfavoritecount()));
-                            temp.put("comment_num", String.valueOf(t.getComment_count()));
-
-                            temp.put("travel_id",String.valueOf(t.gettravelid()));
-                            temp.put("favorited",String.valueOf(t.getfavorited()));
-                            launchDatas.add(temp);
-                        }
-                        int rescode = response.code();
                         if (rescode == 200) {
                             tripnum = travellist.size();
                             t.setText(String.valueOf(tripnum));

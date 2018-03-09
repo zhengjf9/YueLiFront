@@ -54,6 +54,7 @@ public class JourneyDetailActivity extends AppCompatActivity
 
         final RecyclerView myRecView = (RecyclerView) findViewById(R.id.outer_recyclerview);
         final ParentInfoAdapter myAdapter = new ParentInfoAdapter(this, dataInfoList);
+        myAdapter.notifyDataSetChanged();
         myRecView.setLayoutManager(new LinearLayoutManager(this));
         myRecView.setAdapter(myAdapter);
 

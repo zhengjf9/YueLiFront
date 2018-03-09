@@ -60,7 +60,11 @@ public class MapMoodActivity extends AppCompatActivity {
 
             initViews();
             final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
-            myAdapter = new CommentItemAdapter(this, mDatas);
+
+            final CommentItemAdapter myAdapter = new CommentItemAdapter(this, mDatas);
+            myAdapter.notifyDataSetChanged();
+
+
 
             myRecView.setLayoutManager(new LinearLayoutManager(this));
             myRecView.setAdapter(myAdapter);

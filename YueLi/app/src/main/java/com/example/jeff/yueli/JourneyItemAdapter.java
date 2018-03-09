@@ -1,12 +1,14 @@
 package com.example.jeff.yueli;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -86,8 +88,7 @@ class JourneyItemAdapter extends RecyclerView.Adapter<JourneyItemAdapter.MyViewH
         return mDatas.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder
-    {
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView title;
         TextView firstday;
@@ -98,9 +99,25 @@ class JourneyItemAdapter extends RecyclerView.Adapter<JourneyItemAdapter.MyViewH
         TextView like_num;
         TextView comment_num;
 
+        @Override
+        public void onClick(View v) {
+            if(v.getId() == R.id.avator){
+                Intent intent = new Intent(v.getContext(), IndividualOtherActivity.class);
+                intent.putExtra("user_id",Integer.parseInt(mDatas.get(getAdapterPosition()).get("user_id")));
+                //intent.putExtra("favorited",Boolean.valueOf(mDatas.get(position).get("favorited")));
+                v.getContext().startActivity(intent);
+            }else{
+                Toast.makeText(context,"item"+getAdapterPosition(),Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
         public MyViewHolder(View view)
         {
             super(view);
+            view.setOnClickListener(this);
+            View button = view.findViewById(R.id.avator);
+            button.setOnClickListener(this);
             title = (TextView) view.findViewById(R.id.title);
             firstday = (TextView) view.findViewById(R.id.firstday);
             duration = (TextView) view.findViewById(R.id.duration);

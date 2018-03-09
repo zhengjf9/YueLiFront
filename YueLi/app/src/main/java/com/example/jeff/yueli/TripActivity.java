@@ -51,15 +51,12 @@ public class TripActivity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_trip, container,false);
-
-       // String user= getActivity().getIntent().getStringExtra("user");
-       // User yonghu=new Gson().fromJson(user,User.class);
-
         mDatas.clear();
         initData();
 
         final RecyclerView myRecView = (RecyclerView)view.findViewById(R.id.my_recyclerview);
         final JourneyItemAdapter myAdapter = new JourneyItemAdapter(getContext(), mDatas);
+        myAdapter.notifyDataSetChanged();
         myRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
         myRecView.setAdapter(myAdapter);
         Button edit = view.findViewById(R.id.plus_icon);
