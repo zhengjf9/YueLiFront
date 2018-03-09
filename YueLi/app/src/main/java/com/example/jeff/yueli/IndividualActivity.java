@@ -108,7 +108,12 @@ public class IndividualActivity extends Fragment {
             }
         });
 
-
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
         mood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -318,7 +323,7 @@ public class IndividualActivity extends Fragment {
         trashDatas.add(temp1);
 
     }
-    public void showDialog(View view){
+    public void showDialog(){
         final BottomSheetDialog dialog=new BottomSheetDialog(getContext());
         View dialogView= LayoutInflater.from(getContext())
                 .inflate(R.layout.logout,null);
