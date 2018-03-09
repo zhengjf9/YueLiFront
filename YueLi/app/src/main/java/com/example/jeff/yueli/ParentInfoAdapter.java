@@ -25,7 +25,7 @@ public class ParentInfoAdapter extends RecyclerView.Adapter<ParentInfoAdapter.Vi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.journey_date_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.journey_date_item,null);
         return new ViewHolder(view);
 
     }

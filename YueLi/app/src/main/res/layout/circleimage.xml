@@ -8,6 +8,6 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         app:civ_border_width="2dp"
-        android:src="@drawable/male_user_96px_cover"
+        android:src="@drawable/avator"
         app:civ_border_color="#ffffff"/>
 </LinearLayout>
