@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -30,6 +32,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 import rx.*;
 import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by jeff on 18-3-8.
@@ -38,8 +43,11 @@ import rx.Observable;
 public class MapMoodActivity extends AppCompatActivity {
     public List<java.util.Map<String, String>> mDatas =
             new ArrayList<java.util.Map<String, String>>();
+    private List<Comment.review> comments;
     private MyApplication myApplication;
     private Feelings cFeelings;
+    private CommentItemAdapter myAdapter;
+    private int pos;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,12 +56,16 @@ public class MapMoodActivity extends AppCompatActivity {
         try {
             myApplication = (MyApplication)getApplication();
             cFeelings = myApplication.getCurrentFeelings();
-
+            pos = 0;
 
             initViews();
             final RecyclerView myRecView = (RecyclerView) findViewById(R.id.my_recyclerview);
+
             final CommentItemAdapter myAdapter = new CommentItemAdapter(this, mDatas);
             myAdapter.notifyDataSetChanged();
+
+
+
             myRecView.setLayoutManager(new LinearLayoutManager(this));
             myRecView.setAdapter(myAdapter);
         } catch (Exception e) {
@@ -84,9 +96,10 @@ public class MapMoodActivity extends AppCompatActivity {
                 OkHttpClient okHttpClient = myApplication.gethttpclient();
                 String url = "http://123.207.29.66:3009/api/feelings/" + cFeelings.getFeeling_id() + "/comments";
                 EditText nameInput = (EditText)findViewById(R.id.name_input);
-                FormBody formBody = new FormBody.Builder().add("reply_to_id", "")
+                FormBody formBody = new FormBody.Builder()
                         .add("content", nameInput.getText().toString()).build();
-                Request request = new Request.Builder().post(formBody).url(url).build();
+                Log.e("send feeling comment", "start " + url);
+                final Request request = new Request.Builder().post(formBody).url(url).build();
                 okHttpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -95,11 +108,46 @@ public class MapMoodActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
+                        final boolean isOk;
+                        String s = response.body().string();
                         if (response.code() == 200) {
-                            Toast.makeText(MapMoodActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
+                            Log.e("sendFComments", "success" + " " + s);
+                            isOk = true;
+
                         } else {
-                            Toast.makeText(MapMoodActivity.this, "请稍后重新尝试", Toast.LENGTH_SHORT).show();
+                            Log.e("sendFComments", "fail" + " " + s);
+
+                            isOk = false;
                         }
+                        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+                            @Override
+                            public void call(Subscriber<? super String> subscriber) {
+                                subscriber.onCompleted();
+                            }
+                        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+                        Observer<String> observer = new Observer<String>() {
+                            @Override
+                            public void onCompleted() {
+                                if (isOk) {
+                                    Toast.makeText(MapMoodActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
+                                    TextView nameInput = (TextView)findViewById(R.id.name_input);
+                                    nameInput.setText("");
+                                } else {
+                                    Toast.makeText(MapMoodActivity.this, "请稍后重新尝试", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(String s) {
+
+                            }
+                        };
+                        observable.subscribe(observer);
                     }
                 });
             }
@@ -111,6 +159,7 @@ public class MapMoodActivity extends AppCompatActivity {
             }
         });
 
+
         Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
@@ -118,7 +167,7 @@ public class MapMoodActivity extends AppCompatActivity {
                     try {
                         OkHttpClient okHttpClient = myApplication.gethttpclient();
                         String url = "http://123.207.29.66:3009/api/feelings/" + cFeelings.getFeeling_id() + "/comments";
-                        Request request = new Request.Builder().url(url).build();
+                        final Request request = new Request.Builder().url(url).build();
                         okHttpClient.newCall(request).enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
@@ -127,7 +176,17 @@ public class MapMoodActivity extends AppCompatActivity {
 
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
-                                
+                                try {
+                                    String s = response.body().string();
+                                    Gson gson = new Gson();
+                                    Comment comment = gson.fromJson(s, Comment.class);
+                                    List<Comment.review> temp = comment.getreviews();
+                                    if (isCommentsUpdate(temp)) {
+                                        convertCommentToAdapter();
+                                    }
+                                } catch (Exception e) {
+
+                                }
                             }
                         });
                         Thread.sleep(2000);
@@ -136,7 +195,65 @@ public class MapMoodActivity extends AppCompatActivity {
                     }
                 }
             }
-        });
+        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+        Observer<String> observer = new Observer<String>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+
+            }
+        };
+        observable.subscribe(observer);
+
+    }
+
+    private boolean isCommentsUpdate(List<Comment.review> c) {
+        if (comments == null) {
+            comments = new ArrayList<>();
+        }
+        int size = comments.size();
+        if (c.size() == 0) {
+            return false;
+        }
+        boolean isChanged = false;
+        boolean isSame;
+        for (int i = 0; i < c.size(); ++i) {
+            isSame = false;
+            for (int j = 0; j < size; ++i) {
+                if (c.get(i).getcommentid() == comments.get(j).getcommentid()) {
+                    isSame = true;
+                    break;
+                }
+            }
+            if (!isSame) {
+                comments.add(c.get(i));
+                isChanged = true;
+            }
+        }
+        return isChanged;
+    }
+
+    void convertCommentToAdapter() {
+        List<java.util.Map<String, String>> datas = myAdapter.getmDatas();
+
+        for (int i = pos; i < comments.size(); ++i) {
+            java.util.Map<String, String> temp = new LinkedHashMap<>();
+            temp.put("name", comments.get(i).getnickname());
+            temp.put("date", comments.get(i).gettime());
+            temp.put("content", comments.get(i).getcontent());
+            datas.add(temp);
+        }
+        myAdapter.setmDatas(datas);
+        myAdapter.notifyDataSetChanged();
     }
 
     public void initDatas(){

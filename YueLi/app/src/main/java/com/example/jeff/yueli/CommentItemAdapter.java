@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.*;
+import java.util.Map;
 
 /**
  * Created by jeff on 18-3-8.
@@ -26,6 +27,15 @@ class CommentItemAdapter extends RecyclerView.Adapter<CommentItemAdapter.MyViewH
         this.context = context;
         mDatas = list;
     }
+
+    public List<Map<String, String>> getmDatas() {
+        return mDatas;
+    }
+
+    public void setmDatas(List<Map<String, String>> mDatas) {
+        this.mDatas = mDatas;
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
