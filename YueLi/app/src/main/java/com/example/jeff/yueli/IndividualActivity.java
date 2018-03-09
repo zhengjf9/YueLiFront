@@ -18,11 +18,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-<<<<<<< HEAD
-=======
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
->>>>>>> master
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
