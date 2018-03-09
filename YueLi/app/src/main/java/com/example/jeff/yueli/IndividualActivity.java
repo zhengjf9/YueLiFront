@@ -1,23 +1,38 @@
 package com.example.jeff.yueli;
 
+import android.content.ContentUris;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -28,9 +43,20 @@ import java.util.Map;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import rx.*;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+import static android.app.Activity.RESULT_OK;
+import static com.example.jeff.yueli.AddActivity.SELECT_PHOTO;
 
 /**
  * Created by XDDN2 on 2018/3/2.
@@ -45,6 +71,11 @@ public class IndividualActivity extends Fragment {
     private int mnum;
     private int tripnum;
     private int fannum;
+    private String imagePath;
+    private ImageView image;
+    private ImageView bg;
+    private User user;
+    private int which = 0;
 
 
     public IndividualActivity() {
@@ -56,7 +87,7 @@ public class IndividualActivity extends Fragment {
         View view = inflater.inflate(R.layout.activity_individual, container, false);
         MyApplication application = (MyApplication) getActivity().getApplication();
         OkHttpClient httpClient = application.gethttpclient();
-        final User user = application.getUser();
+        user = application.getUser();
         final CustomRecyclerView myRecView = (CustomRecyclerView) view.findViewById(R.id.outer_recyclerview);
         final DateInfoAdapter myAdapter = new DateInfoAdapter(getContext(),dataInfoList);
         myAdapter.notifyDataSetChanged();
@@ -75,6 +106,30 @@ public class IndividualActivity extends Fragment {
         TextView tnum = view.findViewById(R.id.journey_num);
         TextView fans = view.findViewById(R.id.fans_num);
         TextView sig = view.findViewById(R.id.signaure);
+        bg = view.findViewById(R.id.background);
+        bg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                which = 1;
+                if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, 1);
+                } else {
+                    openAlbum();
+                }
+            }
+        });
+        image = view.findViewById(R.id.avator);
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                which = 0;
+                if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, 1);
+                } else {
+                    openAlbum();
+                }
+            }
+        });
         sig.setText(user.getSignature());
         name.setText(user.getnickname());
 
@@ -131,7 +186,7 @@ public class IndividualActivity extends Fragment {
 
             }
         });
-
+//        getBaseData();
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,6 +233,221 @@ public class IndividualActivity extends Fragment {
 
         return view;
     }
+    private void getBaseData() {
+        MyApplication myApplication = (MyApplication)getActivity().getApplication();
+        OkHttpClient okHttpClient = myApplication.gethttpclient();
+        String url = "http://123.207.29.66:3009/api/users/" + user.getuserid() + "?photo=%60avatar%60";
+        Request request = new Request.Builder().url(url).build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    final byte[] inputStream = response.body().bytes();
+
+                    rx.Observable<Bitmap> observable = Observable.create(new Observable.OnSubscribe<Bitmap>() {
+                        @Override
+                        public void call(Subscriber<? super Bitmap> subscriber) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(inputStream, 0, inputStream.length);
+                            Log.e("setAvator", "start");
+                            subscriber.onNext(bitmap);
+                            subscriber.onCompleted();
+                        }
+                    }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+                    Observer<Bitmap> observer = new Observer<Bitmap>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(Bitmap bitmap) {
+                            image.setImageBitmap(bitmap);
+                            Log.e("setAvator", "success");
+                        }
+                    };
+                    observable.subscribe(observer);
+                    Log.e("get_user_avator", "OK!");
+                } else {
+                    Log.e("get_user_avator", "Fail!");
+                }
+            }
+        });
+        url = "http://123.207.29.66:3009/api/users/" + user.getuserid() + "?photo=%60bg%60";
+        request = new Request.Builder().url(url).build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    final byte[] inputStream = response.body().bytes();
+
+                    rx.Observable<Bitmap> observable = Observable.create(new Observable.OnSubscribe<Bitmap>() {
+                        @Override
+                        public void call(Subscriber<? super Bitmap> subscriber) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(inputStream, 0, inputStream.length);
+                            subscriber.onNext(bitmap);
+                            subscriber.onCompleted();
+                        }
+                    }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+                    Observer<Bitmap> observer = new Observer<Bitmap>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(Bitmap bitmap) {
+                            bg.setImageBitmap(bitmap);
+                        }
+                    };
+                    observable.subscribe(observer);
+                    Log.e("get_user_avator", "OK!");
+                } else {
+                    Log.e("get_user_avator", "Fail!");
+                }
+            }
+        });
+    }
+
+    private void openAlbum() {
+        Intent intent = new Intent("android.intent.action.GET_CONTENT");
+        intent.setType("image/*");
+        startActivityForResult(intent,SELECT_PHOTO);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch(requestCode) {
+            case 1:
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openAlbum();
+                } else {
+                    Toast.makeText(getActivity(),"You denied the permission",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+        }
+    }
+
+    @Override
+    public  void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode, data);
+        switch (requestCode) {
+            case SELECT_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    if (Build.VERSION.SDK_INT >= 19) {
+                        handleImageOnKitKat(data);
+                    } else {
+                        handleImageBeforeKitKat(data);
+                    }
+                }
+        }
+    }
+    private void handleImageOnKitKat(Intent data) {
+
+        Uri uri = data.getData();
+
+        if (DocumentsContract.isDocumentUri(getActivity(),uri)) {
+            String docId = DocumentsContract.getDocumentId(uri);
+            if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                String id = docId.split(":")[1];
+                String selecttion = MediaStore.Images.Media._ID + "=" + id;
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,selecttion);
+            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),Long.valueOf(docId));
+                imagePath = getImagePath(contentUri,null);
+            }
+
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            imagePath = getImagePath(uri,null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            imagePath = uri.getPath();
+        }
+        MyApplication myApplication = (MyApplication)getActivity().getApplication();
+        OkHttpClient okHttpClient = myApplication.gethttpclient();
+        String url = "http://123.207.29.66:3009/api/users/" + user.getuserid();
+        MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        File file = new File(imagePath);
+        RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
+        if (which == 0) {
+            requestBody.addFormDataPart("avatar", file.getName(), body);
+        } else {
+            requestBody.addFormDataPart("bg", file.getName(), body);
+        }
+        Request request = new Request.Builder().url(url).patch(requestBody.build()).build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                if (response.code() == 200) {
+                    Log.e("change_user_Image", "OK!");
+                } else {
+                    Log.e("change_user_Image", "Fail!");
+                }
+            }
+        });
+        displayImage(imagePath);
+    }
+
+    private void handleImageBeforeKitKat(Intent data) {
+        Uri uri = data.getData();
+        String imagePath = getImagePath(uri,null);
+        displayImage(imagePath);
+    }
+
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = getActivity().getContentResolver().query(uri,null,selection,null,null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
+    }
+
+    private void displayImage(String imagePath) {
+        if (imagePath != null) {
+//            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+            Bitmap pic = BitmapFactory.decodeFile(imagePath, options);
+            if (which == 0) {
+                image.setImageBitmap(pic);
+            } else {
+                bg.setImageBitmap(pic);
+            }
+            Log.d("checkSelectPath",imagePath);
+        } else {
+            Toast.makeText(getActivity(),"failed to get image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void initDatas(final TextView m, final TextView f, final TextView t,
     final JourneyItemAdapter a, final JourneyItemAdapter b,final DateInfoAdapter c) {
         MyApplication application = (MyApplication) getActivity().getApplication();
@@ -188,76 +458,76 @@ public class IndividualActivity extends Fragment {
 
 
         httpClient.newCall(request).enqueue(new Callback() {
-                                                @Override
-                                                public void onFailure(Call call, IOException e) {
-                                                }
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
 
-                                                String string = null;
+            String string = null;
 
-                                                @Override
-                                                public void onResponse(Call call, final Response response) throws IOException {
-                                                    try {
-                                                        string = response.body().string();
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                    }
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                try {
+                    string = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-                                                    Gson gson = new Gson();
-                                                    Mood result = gson.fromJson(string, Mood.class);
-                                                    List<Mood.xinqing> moodlist = result.getdata();
+                Gson gson = new Gson();
+                Mood result = gson.fromJson(string, Mood.class);
+                List<Mood.xinqing> moodlist = result.getdata();
 
 
-                                                    for (int i = 0; i < moodlist.size(); ) {
-                                                        Mood.xinqing t = moodlist.get(i);
-                                                        DateInfo dateInfo = new DateInfo();//指的是某一天的标题，包括第几天，日期，星期。
+                for (int i = 0; i < moodlist.size(); ) {
+                    Mood.xinqing t = moodlist.get(i);
+                    DateInfo dateInfo = new DateInfo();//指的是某一天的标题，包括第几天，日期，星期。
 
-                                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                                        Calendar calendar = Calendar.getInstance();
-                                                        Date date = null;
-                                                        try {
-                                                            date = sdf.parse(t.gettime().substring(0, 10));
-                                                            calendar.setTime(date);
-                                                        } catch (ParseException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        dateInfo.setDate(t.gettime().substring(0, 10));
-                                                        List<ContentInfo> contentInfoList = new ArrayList<>();//指的是这一天所有的心情
-                                                        Date tmpdate = date;
-                                                        while (tmpdate == date) {
-                                                            ContentInfo contentInfo = new ContentInfo();
-                                                            String location = String.valueOf(t.getlatitude()) + ", " + String.valueOf(t.getlongitude());
-                                                            contentInfo.setLocation(location);//contentInfo指一条心情
-                                                            contentInfo.setComment(t.getcontent());
-                                                            contentInfoList.add(contentInfo);
-                                                            i++;
-                                                            if (i < moodlist.size()) {
-                                                                t = moodlist.get(i);
-                                                            } else break;
-                                                        }
-                                                        if (response.code() == 200)
-                                                            mnum = moodlist.size();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Calendar calendar = Calendar.getInstance();
+                    Date date = null;
+                    try {
+                        date = sdf.parse(t.gettime().substring(0, 10));
+                        calendar.setTime(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    dateInfo.setDate(t.gettime().substring(0, 10));
+                    List<ContentInfo> contentInfoList = new ArrayList<>();//指的是这一天所有的心情
+                    Date tmpdate = date;
+                    while (tmpdate == date) {
+                        ContentInfo contentInfo = new ContentInfo();
+                        String location = String.valueOf(t.getlatitude()) + ", " + String.valueOf(t.getlongitude());
+                        contentInfo.setLocation(location);//contentInfo指一条心情
+                        contentInfo.setComment(t.getcontent());
+                        contentInfoList.add(contentInfo);
+                        i++;
+                        if (i < moodlist.size()) {
+                            t = moodlist.get(i);
+                        } else break;
+                    }
+                    if (response.code() == 200)
+                        mnum = moodlist.size();
 
-                                                        dateInfo.setContentInfoList(contentInfoList);//将这一天的所有游记设置成标题的一个成员
-                                                        dataInfoList.add(dateInfo);
+                    dateInfo.setContentInfoList(contentInfoList);//将这一天的所有游记设置成标题的一个成员
+                    dataInfoList.add(dateInfo);
 
-                                                        ;//将一天一天的数据push进dataInfoList
-                                                        // dataInfoList就是最后要的数据
-                                                    }
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            c.notifyDataSetChanged();
-                                                            int rescode = response.code();
-                                                            if (rescode == 200) {
+                    ;//将一天一天的数据push进dataInfoList
+                    // dataInfoList就是最后要的数据
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        c.notifyDataSetChanged();
+                        int rescode = response.code();
+                        if (rescode == 200) {
 
-                                                                m.setText(String.valueOf(mnum));
-                                                            }
-                                                            // Toast.makeText(getActivity().getApplicationContext(), "心情"+moodlist.size(), Toast.LENGTH_SHORT).show();
+                            m.setText(String.valueOf(mnum));
+                        }
+                        // Toast.makeText(getActivity().getApplicationContext(), "心情"+moodlist.size(), Toast.LENGTH_SHORT).show();
 
-                                                        }
-                                                    });
-                                                }
-                                            });
+                    }
+                });
+            }
+        });
 
         url="http://123.207.29.66:3009/api/travels?user_id="+String.valueOf(user.getuserid());
         request = new Request.Builder().url(url).build();
