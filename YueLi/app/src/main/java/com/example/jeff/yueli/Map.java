@@ -370,10 +370,11 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
 
     void initImageList() {
         imageLists = new ArrayList<>();
-        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.shanghai));
-        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.cake));
-        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.left_back));
-        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.coffee));
+//        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.r1));
+        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.r2));
+        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.r3));
+        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.r4));
+//        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.r5));
     }
 
     // 网络访问获取Spot相关信息

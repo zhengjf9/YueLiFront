@@ -47,10 +47,10 @@ public class RecommendActivity extends Fragment {
     private GestureDetector gestureDetector;
     private View totalView;
     private MyApplication myApplication;
-    private ConstraintLayout first, second;
+    private ConstraintLayout first, second, third;
     private List<spot> spots;
     private int times;
-    private TextView firstDest, secondDest, firstDesc, secondDesc, local;
+    private TextView firstDest, secondDest, thirdDest, firstDesc, secondDesc, thirdDesc, local;
 
     public RecommendActivity() {
 
@@ -60,7 +60,7 @@ public class RecommendActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         totalView = inflater.inflate(R.layout.activity_recommend, container, false);
 
-        which = 1;
+        which = 0;
         times = 0;
         myApplication = (MyApplication)getActivity().getApplication();
         myApplication.setCurrentPos(which);
@@ -75,11 +75,13 @@ public class RecommendActivity extends Fragment {
         first = totalView.findViewById(R.id.firstSpot);
 
         second = totalView.findViewById(R.id.secondSpot);
-
+        third = totalView.findViewById(R.id.thirdSpot);
         firstDest = (TextView)first.findViewById(R.id.firstDestination);
         firstDesc = first.findViewById(R.id.firstDescription);
         secondDest = (TextView)second.findViewById(R.id.secondDestination);
         secondDesc = second.findViewById(R.id.secondDescription);
+        thirdDest = third.findViewById(R.id.thirdDestination);
+        thirdDesc = third.findViewById(R.id.thirdDescription);
         local = totalView.findViewById(R.id.location);
         totalView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -104,37 +106,66 @@ public class RecommendActivity extends Fragment {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (e2.getY() - e1.getY() > verticalMinistance && Math.abs(velocityY) > minVelocity) {
-                if (which == 1) {
+            if (e1.getY() - e2.getY() > verticalMinistance && Math.abs(velocityY) > minVelocity) {
+                Log.e("movement", "shanghua");
+                if (which == 0) {
                     first.setVisibility(View.GONE);
 
-                    secondDest.setText(spots.get(0).getName());
-                    secondDesc.setText(spots.get(0).getDescription());
-                    local.setText(spots.get(0).getCity());
-                    second.setVisibility(View.VISIBLE);
-                    first.setAnimation(AnimationUtil.moveToViewBottom());
-                    second.setAnimation(AnimationUtil.moveToViewLocation());
-                    which = 0;
-
-                } else {
-                    second.setVisibility(View.GONE);
-                    first.setVisibility(View.VISIBLE);
-
-                    firstDest.setText(spots.get(1).getName());
-
-                    firstDesc.setText(spots.get(1).getDescription());
+                    secondDest.setText(spots.get(1).getName());
+                    secondDesc.setText(spots.get(1).getDescription());
                     local.setText(spots.get(1).getCity());
-                    second.setAnimation(AnimationUtil.moveToViewBottom());
-                    first.setAnimation(AnimationUtil.moveToViewLocation());
+                    second.setVisibility(View.VISIBLE);
+                    first.setAnimation(AnimationUtil.upoutside());
+                    second.setAnimation(AnimationUtil.upinto());
                     which = 1;
+
+                } else if (which == 1) {
+                    second.setVisibility(View.GONE);
+                    third.setVisibility(View.VISIBLE);
+
+                    thirdDest.setText(spots.get(2).getName());
+
+                    thirdDesc.setText(spots.get(2).getDescription());
+                    local.setText(spots.get(2).getCity());
+                    second.setAnimation(AnimationUtil.upoutside());
+                    third.setAnimation(AnimationUtil.upinto());
+                    which = 2;
                 }
                 myApplication.setCurrentPos(which);
                 times = times + 1;
+            } else if (e2.getY() - e1.getY() > verticalMinistance && Math.abs(velocityY) > minVelocity) {
+                Log.e("movement", "xiahua");
+                if (which == 1) {
+                    first.setVisibility(View.VISIBLE);
+
+                    firstDest.setText(spots.get(0).getName());
+                    firstDesc.setText(spots.get(0).getDescription());
+                    local.setText(spots.get(0).getCity());
+                    first.setAnimation(AnimationUtil.downinto());
+                    second.setAnimation(AnimationUtil.downoutside());
+                    second.setVisibility(View.GONE);
+                    which = 0;
+
+                } else if (which == 2) {
+                    second.setVisibility(View.VISIBLE);
+
+                    secondDest.setText(spots.get(1).getName());
+
+                    secondDesc.setText(spots.get(1).getDescription());
+                    local.setText(spots.get(1).getCity());
+                    second.setAnimation(AnimationUtil.downinto());
+                    third.setAnimation(AnimationUtil.downoutside());
+                    third.setVisibility(View.GONE);
+                    which = 1;
+                }  else {
+                    Log.e("xiahua","update spots");
+                    getRecommandedSpot();
+                }
             }
-            if (times == 2) {
-                getRecommandedSpot();
-                times = 0;
-            }
+//            if (times == 2) {
+//                getRecommandedSpot();
+//                times = 0;
+//            }
             return false;
         }
 
@@ -169,6 +200,9 @@ public class RecommendActivity extends Fragment {
                     Gson gson = new Gson();
                     Spots spotsInfo = gson.fromJson(string, Spots.class);
                     spots = spotsInfo.getData();
+                    if (spots.size() < 3) {
+                        spots.add(spots.get(1));
+                    }
                     myApplication.setSpots(spots);
                     int rescode = response.code();
                     if (rescode == 200) {
@@ -194,12 +228,12 @@ public class RecommendActivity extends Fragment {
 
                             @Override
                             public void onNext(String s) {
-                                firstDest.setText(spots.get(1).getName());
+                                firstDest.setText(spots.get(0).getName());
 
-                                firstDesc.setText(spots.get(1).getDescription());
-                                local.setText(spots.get(1).getCity());
-                                second.setAnimation(AnimationUtil.moveToViewBottom());
-                                first.setAnimation(AnimationUtil.moveToViewLocation());
+                                firstDesc.setText(spots.get(0).getDescription());
+                                local.setText(spots.get(0).getCity());
+//                                second.setAnimation(AnimationUtil.downoutside());
+                                first.setAnimation(AnimationUtil.downinto());
                             }
                         };
                         observable.subscribe(observer);

@@ -15,10 +15,18 @@ public class AnimationUtil {
      *
      * @return
      */
-    public static TranslateAnimation moveToViewBottom() {
+    public static TranslateAnimation downoutside() {
         TranslateAnimation mHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                 0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
+        mHiddenAction.setDuration(500);
+        return mHiddenAction;
+    }
+
+    public static TranslateAnimation downinto() {
+        TranslateAnimation mHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
         mHiddenAction.setDuration(500);
         return mHiddenAction;
     }
@@ -28,7 +36,14 @@ public class AnimationUtil {
      *
      * @return
      */
-    public static TranslateAnimation moveToViewLocation() {
+    public static TranslateAnimation upoutside() {
+        TranslateAnimation mHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
+        mHiddenAction.setDuration(500);
+        return mHiddenAction;
+    }
+    public static TranslateAnimation upinto() {
         TranslateAnimation mHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                 1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
