@@ -65,6 +65,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
     private ArrayList<MarkerOptions> markeroptions;
     private List<Marker> markers;
     private MapView mapView;
+    private List<Bitmap>imageLists;
     private List<Feelings> feelings; // 地图上心情的信息
     private AMapLocation mapLocation;
     //声明AMapLocationClient类对象
@@ -95,6 +96,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
             size = 0;
             isUpdate =false;
             markers = new ArrayList<>();
+            initImageList();
             myApplication = (MyApplication) getActivity().getApplication();
             ConstraintLayout c = (ConstraintLayout)(totalView.findViewById(R.id.info));
             c.setVisibility(View.GONE);
@@ -125,9 +127,10 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         aMap = mapView.getMap();
         aMap.setOnMarkerClickListener(this);
+        aMap.getUiSettings().setZoomControlsEnabled(false);
         //禁止地图缩放和移动
         aMap.getUiSettings().setScrollGesturesEnabled(false);
-        aMap.getUiSettings().setZoomGesturesEnabled(false);
+//        aMap.getUiSettings().setZoomGesturesEnabled(false);
         //设置缩放比例
         aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         // 实现定位
@@ -148,7 +151,10 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
 
         View circleImage = LayoutInflater.from(getActivity()).inflate(R.layout.circleimage, null);
         CircleImageView circleImageView = circleImage.findViewById(R.id.circle);
-        circleImageView.setImageResource(R.drawable.shanghai);
+        if (p >= feelings.size()) {
+            p = feelings.size() - 1;
+        }
+        circleImageView.setImageBitmap(feelings.get(p).getImage());
 
         Log.e("finish", "add image");
         bitmapDescriptor = BitmapDescriptorFactory.fromView(circleImage);
@@ -228,6 +234,7 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         c.setVisibility(View.VISIBLE);
         ImageView imageView = (ImageView)totalView.findViewById(R.id.markerImg);
         imageView.setImageBitmap(feelings.get(p).getImage());
+
         ImageView userImage = (ImageView)c.findViewById(R.id.user_image);
         TextView username = (TextView)c.findViewById(R.id.user_name);
         username.setText(feelings.get(p).getNickname());
@@ -361,6 +368,15 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
         return !(size == feelings.size());
     }
 
+    void initImageList() {
+        imageLists = new ArrayList<>();
+//        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.r1));
+        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.r2));
+        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.r3));
+        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.r4));
+//        imageLists.add(BitmapFactory.decodeResource(getResources(), R.drawable.r5));
+    }
+
     // 网络访问获取Spot相关信息
 
     List<Feelings> getFeelings(AMapLocation myLocation) {
@@ -384,7 +400,9 @@ public class Map  extends Fragment implements AMap.OnMarkerClickListener {
                     InputStream in = response.body().byteStream();
 //                    Bitmap bitmap = BitmapFactory.decodeStream(in);
                     Gson gson = new Gson();
+
                     AllFeelings allFeelings = gson.fromJson(s, AllFeelings.class);
+                    allFeelings.setImages(imageLists);
                     List<Feelings> temp = allFeelings.getFeelingsList();
                     if (temp == null) {
                         Log.e("update_info", s);

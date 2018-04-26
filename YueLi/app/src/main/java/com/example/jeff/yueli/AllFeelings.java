@@ -1,5 +1,8 @@
 package com.example.jeff.yueli;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.util.List;
 
 /**
@@ -16,6 +19,12 @@ public class AllFeelings {
 
     public String getMsg() {
         return msg;
+    }
+
+    public void setImages(List<Bitmap> images) {
+        for (int i = 0; i < data.size() && i < images.size(); ++i) {
+            data.get(i).setImage(images.get(i));
+        }
     }
 
     public List<Feelings> getFeelingsList() {

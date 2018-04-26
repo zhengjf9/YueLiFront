@@ -97,6 +97,52 @@
             android:layout_marginBottom="4dp"
             />
     </android.support.constraint.ConstraintLayout>
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/thirdSpot"
+        android:visibility="gone"
+        android:background="@drawable/background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <View
+            android:id="@+id/thirdIntroduction"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="parent"
+            android:background="#69434343"
+            app:layout_constraintTop_toTopOf="@+id/thirdDestination"
+            />
+        <TextView
+            android:id="@+id/thirdDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/description"
+            android:textSize="60px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="40dp"
+            android:ellipsize="end"
+            android:maxLines="4"
+            android:lines="4"
+            />
+        <TextView
+            android:id="@+id/thirdDestination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/thirdDescription"
+            android:text="科帕卡巴纳海滩2"
+            android:textSize="70px"
+            android:textColor="@color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="4dp"
+            />
+    </android.support.constraint.ConstraintLayout>
     <ImageView
         android:id="@+id/location_icon"
         android:layout_width="48dp"

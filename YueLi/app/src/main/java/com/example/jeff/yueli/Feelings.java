@@ -31,6 +31,10 @@ public class Feelings {
         this.content = content;
     }
 
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
+
     public String getNickname() {
         return nickname;
     }

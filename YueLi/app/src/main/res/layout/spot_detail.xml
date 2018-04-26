@@ -9,7 +9,7 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:background="@color/mood_blue" />
+        android:background="@drawable/background" />
     <Button
         android:id="@+id/back"
         android:layout_width="30dp"

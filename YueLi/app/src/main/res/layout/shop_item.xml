@@ -10,7 +10,7 @@
     android:id="@+id/pic"
     android:layout_width="100dp"
     android:layout_height="100dp"
-    android:src="@drawable/ic_launcher_background"
+    android:src="@drawable/coffee"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     android:layout_marginTop="20dp"

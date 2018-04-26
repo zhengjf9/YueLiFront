@@ -62,9 +62,9 @@
         />
     <ImageView
         android:id="@+id/pic"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="150dp"
-        android:background="@color/gray"
+
         app:layout_constraintTop_toBottomOf="@+id/description"
         app:layout_constraintLeft_toLeftOf="@+id/description"
         app:layout_constraintRight_toRightOf="@+id/description"

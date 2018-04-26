@@ -75,7 +75,7 @@ public class AddActivity extends Fragment {
 
     private void initViews() {
         addPic = (ImageView) totalView.findViewById(R.id.add);
-        image = (ImageView)totalView.findViewById(R.id.feelingImage);
+        image = (ImageView)totalView.findViewById(R.id.add);
 
         Button send = (Button)totalView.findViewById(R.id.send);
         send.setOnClickListener(new View.OnClickListener() {
