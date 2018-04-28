@@ -7,6 +7,8 @@ import android.app.Application;
 
 import com.amap.api.location.AMapLocation;
 
+import org.litepal.LitePalApplication;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +19,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-public class MyApplication extends Application {
+public class MyApplication extends LitePalApplication {
     private OkHttpClient httpClient = new OkHttpClient.Builder()
             .cookieJar(new CookieJar() {
         private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();

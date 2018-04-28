@@ -77,9 +77,22 @@ public class PostTrip extends AppCompatActivity {
         myRecView.setAdapter(myAdapter);
         initData();//类似individualactovity,从本地读取
 
+        final Button addday = (Button)findViewById(R.id.add);
+        addday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PostTrip.this, addDay.class);
+                startActivity(intent);
+            }
+        });
+
         s.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
+                Intent intent = new Intent(PostTrip.this, PostTrip.class);
+                startActivity(intent);*/
+                /*
                 final MyApplication application = (MyApplication) getApplication();
                 final OkHttpClient httpClient = application.gethttpclient();
                 final User user = application.getUser();
@@ -98,10 +111,6 @@ public class PostTrip extends AppCompatActivity {
                     FormBody formBody = new FormBody.Builder().add("title", t).build();
                     request = new Request.Builder().url(url).build();
                 }
-
-
-
-
 
                 httpClient.newCall(request).enqueue(new Callback() {
                     @Override
@@ -177,7 +186,7 @@ public class PostTrip extends AppCompatActivity {
                             }
                         });
                     }
-                });
+                });*/
 
 
             }

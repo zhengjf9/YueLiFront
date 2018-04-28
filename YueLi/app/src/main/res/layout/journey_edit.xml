@@ -137,11 +137,11 @@
         android:layout_marginLeft="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/panel"
         />
-    <ImageView
+    <Button
         android:id="@+id/add"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/plus_gray_48px"
+        android:background="@drawable/plus_gray_48px"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="10dp"
         app:layout_constraintTop_toTopOf="@+id/panel"

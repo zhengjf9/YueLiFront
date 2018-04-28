@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">悦历</string>
     <string name="description">巴西里约热内卢科帕卡巴纳海滩被称为世界上最有名的海滩，海岸沿线长达4.5公里，海水蔚蓝，浪花雪白，沙滩洁净松软，加上终年气温适宜戏水，游人络绎不绝。五彩缤纷的阳伞和五颜六色的游泳衣，把沙滩点缀得绚丽多姿，随处可见身材惹火的比基尼女郎也是里约海岸一景。</string>
+    <string name="title_activity_add_day">addDay</string>
 </resources>

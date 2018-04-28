@@ -60,11 +60,14 @@ public class TripActivity extends Fragment {
         myAdapter.notifyDataSetChanged();
         myRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
         myRecView.setAdapter(myAdapter);
+        //添加游记按钮
         Button edit = view.findViewById(R.id.plus_icon);
+
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PostTrip.class);
+                //Intent intent = new Intent(getActivity(), PostTrip.class);
+                Intent intent = new Intent(getActivity(), TrashActivity.class);
                 startActivity(intent);
             }
         });
