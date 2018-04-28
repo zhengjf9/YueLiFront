@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -47,6 +48,7 @@ public class PostTrip extends AppCompatActivity {
 
     private ImageView imageView;
     private String imagePath;
+    private List<DateInfo> dataInfoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,14 @@ public class PostTrip extends AppCompatActivity {
         });
         final EditText e = findViewById(R.id.title);
        // final String t = e.getText().toString();
-        final EditText ed = findViewById(R.id.edit);
+        final EditText ed = findViewById(R.id.edit);//这里全部要去掉
+
+        final CustomRecyclerView myRecView = (CustomRecyclerView) findViewById(R.id.outer_recyclerview);
+        final DateInfoAdapter myAdapter = new DateInfoAdapter(this,dataInfoList);
+        myAdapter.notifyDataSetChanged();
+        myRecView.setLayoutManager(new LinearLayoutManager(this));
+        myRecView.setAdapter(myAdapter);
+        initData();//类似individualactovity,从本地读取
 
         s.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +182,9 @@ public class PostTrip extends AppCompatActivity {
 
             }
         });
+    }
+    void initData(){
+
     }
     private void openAlbum() {
         Intent intent = new Intent("android.intent.action.GET_CONTENT");
