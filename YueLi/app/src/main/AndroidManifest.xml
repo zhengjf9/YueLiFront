@@ -48,6 +48,7 @@
         <activity android:name=".PostTrip"></activity>
         <activity android:name=".SpotCommentActivity"></activity>
         <activity android:name=".IndividualOtherActivity"></activity>
+        <activity android:name=".TrashActivity"></activity>
 
     </application>
 
