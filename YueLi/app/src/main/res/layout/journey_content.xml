@@ -21,8 +21,8 @@
     />
     <ImageView
         android:id="@+id/location_icon"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:src="@drawable/marker_96px"
         app:layout_constraintTop_toBottomOf="@+id/word"
         app:layout_constraintLeft_toLeftOf="@+id/word"
@@ -33,7 +33,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@+id/location_icon"
-        app:layout_constraintTop_toTopOf="@+id/location_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/line"
+        android:layout_marginBottom="7dp"
         android:text="上海，中国"
         android:layout_marginTop="5dp"
         />

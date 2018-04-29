@@ -48,7 +48,11 @@ public class PostTrip extends AppCompatActivity {
 
     private ImageView imageView;
     private String imagePath;
-    private List<DateInfo> dataInfoList = new ArrayList<>();
+    public List<java.util.Map<String, String>> dateDatas =
+            new ArrayList<java.util.Map<String, String>>();//游记开头日期
+    public List<java.util.Map<String, String>> contentDatas =
+            new ArrayList<java.util.Map<String, String>>();//游记内容
+    private List<ParentInfo> dataInfoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,24 +71,27 @@ public class PostTrip extends AppCompatActivity {
             }
         });
         final EditText e = findViewById(R.id.title);
-       // final String t = e.getText().toString();
-        final EditText ed = findViewById(R.id.edit);//这里全部要去掉
 
-        final CustomRecyclerView myRecView = (CustomRecyclerView) findViewById(R.id.outer_recyclerview);
-        final DateInfoAdapter myAdapter = new DateInfoAdapter(this,dataInfoList);
-        myAdapter.notifyDataSetChanged();
+        final RecyclerView myRecView = (RecyclerView) findViewById(R.id.outer_recyclerview);
+        final ParentInfoAdapter_Trash myAdapter = new ParentInfoAdapter_Trash(this, dataInfoList);
+        initData();
         myRecView.setLayoutManager(new LinearLayoutManager(this));
         myRecView.setAdapter(myAdapter);
-        initData();//类似individualactovity,从本地读取
 
-        final Button addday = (Button)findViewById(R.id.add);
-        addday.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PostTrip.this, addDay.class);
-                startActivity(intent);
-            }
-        });
+       // final String t = e.getText().toString();
+        //final EditText ed = findViewById(R.id.edit);//这里全部要去掉
+
+
+        //加号的点击事件已经放到ParentInfoAdapter_Trash.java里面
+        //草稿箱的编辑和点击按钮写在ChildInfoAdapter_Trash里面
+//        final Button addday = (Button)findViewById(R.id.add);
+//        addday.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(PostTrip.this, addDay.class);
+//                startActivity(intent);
+//            }
+//        });
 
         s.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,6 +201,21 @@ public class PostTrip extends AppCompatActivity {
     }
     void initData(){
 
+
+        //模仿journeydetail.activity
+
+        ParentInfo parentInfo = new ParentInfo();
+        parentInfo.setDay_num("Day1");
+        parentInfo.setDate("2018年3月8日");
+        parentInfo.setWeek("周四");
+        List<ChildInfo> childInfoList = new ArrayList<>();//指的是这一天所有的游记,最开始为空
+        parentInfo.setItemList(childInfoList);//将这一天的所有游记设置成标题的一个成员
+        ChildInfo childInfo = new ChildInfo();
+        childInfo.setWord("又是美好的一天");//childInfo指一条游记
+        childInfo.setLocation("中国广州");
+        childInfoList.add(childInfo);
+        parentInfo.setItemList(childInfoList);//将这一天的所有游记设置成标题的一个成员
+        dataInfoList.add(parentInfo);//将一天一天的数据push进dataInfoList
     }
     private void openAlbum() {
         Intent intent = new Intent("android.intent.action.GET_CONTENT");
