@@ -31,7 +31,7 @@ public class TrashActivity extends AppCompatActivity {
        // test.save();
 
         final RecyclerView myRecView = (RecyclerView)findViewById(R.id.my_recyclerview);
-        final JourneyItemAdapter myAdapter = new JourneyItemAdapter(this, mDatas);
+        final TrashItemAdapter myAdapter = new TrashItemAdapter(this, mDatas);
         initData(myAdapter);
         myAdapter.notifyDataSetChanged();
         myRecView.setLayoutManager(new LinearLayoutManager(this));
@@ -48,9 +48,9 @@ public class TrashActivity extends AppCompatActivity {
             }
         });
     }
-    public void initData(final JourneyItemAdapter adapter){
+    public void initData(final TrashItemAdapter adapter){
         //跟TripActivity.java类似，但是从本地读取数据
-
+        //四个数据，title，firstday， duration， location
 
     }
 }
