@@ -43,6 +43,8 @@ public class SpotDetailActivity extends AppCompatActivity {
     private spot currentSpot;
     private MyApplication myApplication;
     private int pinglunshu;
+    int fenshu = 0;
+    TextView shownum;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +65,6 @@ public class SpotDetailActivity extends AppCompatActivity {
         initDatas(myAdapter,myAdapter2);
 
 
-
         myRecView.setLayoutManager(new LinearLayoutManager(this));
         myRecView.setAdapter(myAdapter);
         Button comment = findViewById(R.id.comment_icon);
@@ -74,6 +75,43 @@ public class SpotDetailActivity extends AppCompatActivity {
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
         final int spotid = application.getSpots().get(application.getCurrentPos()).getID();
+        shownum = (TextView)findViewById(R.id.star_num);
+        ImageView star1 = (ImageView) findViewById(R.id.mystar1);
+        ImageView star2 = (ImageView) findViewById(R.id.mystar2);
+        ImageView star3 = (ImageView) findViewById(R.id.mystar3);
+        ImageView star4 = (ImageView) findViewById(R.id.mystar4);
+        ImageView star5 = (ImageView) findViewById(R.id.mystar5);
+        star1.setImageResource(R.drawable.star_empty);
+        star2.setImageResource(R.drawable.star_empty);
+        star3.setImageResource(R.drawable.star_empty);
+        star4.setImageResource(R.drawable.star_empty);
+        star5.setImageResource(R.drawable.star_empty);
+        star1.setTag(R.drawable.star_empty);
+        star2.setTag(R.drawable.star_empty);
+        star3.setTag(R.drawable.star_empty);
+        star4.setTag(R.drawable.star_empty);
+        star5.setTag(R.drawable.star_empty);
+
+        View.OnClickListener clickstart = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ((Integer)v.getTag() == R.drawable.star_empty) {
+                    v.setBackgroundResource(R.drawable.star_filled);
+                    v.setTag(R.drawable.star_filled);
+                    fenshu = fenshu+1;
+                } else {
+                    v.setBackgroundResource(R.drawable.star_empty);
+                    v.setTag(R.drawable.star_empty);
+                    fenshu = fenshu-1;
+                }
+                //shownum.setText(String.valueOf(fenshu));
+            }
+        };
+        star1.setOnClickListener(clickstart);
+        star2.setOnClickListener(clickstart);
+        star3.setOnClickListener(clickstart);
+        star4.setOnClickListener(clickstart);
+        star5.setOnClickListener(clickstart);
 
 
      //   cnum.setText(String.valueOf(myApplication.getSpots().get(myApplication.getCurrentPos()).getComment_count()));
@@ -325,10 +363,17 @@ public class SpotDetailActivity extends AppCompatActivity {
 */
         Map<String, String> temp = new LinkedHashMap<String, String>();
         temp.put("name", "星巴克");
-        temp.put("description", "咖啡店咖啡店");
+        temp.put("description", "咖啡店");
         shopDatas.add(temp);
+        temp = new LinkedHashMap<String, String>();
+        temp.put("name", "绿野仙踪");
+        temp.put("description", "西餐厅");
         shopDatas.add(temp);
+        temp = new LinkedHashMap<String, String>();
+        temp.put("name", "南京大牌档");
+        temp.put("description", "中餐厅");
         shopDatas.add(temp);
+
     }
     class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
 
