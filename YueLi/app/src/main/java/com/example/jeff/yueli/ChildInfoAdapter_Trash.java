@@ -49,15 +49,17 @@ public class ChildInfoAdapter_Trash extends RecyclerView.Adapter<ChildInfoAdapte
         holder.word.setText(info.getWord());
         holder.location.setText(info.getLocation());
         holder.id = info.getid();
-        final int tid= holder.id;
+        final int tid= holder.id; // record_id
         holder.del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listchild.size() == 1) {
-                    Snackbar.make(v, "此条目不能删除", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(v, "游记至少包含一条记录", Snackbar.LENGTH_SHORT).show();
                 } else {
                     MyApplication application = (MyApplication)v.getContext().getApplicationContext();
-                    application.curTrashRecords.remove(tid);
+                    application.curTrashRecords.remove(position);
+                    System.out.println("删除位置:"+position);
+                    System.out.println(application.curTrashRecords.size());
                     removeData(position);
                 }
             }

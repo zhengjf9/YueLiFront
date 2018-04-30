@@ -144,6 +144,7 @@ public class IndividualOtherActivity extends AppCompatActivity {
             public void onItemClick(View view, int position)
             {
                 Intent intent = new Intent(IndividualOtherActivity.this, JourneyDetailActivity.class);
+                intent.putExtra("From",0);
                 intent.putExtra("travel_id",launchDatas.get(position).get("travel_id"));
                 intent.putExtra("favorited",Boolean.valueOf(launchDatas.get(position).get("favorited")));
                 startActivity(intent);

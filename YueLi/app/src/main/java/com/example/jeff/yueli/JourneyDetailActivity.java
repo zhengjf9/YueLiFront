@@ -41,22 +41,21 @@ public class JourneyDetailActivity extends AppCompatActivity
     public List<java.util.Map<String, String>> contentDatas =
             new ArrayList<java.util.Map<String, String>>();//游记内容
     private List<ParentInfo> dataInfoList = new ArrayList<>();
-
+    Boolean favor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.journey_detail);
-        final int from = (int)getIntent().getSerializableExtra("From");
+       // final int from = (int)getIntent().getSerializableExtra("From");
         final String t;
-        final Boolean favor;
-        if (from == 0) {
+       // if (from == 0) {
             t=(String) getIntent().getSerializableExtra("travel_id");
             favor=(Boolean) getIntent().getSerializableExtra("favorited");
-        } else {
-            t=(String) getIntent().getSerializableExtra("travel_id");
-            favor = (Boolean) getIntent().getSerializableExtra("favorited");
-        }
+     //   } else {
+     //       t=(String) getIntent().getSerializableExtra("travel_id");
+     //       favor = (Boolean) getIntent().getSerializableExtra("favorited");
+      //  }
 
 
         final RecyclerView myRecView = (RecyclerView) findViewById(R.id.outer_recyclerview);
@@ -72,9 +71,7 @@ public class JourneyDetailActivity extends AppCompatActivity
         if (favor) {
             like.setBackgroundResource(R.drawable.heart_red);
         } else {
-
             like.setBackgroundResource(R.drawable.heart_48px_white);
-
         }
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +129,7 @@ public class JourneyDetailActivity extends AppCompatActivity
                                     if (rescode == 200) {
                                         Toast.makeText(getApplicationContext(), "成功收藏", Toast.LENGTH_SHORT).show();
                                         like.setBackgroundResource(R.drawable.heart_red);
+                                        favor = true;
                                     } else {
                                         Toast.makeText(getApplicationContext(), "收藏失败", Toast.LENGTH_SHORT).show();
                                     }
@@ -169,7 +167,8 @@ public class JourneyDetailActivity extends AppCompatActivity
 
                                     if (rescode == 200) {
                                         Toast.makeText(getApplicationContext(), "取消收藏", Toast.LENGTH_SHORT).show();
-                                        like.setBackgroundResource(R.drawable.heart_red);
+                                        like.setBackgroundResource(R.drawable.heart_48px_white);
+                                        favor = false;
                                     } else {
                                         Toast.makeText(getApplicationContext(), "取消失败", Toast.LENGTH_SHORT).show();
                                     }

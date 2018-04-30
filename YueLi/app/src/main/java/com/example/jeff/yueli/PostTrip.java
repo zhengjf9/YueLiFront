@@ -145,20 +145,39 @@ public class PostTrip extends AppCompatActivity {
             for (int i = 0; i < application.curTrashRecords.size(); i++) {
                 trashRecord n = new trashRecord();
                 trashRecord old = application.curTrashRecords.get(i);
+
                 n.setrecord_id(old.getrecord_id());
-                n.settravelid(old.getrecord_id());
+
+                n.settravelid(application.getTrashItemId());
                 n.setday(old.getday());
                 n.setduration(old.getduration());
                 n.setlocation(old.getlocation());
                 n.settext(old.gettext());
                 newrecord.add(n);
-                old.setrecord_id(-1);
-                old.save();
+
             }
-            DataSupport.deleteAll(trashRecord.class,"travel_id = ?", String.valueOf(-1));
+            System.out.println(application.getTrashItemId());
+            int yuanben = DataSupport.where("travel_id = ?", String.valueOf(application.getTrashItemId())).find(trashRecord.class).size();
+            System.out.println("原本有："+yuanben);
+            int delnum = DataSupport.deleteAll(trashRecord.class,"travel_id = ?",String.valueOf(application.getTrashItemId()) );
+            System.out.println("删除了："+delnum);
+            application.curTrashRecords.clear();
+            System.out.println("还有："+newrecord.size());
             for (int i = 0; i < newrecord.size(); i++) {
                 newrecord.get(i).save();
             }
+            int gengxin = DataSupport.where("travel_id = ?", String.valueOf(application.getTrashItemId())).find(trashRecord.class).size();
+            System.out.println("更新后有："+gengxin);
+
+            /*
+
+            int t  = DataSupport.deleteAll(trashRecord.class,"travel_id = ?", String.valueOf(-1));
+            System.out.println(t);
+            for (int i = 0; i < newrecord.size(); i++) {
+                newrecord.get(i).save();
+            }
+            System.out.println(DataSupport.where("travel_id = ?",String.valueOf(application.getTrashItemId())).find(trashRecord.class).size());
+        */
         }
     }
     @Override
@@ -212,6 +231,7 @@ public class PostTrip extends AppCompatActivity {
             // 从已有草稿进入
             MyApplication application = (MyApplication) getApplication();
             String t = (String)getIntent().getSerializableExtra("travel_id");
+            System.out.println("传入的ID:"+t);
             Toast.makeText(PostTrip.this, t, Toast.LENGTH_SHORT).show();
             int i = Integer.parseInt(t);
             application.setTrashItemId(i);
@@ -280,8 +300,6 @@ public class PostTrip extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //清空这次编辑
-
-
                 MyApplication application = (MyApplication) getApplication();
                 Toast.makeText(PostTrip.this, String.valueOf(application.curTrashRecords.size()), Toast.LENGTH_LONG).show();
                 if (application.curTrashRecords.size()!=0) {

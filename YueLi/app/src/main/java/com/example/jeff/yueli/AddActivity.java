@@ -86,13 +86,16 @@ public class AddActivity extends Fragment {
                     OkHttpClient okHttpClient = myApplication.gethttpclient();
                     String url = "http://123.207.29.66:3009/api/feelings";
                     EditText con = (EditText) totalView.findViewById(R.id.edit);
+
                     if (con.getText().toString().equals("") || imagePath.equals("")) {
                         Toast.makeText(getActivity(), "内容或图片不能为空", Toast.LENGTH_SHORT).show();
                     }
+
                     MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
                     File file = new File(imagePath);
                     RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
                     requestBody.addFormDataPart("photo", file.getName(), body);
+
                     requestBody.addFormDataPart("longitude", (myApplication.getaMapLocation().getLongitude() + Math.random() / 500) + "")
                             .addFormDataPart("latitude", (myApplication.getaMapLocation().getLatitude() + Math.random() / 500) + "")
                             .addFormDataPart("content", con.getText().toString());
