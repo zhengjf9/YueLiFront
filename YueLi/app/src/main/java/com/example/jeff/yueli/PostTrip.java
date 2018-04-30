@@ -67,7 +67,7 @@ public class PostTrip extends AppCompatActivity {
     Button btn;
     private List<ParentInfo> dataInfoList = new ArrayList<>();
     SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日");
-   // Date curDate =  new Date(System.currentTimeMillis());
+    //Date curDate =  new Date(System.currentTimeMillis());
     Calendar calendar = Calendar.getInstance();
     String testDate = "2018年5月1日";
     Date curDate = findDate(testDate);
@@ -330,12 +330,18 @@ public class PostTrip extends AppCompatActivity {
         MyApplication application = (MyApplication)getApplication();
 
         int fir = m.findFirstVisibleItemPosition();
-        for (int position = fir; position<fir+2; position++) {
+        System.out.println("初始位置"+fir);
+        int c = myAdapter.getItemCount();
+        System.out.println("共有："+c);
+        for (int position = 0; position<c; position++) {
+            System.out.println("位置"+position);
             ParentInfoAdapter_Trash.ViewHolder myviewholde = (ParentInfoAdapter_Trash.ViewHolder) myRecView.findViewHolderForAdapterPosition(position);
+//            System.out.println(myviewholde.date);
+           /*
             if (myviewholde!=null) {
-                //Toast.makeText(PostTrip.this, myviewholde.date.getText().toString(), Toast.LENGTH_LONG).show();
+                System.out.println("位置"+position+"不空");
                 myviewholde.add.setVisibility(View.INVISIBLE);
-            }
+            }*/
 
 
         }
@@ -491,28 +497,16 @@ public class PostTrip extends AppCompatActivity {
 //模仿journeydetail.activity
 
         Toast.makeText(PostTrip.this, String.valueOf(all.size()), Toast.LENGTH_SHORT).show();
-        if (application.getTrashItemId() == -1 && all.size() == 0) {
-            //显示样本
-            ParentInfo parentInfo = new ParentInfo();
-            parentInfo.setDay_num("Day1");
-            parentInfo.setDate(strDate);
-            parentInfo.setWeek(findWeekX(strDate));
+        boolean newday = true;
 
-            List<ChildInfo> childInfoList = new ArrayList<>();//指的是这一天所有的游记,最开始为空
-            parentInfo.setItemList(childInfoList);//将这一天的所有游记设置成标题的一个成员
-            ChildInfo childInfo = new ChildInfo();
-            childInfo.setWord("又是美好的一天");//childInfo指一条游记
-            childInfo.setLocation("中国广州");
-
-            childInfoList.add(childInfo);
-            parentInfo.setItemList(childInfoList);//将这一天的所有游记设置成标题的一个成员
-            dataInfoList.add(parentInfo);//将一天一天的数据push进dataInfoList
-            return ;
-        }
         for (int i = 0; i < all.size();) {
             trashRecord tmp = all.get(i);
             if (writingday != tmp.getduration()) {
                 writingday = tmp.getduration();
+            }
+            if (writingday == Integer.parseInt(application.tmpdur)) {
+                System.out.println(writingday);
+                newday = false;
             }
             ParentInfo parentInfo = new ParentInfo();
             parentInfo.setDay_num("Day"+String.valueOf(writingday));
@@ -543,7 +537,23 @@ public class PostTrip extends AppCompatActivity {
 
         }
 
+        if (newday) {
+            ParentInfo parentInfo = new ParentInfo();
+            parentInfo.setDay_num("Day"+application.tmpdur);
+            parentInfo.setDate(strDate);
+            parentInfo.setWeek(findWeekX(strDate));
 
+            List<ChildInfo> childInfoList = new ArrayList<>();//指的是这一天所有的游记,最开始为空
+            parentInfo.setItemList(childInfoList);//将这一天的所有游记设置成标题的一个成员
+            ChildInfo childInfo = new ChildInfo();
+            childInfo.setWord("又是美好的一天");//childInfo指一条游记
+            childInfo.setLocation("中国广州");
+
+           // childInfoList.add(childInfo);
+            parentInfo.setItemList(childInfoList);//将这一天的所有游记设置成标题的一个成员
+            dataInfoList.add(parentInfo);//将一天一天的数据push进dataInfoList
+
+        }
 
 
 
