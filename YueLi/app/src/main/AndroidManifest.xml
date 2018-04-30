@@ -29,7 +29,7 @@
         <service android:name="com.amap.api.location.APSService" />
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,6 +48,8 @@
         <activity android:name=".SpotCommentActivity" />
         <activity android:name=".IndividualOtherActivity" />
         <activity android:name=".TrashActivity" />
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".WelcomeGuideActivity"/>
         <activity
             android:name=".addDay"
             android:label="@string/title_activity_add_day"
