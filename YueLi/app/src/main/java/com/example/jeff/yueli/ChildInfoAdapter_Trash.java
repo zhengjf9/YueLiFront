@@ -53,8 +53,8 @@ public class ChildInfoAdapter_Trash extends RecyclerView.Adapter<ChildInfoAdapte
         holder.del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listchild.size() == 1) {
-                    Snackbar.make(v, "游记至少包含一条记录", Snackbar.LENGTH_SHORT).show();
+                if (listchild.size() == 0) {
+                   // Snackbar.make(v, "至少包含一条记录", Snackbar.LENGTH_SHORT).show();
                 } else {
                     MyApplication application = (MyApplication)v.getContext().getApplicationContext();
                     application.curTrashRecords.remove(position);

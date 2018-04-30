@@ -42,10 +42,17 @@ public class ParentInfoAdapter_Trash extends RecyclerView.Adapter<ParentInfoAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        MyApplication application = (MyApplication)getContext().getApplicationContext();
         holder.day_num.setText(list.get(position).getDay_num());
         holder.date.setText(list.get(position).getDate());
         holder.week.setText(list.get(position).getWeek());
-
+       // System.out.println("lallalalalallalalalala"+position);
+       // System.out.println("lalalalallala"+list.get(position).getDate());
+       // System.out.println(list.get(position).getDate() == "2018年05月01日");
+        holder.add.setVisibility(View.INVISIBLE);
+        if (list.get(position).getDate().equals(application.tmptoday) ) {
+            holder.add.setVisibility(View.VISIBLE);
+        }
         //把内层的RecyclerView 绑定在外层的onBindViewHolder
         // 先判断一下是不是已经设置了Adapter
         if (holder.mRecyclerView.getAdapter() == null) {
