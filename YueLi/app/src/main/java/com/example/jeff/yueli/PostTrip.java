@@ -67,10 +67,12 @@ public class PostTrip extends AppCompatActivity {
     Button btn;
     private List<ParentInfo> dataInfoList = new ArrayList<>();
     SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日");
-    //Date curDate =  new Date(System.currentTimeMillis());
+    Date curDate =  new Date(System.currentTimeMillis());
     Calendar calendar = Calendar.getInstance();
+
     String testDate = "2018年5月1日";
-    Date curDate = findDate(testDate);
+    /*假装今天是几号*/
+    //Date curDate = findDate(testDate);
 
 
     Date firstDate;
