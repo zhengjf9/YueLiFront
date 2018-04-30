@@ -23,20 +23,23 @@ public class SplashActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        boolean isFirstOpen = SpUtils.getBoolean(this, AppConstants.FIRST_OPEN);
+        final boolean isFirstOpen = SpUtils.getBoolean(this, AppConstants.FIRST_OPEN);
         // 如果是第一次启动，则先进入功能引导页
-        if (!isFirstOpen) {
-            Intent intent = new Intent(this, WelcomeGuideActivity.class);
-            startActivity(intent);
-            finish();
-            return;
-        }
+//        if (!isFirstOpen) {
+//            Intent intent = new Intent(this, WelcomeGuideActivity.class);
+//            startActivity(intent);
+//            finish();
+//            return;
+//        }
         // 如果不是第一次启动app，则正常显示启动屏
         setContentView(R.layout.activity_splash);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                enterHomeActivity();
+                if(!isFirstOpen)
+                    enterWelcomeActivity();
+                else
+                    enterHomeActivity();
             }
 
         }, 2000);
@@ -47,5 +50,9 @@ public class SplashActivity extends Activity {
         startActivity(intent);
         finish();
     }
-
+    private void enterWelcomeActivity(){
+        Intent intent = new Intent(this, WelcomeGuideActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

@@ -163,7 +163,7 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
 
     private void enterMainActivity() {
         Intent intent = new Intent(WelcomeGuideActivity.this,
-                SplashActivity.class);
+                LoginActivity.class);
         startActivity(intent);
         SpUtils.putBoolean(WelcomeGuideActivity.this, AppConstants.FIRST_OPEN, true);
         finish();
