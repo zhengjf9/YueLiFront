@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.example.jeff.yueli.AppConstants;
 import com.example.jeff.yueli.SpUtils;
@@ -18,6 +20,9 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 判断是否是第一次开启应用
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         boolean isFirstOpen = SpUtils.getBoolean(this, AppConstants.FIRST_OPEN);
         // 如果是第一次启动，则先进入功能引导页
         if (!isFirstOpen) {

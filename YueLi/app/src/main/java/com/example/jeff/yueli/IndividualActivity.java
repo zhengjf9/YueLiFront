@@ -64,8 +64,6 @@ import static com.example.jeff.yueli.AddActivity.SELECT_PHOTO;
 
 public class IndividualActivity extends Fragment {
     private List<DateInfo> dataInfoList = new ArrayList<>();
-    private List<java.util.Map<String, String>> trashDatas =
-            new ArrayList<java.util.Map<String, String>>();//草稿箱的数据
     private List<java.util.Map<String, String>> launchDatas =
             new ArrayList<java.util.Map<String, String>>();//已发布的数据
     private int mnum;
@@ -97,8 +95,6 @@ public class IndividualActivity extends Fragment {
         Button mood = view.findViewById(R.id.mood_title);
         Button journey = view.findViewById(R.id.journey_title);
         TextView name = view.findViewById(R.id.name);
-        final Button trash = view.findViewById(R.id.trash);
-        final Button launch = view.findViewById(R.id.launch);
         Button like = view.findViewById(R.id.like);
         Button letter = view.findViewById(R.id.letter);
         Button menu = view.findViewById(R.id.menu);
@@ -133,20 +129,9 @@ public class IndividualActivity extends Fragment {
         sig.setText(user.getSignature());
         name.setText(user.getnickname());
 
-
-        trash.setVisibility(View.INVISIBLE);
-        launch.setVisibility(View.INVISIBLE);
-        final CustomRecyclerView trashRecView = (CustomRecyclerView)view.findViewById(R.id.trash_recyclerview);
-        final JourneyItemAdapter trashAdapter = new JourneyItemAdapter(getContext(), trashDatas);
-       trashRecView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-        //trashRecView.addHeaderView(headerView);
-        trashRecView.setAdapter(trashAdapter);
-        trashRecView.setVisibility(View.INVISIBLE);
         final CustomRecyclerView launchRecView = (CustomRecyclerView)view.findViewById(R.id.launch_recyclerview);
         final JourneyItemAdapter launchAdapter = new JourneyItemAdapter(getContext(), launchDatas);
-        initDatas(moodnum,fans,tnum,launchAdapter,trashAdapter,myAdapter);
+        initDatas(moodnum,fans,tnum,launchAdapter,myAdapter);
         launchAdapter.setOnItemClickLitener(new OnItemClickLitener()
         {
 
@@ -196,11 +181,8 @@ public class IndividualActivity extends Fragment {
         mood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trashRecView.setVisibility(View.INVISIBLE);
                 launchRecView.setVisibility(View.INVISIBLE);
                 myRecView.setVisibility(View.VISIBLE);
-                trash.setVisibility(View.INVISIBLE);
-                launch.setVisibility(View.INVISIBLE);
 
             }
         });
@@ -208,27 +190,7 @@ public class IndividualActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 myRecView.setVisibility(View.INVISIBLE);
-                trashRecView.setVisibility(View.INVISIBLE);
                 launchRecView.setVisibility(View.VISIBLE);
-                trash.setVisibility(View.VISIBLE);
-                launch.setVisibility(View.VISIBLE);
-            }
-        });
-        launch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myRecView.setVisibility(View.INVISIBLE);
-                trashRecView.setVisibility(View.INVISIBLE);
-                launchRecView.setVisibility(View.VISIBLE);
-
-            }
-        });
-        trash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myRecView.setVisibility(View.INVISIBLE);
-                launchRecView.setVisibility(View.INVISIBLE);
-                trashRecView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -450,7 +412,7 @@ public class IndividualActivity extends Fragment {
     }
 
     public void initDatas(final TextView m, final TextView f, final TextView t,
-    final JourneyItemAdapter a, final JourneyItemAdapter b,final DateInfoAdapter c) {
+    final JourneyItemAdapter a,final DateInfoAdapter c) {
         MyApplication application = (MyApplication) getActivity().getApplication();
         OkHttpClient httpClient = application.gethttpclient();
         final User user = application.getUser();
@@ -564,7 +526,6 @@ public class IndividualActivity extends Fragment {
                     temp.put("travel_id",String.valueOf(t.gettravelid()));
                     temp.put("favorited",String.valueOf(t.getfavorited()));
                     launchDatas.add(temp);
-
                 }
                 final int rescode = response.code();
                 getActivity().runOnUiThread(new Runnable() {
@@ -612,19 +573,6 @@ public class IndividualActivity extends Fragment {
                 });
             }
         });
-        // 草稿箱
-        java.util.Map<String, String> temp1 = new LinkedHashMap<String, String>();
-        temp1.put("title", "上海:梦中城");
-        temp1.put("firstday", "2018-3-7");
-        temp1.put("duration",  "3天");
-        temp1.put("location", "上海");
-        temp1.put("name", "旅行者");
-        temp1.put("like_num", "99");
-        temp1.put("comment_num", "99");
-        trashDatas.add(temp1);
-        trashDatas.add(temp1);
-        b.notifyDataSetChanged();
-
     }
     public void showDialog(){
         final BottomSheetDialog dialog=new BottomSheetDialog(getContext());

@@ -237,66 +237,17 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="96dp"
         />
-    <!--<View-->
-        <!--android:id="@+id/mood_line"-->
-        <!--android:layout_width="70dp"-->
-        <!--android:layout_height="4dp"-->
-        <!--android:background="@color/mood_blue"-->
-        <!--app:layout_constraintBottom_toBottomOf="@id/line"-->
-        <!--app:layout_constraintLeft_toLeftOf="@id/mood_title"-->
-        <!--app:layout_constraintRight_toRightOf="@+id/mood_title"-->
-        <!--/>-->
-    <!--<View-->
-        <!--android:id="@+id/journey_line"-->
-        <!--android:layout_width="70dp"-->
-        <!--android:layout_height="4dp"-->
-        <!--android:background="@color/mood_blue"-->
-        <!--app:layout_constraintBottom_toBottomOf="@id/line"-->
-        <!--app:layout_constraintLeft_toLeftOf="@id/journey_title"-->
-        <!--app:layout_constraintRight_toRightOf="@+id/journey_title"-->
-        <!--/>-->
     <com.example.jeff.yueli.CustomRecyclerView
         android:id="@+id/outer_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/line"
         />
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/shift_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/line"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        >
-<Button
-    android:id="@+id/trash"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="草稿箱"
-    android:background="@drawable/shape_half_round_corner"
-    />
-    <Button
-        android:id="@+id/launch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="已发布"
-        android:background="@drawable/shape_half_round_corner_right"
-        app:layout_constraintLeft_toRightOf="@+id/trash"
-        />
-    </android.support.constraint.ConstraintLayout>
-    <com.example.jeff.yueli.CustomRecyclerView
-        android:id="@+id/trash_recyclerview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/shift_button"
-        />
     <com.example.jeff.yueli.CustomRecyclerView
         android:id="@+id/launch_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/shift_button"
+        app:layout_constraintTop_toBottomOf="@+id/line"
         />
 
 
