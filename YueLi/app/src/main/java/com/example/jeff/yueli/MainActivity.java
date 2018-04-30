@@ -3,8 +3,10 @@ package com.example.jeff.yueli;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.ColorSpace;
 import android.os.Build;
 import android.os.PersistableBundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -28,6 +30,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
+import org.litepal.tablemanager.Connector;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -58,7 +62,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         try {
             super.onCreate(savedInstanceState);
-
+            Connector.getDatabase();
+            /*清空数据库
+            DataSupport.deleteAll(trashRecord.class);
+            DataSupport.deleteAll(trashJournalItem.class);
+            */
             MyApplication application = (MyApplication)getApplication();
             OkHttpClient httpClient = application.gethttpclient();
             User user = application.getUser();

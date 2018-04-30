@@ -4,10 +4,12 @@ package com.example.jeff.yueli;
  * Created by xumuxin on 2018/3/3.
  */
 import android.app.Application;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.amap.api.location.AMapLocation;
 
 import org.litepal.LitePalApplication;
+import org.litepal.tablemanager.Connector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +37,18 @@ public class MyApplication extends LitePalApplication {
         }
     })
             .addInterceptor(new HttpLoggingInterceptor()).build();
+    //public SQLiteDatabase db =  Connector.getDatabase();
+    public List<trashRecord> curTrashRecords=new ArrayList<>();
+
+    private int trashItemId=-1;
+    public String tmptitle;
+    public String tmpdur;
+    public String tmpfirst;
+    public String tmptoday;
+    public int getTrashItemId() {return trashItemId;}
+    public void setTrashItemId(int i) {trashItemId=i;}
+
+    public String futureId;
     private User user;
 
     private List<spot> spots;

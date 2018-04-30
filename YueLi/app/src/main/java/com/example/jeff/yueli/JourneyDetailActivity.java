@@ -47,9 +47,16 @@ public class JourneyDetailActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.journey_detail);
-        final String t = (String) getIntent().getSerializableExtra("travel_id");
-        final Boolean favor = (Boolean) getIntent().getSerializableExtra("favorited");
-
+        final int from = (int)getIntent().getSerializableExtra("From");
+        final String t;
+        final Boolean favor;
+        if (from == 0) {
+            t=(String) getIntent().getSerializableExtra("travel_id");
+            favor=(Boolean) getIntent().getSerializableExtra("favorited");
+        } else {
+            t=(String) getIntent().getSerializableExtra("travel_id");
+            favor = (Boolean) getIntent().getSerializableExtra("favorited");
+        }
 
 
         final RecyclerView myRecView = (RecyclerView) findViewById(R.id.outer_recyclerview);
@@ -177,7 +184,7 @@ public class JourneyDetailActivity extends AppCompatActivity
         });
     }
 
-    public void initData(String t,final ParentInfoAdapter a) {
+    public void initData(final String t, final ParentInfoAdapter a) {
 
         MyApplication application = (MyApplication) getApplication();
 
@@ -209,10 +216,15 @@ public class JourneyDetailActivity extends AppCompatActivity
                     record.Rec t = travellist.get(i);
                     ParentInfo parentInfo = new ParentInfo();//指的是某一天的标题，包括第几天，日期，星期。
                     int day_num = t.getday();
+
                     parentInfo.setDay_num("Day" + String.valueOf(day_num));
-                    parentInfo.setDate(t.gettime());
+
+                    parentInfo.setDate(t.gettime().substring(0, 10));
+
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
                     Calendar calendar = Calendar.getInstance();
+
                     try {
                         Date date = sdf.parse(travellist.get(i).gettime().substring(0, 10));
                         calendar.setTime(date);
@@ -223,6 +235,7 @@ public class JourneyDetailActivity extends AppCompatActivity
                             "周五", "周六"};
                     String wd = dayofweek[calendar.get(Calendar.DAY_OF_WEEK) - 1];
                     parentInfo.setWeek(wd);
+
                     List<ChildInfo> childInfoList = new ArrayList<>();//指的是这一天所有的游记
                     while (t.getday() == day_num) {
                         ChildInfo childInfo = new ChildInfo();
@@ -248,9 +261,9 @@ public class JourneyDetailActivity extends AppCompatActivity
 
                         int rescode = response.code();
                         if (rescode == 200) {
-                           // Toast.makeText(getApplicationContext(), "获取游记详情成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "获取游记详情成功"+(String)t, Toast.LENGTH_SHORT).show();
                         } else {
-                           // Toast.makeText(getApplicationContext(), "获取游记详情失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "获取游记详情失败"+(String)t, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

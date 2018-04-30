@@ -21,6 +21,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map;
 
@@ -42,22 +44,45 @@ import okhttp3.logging.HttpLoggingInterceptor;
 public class TripActivity extends Fragment {
     public List<java.util.Map<String, String>> mDatas =
             new ArrayList<java.util.Map<String, String>>();
-    public TripActivity() {
-
-
+    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日");
+    public TripActivity() {}
+    private Date findDate(String str) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date();
+        try {
+            date = formatter.parse(str);
+            calendar.setTime(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
-
+    private String findWeekX(String tmp) {
+        Calendar calendar = Calendar.getInstance();
+        try {
+            Date date = formatter.parse(tmp);
+            calendar.setTime(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String[] dayofweek = new String[]{"周日", "周一", "周二", "周三", "周四",
+                "周五", "周六"};
+        String wd = dayofweek[calendar.get(Calendar.DAY_OF_WEEK) - 1];
+        return wd;
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_trip, container,false);
         mDatas.clear();
 
-
         final RecyclerView myRecView = (RecyclerView)view.findViewById(R.id.my_recyclerview);
+
         final JourneyItemAdapter myAdapter = new JourneyItemAdapter(getContext(), mDatas);
         initData(myAdapter);
         myAdapter.notifyDataSetChanged();
+
+
         myRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
         myRecView.setAdapter(myAdapter);
         //添加游记按钮
@@ -78,6 +103,7 @@ public class TripActivity extends Fragment {
             public void onItemClick(View view, int position)
             {
                 Intent intent = new Intent(getActivity(), JourneyDetailActivity.class);
+                intent.putExtra("From",0);
                 intent.putExtra("travel_id",mDatas.get(position).get("travel_id"));
                 intent.putExtra("favorited",Boolean.valueOf(mDatas.get(position).get("favorited")));
                 startActivity(intent);
@@ -121,7 +147,7 @@ public class TripActivity extends Fragment {
                     Map<String, String> temp = new LinkedHashMap<String, String>();
                     temp.put("user_id",String.valueOf(t.getuserid()));
                     temp.put("title", t.gettitle());
-                    temp.put("firstday", t.getFirst_day());
+                    temp.put("firstday", formatter.format(findDate(t.getFirst_day())));
                     temp.put("duration",  String.valueOf(t.getduration()));
                     temp.put("location", t.getlocation());
                     temp.put("name", t.getnickname());

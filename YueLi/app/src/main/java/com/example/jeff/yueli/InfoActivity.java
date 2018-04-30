@@ -32,6 +32,7 @@ import okhttp3.Response;
 public class InfoActivity extends AppCompatActivity {
     public List<java.util.Map<String, String>> mDatas =
             new ArrayList<java.util.Map<String, String>>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

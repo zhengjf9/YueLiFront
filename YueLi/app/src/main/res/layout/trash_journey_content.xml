@@ -38,11 +38,11 @@
             android:text="上海，中国"
             android:layout_marginTop="5dp"
             />
-        <ImageView
+        <Button
             android:id="@+id/trash"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/trash"
+            android:background="@drawable/trash"
             app:layout_constraintBottom_toBottomOf="@+id/line"
             android:layout_marginBottom="8dp"
             app:layout_constraintRight_toRightOf="parent"

@@ -7,6 +7,8 @@ import org.litepal.crud.DataSupport;
  */
 
 public class trashJournalItem extends DataSupport {
+    private long id;
+    private int user_id;
     private int travel_id;
     private String title;
     private String first_day;
@@ -17,8 +19,10 @@ public class trashJournalItem extends DataSupport {
    // private int favorite_count;
    //private boolean favorited;
    // private int comment_count;
-
-
+    public long getid() {return id;}
+    public int getUser_id() {
+        return user_id;
+    }
     public int gettravelid() {
         return travel_id;
     }
@@ -34,7 +38,9 @@ public class trashJournalItem extends DataSupport {
     public int getduration() {
         return duration;
     }
-
+    public void setuser_id(int id) {
+        user_id = id;
+    }
     public void settravelid(int id) {
         travel_id = id;
     }

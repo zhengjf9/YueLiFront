@@ -44,7 +44,31 @@ import okhttp3.Response;
 public class JourneyCommentActivity extends AppCompatActivity {
     public List<java.util.Map<String, String>> mDatas =
             new ArrayList<java.util.Map<String, String>>();
-
+    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日");
+    private Date findDate(String str) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date();
+        try {
+            date = formatter.parse(str);
+            calendar.setTime(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+    private String findWeekX(String tmp) {
+        Calendar calendar = Calendar.getInstance();
+        try {
+            Date date = formatter.parse(tmp);
+            calendar.setTime(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String[] dayofweek = new String[]{"周日", "周一", "周二", "周三", "周四",
+                "周五", "周六"};
+        String wd = dayofweek[calendar.get(Calendar.DAY_OF_WEEK) - 1];
+        return wd;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -168,7 +192,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
                         Map<String, String> temp = new LinkedHashMap<String, String>();
 
                         temp.put("name", t.getnickname());
-                        temp.put("date",t.gettime());
+                        temp.put("date",formatter.format(findDate(t.gettime())));
                         temp.put("user_id",String.valueOf(t.getuserid()));
                         temp.put("content",t.getcontent());
                         mDatas.add(temp);

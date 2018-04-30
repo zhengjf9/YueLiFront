@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +45,7 @@ public class ParentInfoAdapter_Trash extends RecyclerView.Adapter<ParentInfoAdap
         holder.day_num.setText(list.get(position).getDay_num());
         holder.date.setText(list.get(position).getDate());
         holder.week.setText(list.get(position).getWeek());
+
         //把内层的RecyclerView 绑定在外层的onBindViewHolder
         // 先判断一下是不是已经设置了Adapter
         if (holder.mRecyclerView.getAdapter() == null) {
@@ -75,17 +78,27 @@ public class ParentInfoAdapter_Trash extends RecyclerView.Adapter<ParentInfoAdap
             week = (TextView) itemView.findViewById(R.id.week);
             mRecyclerView = (RecyclerView) itemView.findViewById(R.id.inner_recyclerview);
             add = (ImageView)itemView.findViewById(R.id.add);
+            /*
+            add = (ImageView)itemView.findViewById(R.id.add);
+            add.setVisibility(View.INVISIBLE);
+            MyApplication application = (MyApplication)getContext().getApplicationContext();
+            if (true) {
+               add.setVisibility(View.VISIBLE);
+            }*/
+
             RecyclerView.LayoutManager manager = new LinearLayoutManager(itemView.getContext());
             // 需要注意的是GridLayoutManager要设置setAutoMeasureEnabled(true)成自适应高度
             manager.setAutoMeasureEnabled(true);
             mRecyclerView.setLayoutManager(manager);
             add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(itemView.getContext(), addDay.class);
-                    itemView.getContext().startActivity(intent);
-                }
-            });
+                    @Override
+                    public void onClick(View v) {
+                        v.findViewById(R.id.title);
+                        Intent intent = new Intent(itemView.getContext(), addDay.class);
+                        itemView.getContext().startActivity(intent);
+                    }
+                });
+
         }
     }
 }

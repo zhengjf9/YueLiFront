@@ -99,6 +99,7 @@ public class JourneyItemAdapter extends RecyclerView.Adapter<JourneyItemAdapter.
         TextView like_num;
         TextView comment_num;
 
+
         @Override
         public void onClick(View v) {
             if(v.getId() == R.id.avator){
@@ -107,10 +108,9 @@ public class JourneyItemAdapter extends RecyclerView.Adapter<JourneyItemAdapter.
                 //intent.putExtra("favorited",Boolean.valueOf(mDatas.get(position).get("favorited")));
                 v.getContext().startActivity(intent);
             }else{
-               // Toast.makeText(context,"item"+getAdapterPosition(),Toast.LENGTH_SHORT).show();
+                // Toast.makeText(context,"item"+getAdapterPosition(),Toast.LENGTH_SHORT).show();
             }
         }
-
 
         public MyViewHolder(View view)
         {
