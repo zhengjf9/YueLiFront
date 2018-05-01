@@ -60,7 +60,7 @@
         android:id="@+id/avator"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/male_user_96px"
+        android:src="@drawable/avator"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="5dp"
         app:layout_constraintBottom_toBottomOf="@id/journey_bg"

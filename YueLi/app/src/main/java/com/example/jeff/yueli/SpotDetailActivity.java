@@ -76,11 +76,11 @@ public class SpotDetailActivity extends AppCompatActivity {
         final User user = application.getUser();
         final int spotid = application.getSpots().get(application.getCurrentPos()).getID();
         shownum = (TextView)findViewById(R.id.star_num);
-        ImageView star1 = (ImageView) findViewById(R.id.mystar1);
-        ImageView star2 = (ImageView) findViewById(R.id.mystar2);
-        ImageView star3 = (ImageView) findViewById(R.id.mystar3);
-        ImageView star4 = (ImageView) findViewById(R.id.mystar4);
-        ImageView star5 = (ImageView) findViewById(R.id.mystar5);
+        final ImageView star1 = (ImageView) findViewById(R.id.mystar1);
+        final ImageView star2 = (ImageView) findViewById(R.id.mystar2);
+        final ImageView star3 = (ImageView) findViewById(R.id.mystar3);
+        final ImageView star4 = (ImageView) findViewById(R.id.mystar4);
+        final ImageView star5 = (ImageView) findViewById(R.id.mystar5);
         star1.setImageResource(R.drawable.star_empty);
         star2.setImageResource(R.drawable.star_empty);
         star3.setImageResource(R.drawable.star_empty);
@@ -92,26 +92,72 @@ public class SpotDetailActivity extends AppCompatActivity {
         star4.setTag(R.drawable.star_empty);
         star5.setTag(R.drawable.star_empty);
 
-        View.OnClickListener clickstart = new View.OnClickListener() {
+//        View.OnClickListener clickstart = new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if ((Integer)v.getTag() == R.drawable.star_empty) {
+//                    v.setBackgroundResource(R.drawable.star_filled);
+//                    v.setTag(R.drawable.star_filled);
+//                    fenshu = fenshu+1;
+//                } else {
+//                    v.setBackgroundResource(R.drawable.star_empty);
+//                    v.setTag(R.drawable.star_empty);
+//                    fenshu = fenshu-1;
+//                }
+//                //shownum.setText(String.valueOf(fenshu));
+//            }
+//        };
+        star1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((Integer)v.getTag() == R.drawable.star_empty) {
-                    v.setBackgroundResource(R.drawable.star_filled);
-                    v.setTag(R.drawable.star_filled);
-                    fenshu = fenshu+1;
-                } else {
-                    v.setBackgroundResource(R.drawable.star_empty);
-                    v.setTag(R.drawable.star_empty);
-                    fenshu = fenshu-1;
-                }
-                //shownum.setText(String.valueOf(fenshu));
+                star1.setBackgroundResource(R.drawable.star_filled);
+                star2.setBackgroundResource(R.drawable.star_empty);
+                star3.setBackgroundResource(R.drawable.star_empty);
+                star4.setBackgroundResource(R.drawable.star_empty);
+                star5.setBackgroundResource(R.drawable.star_empty);
             }
-        };
-        star1.setOnClickListener(clickstart);
-        star2.setOnClickListener(clickstart);
-        star3.setOnClickListener(clickstart);
-        star4.setOnClickListener(clickstart);
-        star5.setOnClickListener(clickstart);
+        });
+        star2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                star1.setBackgroundResource(R.drawable.star_filled);
+                star2.setBackgroundResource(R.drawable.star_filled);
+                star3.setBackgroundResource(R.drawable.star_empty);
+                star4.setBackgroundResource(R.drawable.star_empty);
+                star5.setBackgroundResource(R.drawable.star_empty);
+            }
+        });
+        star3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                star1.setBackgroundResource(R.drawable.star_filled);
+                star2.setBackgroundResource(R.drawable.star_filled);
+                star3.setBackgroundResource(R.drawable.star_filled);
+                star4.setBackgroundResource(R.drawable.star_empty);
+                star5.setBackgroundResource(R.drawable.star_empty);
+            }
+        });
+        star4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                star1.setBackgroundResource(R.drawable.star_filled);
+                star2.setBackgroundResource(R.drawable.star_filled);
+                star3.setBackgroundResource(R.drawable.star_filled);
+                star4.setBackgroundResource(R.drawable.star_filled);
+                star5.setBackgroundResource(R.drawable.star_empty);
+            }
+        });
+        star5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                star1.setBackgroundResource(R.drawable.star_filled);
+                star2.setBackgroundResource(R.drawable.star_filled);
+                star3.setBackgroundResource(R.drawable.star_filled);
+                star4.setBackgroundResource(R.drawable.star_filled);
+                star5.setBackgroundResource(R.drawable.star_filled);
+            }
+        });
+
 
 
      //   cnum.setText(String.valueOf(myApplication.getSpots().get(myApplication.getCurrentPos()).getComment_count()));

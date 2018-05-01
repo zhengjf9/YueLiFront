@@ -18,8 +18,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -49,6 +51,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * Created by XDDN2 on 2018/3/2.
@@ -70,6 +73,25 @@ public class AddActivity extends Fragment {
         totalView = inflater.inflate(R.layout.activity_addmood, container, false);
         myApplication = (MyApplication)getActivity().getApplication();
         initViews();
+        MainActivity.MyTouchListener myTouchListener = new MainActivity.MyTouchListener() {
+            @Override
+            public void onTouchEvent(MotionEvent event) {
+                // 处理手势事件
+                if(null != getActivity().getCurrentFocus()){
+                    /**
+                     * 点击空白位置 隐藏软键盘
+                     */
+                    InputMethodManager mInputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+                     mInputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                     return;
+                }
+                getActivity().onTouchEvent(event);
+                return;
+            }
+        };
+
+        // 将myTouchListener注册到分发列表
+        ((MainActivity)this.getActivity()).registerMyTouchListener(myTouchListener);
         return totalView;
     }
 

@@ -50,7 +50,7 @@
         android:id="@+id/avator"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:src="@drawable/male_user_96px"
+        android:src="@drawable/avator"
         app:layout_constraintBottom_toBottomOf="@+id/pic"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="10dp"

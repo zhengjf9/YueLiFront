@@ -17,7 +17,7 @@
     <RelativeLayout
     android:id="@+id/name"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true"
     app:layout_constraintTop_toBottomOf="@+id/logo"
@@ -47,7 +47,7 @@
         android:padding="7dp"
         android:textColor="@color/black"
         android:textColorHint="@color/white"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:background="@null"
         android:cursorVisible="false"
         >
@@ -57,7 +57,7 @@
     <RelativeLayout
         android:id="@+id/password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         app:layout_constraintTop_toBottomOf="@+id/name"
@@ -87,7 +87,7 @@
             android:padding="7dp"
             android:textColor="@color/black"
             android:textColorHint="@color/white"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:background="@null"
             android:cursorVisible="false"
             android:inputType="numberPassword"
