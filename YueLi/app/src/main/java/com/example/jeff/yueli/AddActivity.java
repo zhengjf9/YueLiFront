@@ -132,7 +132,7 @@ public class AddActivity extends Fragment {
                         public void onResponse(Call call, Response response) throws IOException {
                             try {
                                 if (response.code() == 200) {
-                                    Toast.makeText(getContext(), response.message(), Toast.LENGTH_SHORT).show();
+                                  //Toast.makeText(getContext(), response.message(), Toast.LENGTH_SHORT).show();
                                     String s = response.body().string();
                                     Gson gson = new Gson();
                                     Feelings f = gson.fromJson(s, Feelings.class);
@@ -214,7 +214,7 @@ public class AddActivity extends Fragment {
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openAlbum();
                 } else {
-                    Toast.makeText(getActivity(),"You denied the permission",Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getActivity(),"You denied the permission",Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -285,7 +285,7 @@ public class AddActivity extends Fragment {
             image.setImageBitmap(pic);
             Log.d("checkSelectPath",imagePath);
         } else {
-            Toast.makeText(getActivity(),"failed to get image", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getActivity(),"failed to get image", Toast.LENGTH_SHORT).show();
         }
     }
 

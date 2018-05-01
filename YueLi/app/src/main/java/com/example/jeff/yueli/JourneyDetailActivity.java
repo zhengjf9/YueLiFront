@@ -260,9 +260,9 @@ public class JourneyDetailActivity extends AppCompatActivity
 
                         int rescode = response.code();
                         if (rescode == 200) {
-                            Toast.makeText(getApplicationContext(), "获取游记详情成功"+(String)t, Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(getApplicationContext(), "获取游记详情成功"+(String)t, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), "获取游记详情失败"+(String)t, Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getApplicationContext(), "获取游记详情失败"+(String)t, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

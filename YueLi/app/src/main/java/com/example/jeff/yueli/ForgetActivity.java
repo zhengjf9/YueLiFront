@@ -76,7 +76,7 @@ public class ForgetActivity extends AppCompatActivity {
 
                                 int rescode = response.code();
                                 if (rescode == 200) {
-                                    //Toast.makeText(ForgetActivity.this, "密码更改成功", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ForgetActivity.this, "密码更改成功", Toast.LENGTH_SHORT).show();
                                     //application.setuserid(wangji.getuserid());
                                     //application.setusernickname(wangji.getnickname());
                                     User u = new User();
@@ -87,7 +87,7 @@ public class ForgetActivity extends AppCompatActivity {
                                     Intent intent = new Intent(ForgetActivity.this, MainActivity.class);
                                     startActivity(intent);
                                 } else {
-                                    Toast.makeText(ForgetActivity.this, forgetresult.msg, Toast.LENGTH_SHORT).show();
+                                   // Toast.makeText(ForgetActivity.this, forgetresult.msg, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

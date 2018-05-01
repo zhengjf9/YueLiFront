@@ -140,10 +140,10 @@ public class JourneyCommentActivity extends AppCompatActivity {
                                         Result<reviewback> commentresult = gson.fromJson(string, commenttype);
                                         int rescode = response.code();
                                         if (rescode == 200) {
-                                            Toast.makeText(getApplicationContext(),String.valueOf(commentresult.msg)   , Toast.LENGTH_SHORT).show();
+                                           // Toast.makeText(getApplicationContext(),String.valueOf(commentresult.msg)   , Toast.LENGTH_SHORT).show();
                                             initData(t,myAdapter);
                                         } else {
-                                            Toast.makeText(getApplicationContext(), commentresult.msg , Toast.LENGTH_SHORT).show();
+                                           // Toast.makeText(getApplicationContext(), commentresult.msg , Toast.LENGTH_SHORT).show();
                                         }
                                     } catch (IOException e) {
                                         e.printStackTrace();
@@ -215,7 +215,7 @@ public class JourneyCommentActivity extends AppCompatActivity {
                             if (rescode == 200) {
                                // Toast.makeText(getApplicationContext(),String.valueOf(reviewlist.size())   , Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(getApplicationContext(), "journey comment fail" , Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getApplicationContext(), "journey comment fail" , Toast.LENGTH_SHORT).show();
                             }
 
 

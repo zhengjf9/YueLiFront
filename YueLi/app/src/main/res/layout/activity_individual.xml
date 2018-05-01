@@ -14,7 +14,7 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="170dp"
-    android:background="@drawable/background"
+    android:background="@drawable/person"
     app:layout_constraintTop_toTopOf="parent"
     />
     <Button
@@ -215,31 +215,52 @@
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@+id/middle"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="25dp"
         android:background="@color/gray"
         />
-    <Button
-        android:id="@+id/mood_title"
+    <TextView
+        android:id="@+id/left_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="90dp"
         android:text="心情"
         android:textColor="@color/black"
-        android:textSize="20dp"
-        app:layout_constraintTop_toBottomOf="@id/middle"
+        android:textSize="18dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="96dp"
+        app:layout_constraintBottom_toBottomOf="@+id/line"
+        android:layout_marginBottom="1dp"
         />
-    <Button
-        android:id="@+id/journey_title"
+    <TextView
+        android:id="@+id/right_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="游记"
+        android:textSize="18dp"
         android:textColor="@color/black"
-        android:textSize="20dp"
-        app:layout_constraintTop_toBottomOf="@id/middle"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="96dp"
+        android:layout_marginRight="90dp"
+        app:layout_constraintBottom_toBottomOf="@+id/line"
+        android:layout_marginBottom="1dp"
+        />
+    <View
+        android:id="@+id/left_line"
+        android:layout_width="70dp"
+        android:layout_height="3dp"
+        android:background="@color/mood_blue"
+        app:layout_constraintTop_toBottomOf="@+id/left_title"
+        app:layout_constraintLeft_toLeftOf="@+id/left_title"
+        app:layout_constraintRight_toRightOf="@+id/left_title"
+        />
+    <View
+        android:id="@+id/right_line"
+        android:layout_width="70dp"
+        android:layout_height="3dp"
+        android:background="@color/mood_blue"
+        app:layout_constraintTop_toBottomOf="@+id/right_title"
+        app:layout_constraintLeft_toLeftOf="@+id/right_title"
+        app:layout_constraintRight_toRightOf="@+id/right_title"
         />
     <com.example.jeff.yueli.CustomRecyclerView
         android:id="@+id/outer_recyclerview"
@@ -253,7 +274,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/line"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="55dp"
         />
 </android.support.constraint.ConstraintLayout>
 </FrameLayout>

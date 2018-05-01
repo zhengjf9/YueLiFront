@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,8 +44,22 @@ public class SpotDetailActivity extends AppCompatActivity {
     private spot currentSpot;
     private MyApplication myApplication;
     private int pinglunshu;
-    int fenshu = 0;
     TextView shownum;
+    View leftLine;
+    View rightLine;
+   // ScrollView scrollView;
+   SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日");
+    private Date findDate(String str) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date();
+        try {
+            date = formatter.parse(str);
+            calendar.setTime(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,7 +73,7 @@ public class SpotDetailActivity extends AppCompatActivity {
 
         spotRecView.setLayoutManager(new LinearLayoutManager(this));
         spotRecView.setAdapter(myAdapter2);
-        spotRecView.setVisibility(View.INVISIBLE);
+        spotRecView.setFocusable(false);
 
         final RecyclerView myRecView = (RecyclerView) findViewById(R.id.right_recyclerview);
         final HomeAdapter myAdapter = new HomeAdapter();
@@ -67,6 +82,8 @@ public class SpotDetailActivity extends AppCompatActivity {
 
         myRecView.setLayoutManager(new LinearLayoutManager(this));
         myRecView.setAdapter(myAdapter);
+        myRecView.setVisibility(View.INVISIBLE);
+        myRecView.setFocusable(false);
         Button comment = findViewById(R.id.comment_icon);
         Button back = findViewById(R.id.back);
         final Button like = findViewById(R.id.like);
@@ -91,22 +108,6 @@ public class SpotDetailActivity extends AppCompatActivity {
         star3.setTag(R.drawable.star_empty);
         star4.setTag(R.drawable.star_empty);
         star5.setTag(R.drawable.star_empty);
-
-//        View.OnClickListener clickstart = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if ((Integer)v.getTag() == R.drawable.star_empty) {
-//                    v.setBackgroundResource(R.drawable.star_filled);
-//                    v.setTag(R.drawable.star_filled);
-//                    fenshu = fenshu+1;
-//                } else {
-//                    v.setBackgroundResource(R.drawable.star_empty);
-//                    v.setTag(R.drawable.star_empty);
-//                    fenshu = fenshu-1;
-//                }
-//                //shownum.setText(String.valueOf(fenshu));
-//            }
-//        };
         star1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -303,17 +304,21 @@ public class SpotDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+//        scrollView = (ScrollView) findViewById(R.id.scrollview);
+//        scrollView.scrollTo(0,0);
         TextView spotName = (TextView)findViewById(R.id.spot_name);
         TextView location = (TextView)findViewById(R.id.location);
         TextView descr = (TextView)findViewById(R.id.description);
         TextView leftTitle = (TextView)findViewById(R.id.left_title);
         TextView rightTitle = (TextView)findViewById(R.id.right_title);
+        leftLine = (View) findViewById(R.id.left_line);
+        rightLine = (View) findViewById(R.id.right_line);
+        leftLine.setVisibility(View.VISIBLE);
+        rightLine.setVisibility(View.INVISIBLE);
 
         leftTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View leftLine = (View)findViewById(R.id.left_line);
-                View rightLine = (View) findViewById(R.id.right_line);
                 RecyclerView leftRecyc = (RecyclerView)findViewById(R.id.left_recyclerview);
                 RecyclerView rightRecyc = (RecyclerView)findViewById(R.id.right_recyclerview);
                 leftLine.setVisibility(View.VISIBLE);
@@ -372,8 +377,8 @@ public class SpotDetailActivity extends AppCompatActivity {
                     Map<String, String> temp = new LinkedHashMap<String, String>();
                     temp.put("user_id",String.valueOf(t.getuserid()));
                     temp.put("title", t.gettitle());
-                    temp.put("firstday", t.getFirst_day());
-                    temp.put("duration",  String.valueOf(t.getduration()));
+                    temp.put("firstday", formatter.format(findDate(t.getFirst_day())));
+                    temp.put("duration",  String.valueOf(t.getduration()) + "天");
                     temp.put("location", t.getlocation());
                     temp.put("name", t.getnickname());
                     temp.put("like_num", String.valueOf(t.getfavoritecount()));
@@ -395,18 +400,6 @@ public class SpotDetailActivity extends AppCompatActivity {
                 });
             }
         });
-        /*
-        Map<String, String> temp1 = new LinkedHashMap<String, String>();
-        temp1.put("title", "上海:梦中城");
-        temp1.put("firstday", "2018-3-7");
-        temp1.put("duration",  "3天");
-        temp1.put("location", "上海");
-        temp1.put("name", "旅行者");
-        temp1.put("like_num", "99");
-        temp1.put("comment_num", "99");
-        spotDatas.add(temp1);
-        spotDatas.add(temp1);
-*/
         Map<String, String> temp = new LinkedHashMap<String, String>();
         temp.put("name", "星巴克");
         temp.put("description", "咖啡店");
@@ -419,7 +412,10 @@ public class SpotDetailActivity extends AppCompatActivity {
         temp.put("name", "南京大牌档");
         temp.put("description", "中餐厅");
         shopDatas.add(temp);
-
+        temp = new LinkedHashMap<String, String>();
+        temp.put("name", "一点点");
+        temp.put("description", "奶茶店");
+        shopDatas.add(temp);
     }
     class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
 

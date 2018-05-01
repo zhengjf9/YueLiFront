@@ -148,7 +148,7 @@ public class TripActivity extends Fragment {
                     temp.put("user_id",String.valueOf(t.getuserid()));
                     temp.put("title", t.gettitle());
                     temp.put("firstday", formatter.format(findDate(t.getFirst_day())));
-                    temp.put("duration",  String.valueOf(t.getduration()));
+                    temp.put("duration",  String.valueOf(t.getduration()) + "天");
                     temp.put("location", t.getlocation());
                     temp.put("name", t.getnickname());
 
@@ -170,7 +170,7 @@ public class TripActivity extends Fragment {
                             adapter.notifyDataSetChanged();
                            // Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity().getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getActivity().getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

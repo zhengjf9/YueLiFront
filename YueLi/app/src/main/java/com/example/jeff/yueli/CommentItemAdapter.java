@@ -107,7 +107,7 @@ class CommentItemAdapter extends RecyclerView.Adapter<CommentItemAdapter.MyViewH
                 //intent.putExtra("favorited",Boolean.valueOf(mDatas.get(position).get("favorited")));
                 v.getContext().startActivity(intent);
             }else{
-                Toast.makeText(context,"item"+getAdapterPosition(),Toast.LENGTH_SHORT).show();
+               // Toast.makeText(context,"item"+getAdapterPosition(),Toast.LENGTH_SHORT).show();
             }
         }
 

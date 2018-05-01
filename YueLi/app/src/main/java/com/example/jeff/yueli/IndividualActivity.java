@@ -74,6 +74,20 @@ public class IndividualActivity extends Fragment {
     private ImageView bg;
     private User user;
     private int which = 0;
+    View left_line;
+    View right_line;
+    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日");
+    private Date findDate(String str) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date();
+        try {
+            date = formatter.parse(str);
+            calendar.setTime(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
 
 
     public IndividualActivity() {
@@ -91,9 +105,13 @@ public class IndividualActivity extends Fragment {
         myAdapter.notifyDataSetChanged();
         myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         myRecView.setAdapter(myAdapter);
+        myRecView.setFocusable(false);
        // myRecView.setVisibility(View.INVISIBLE);//心情页面暂时设置不可见
-        Button mood = view.findViewById(R.id.mood_title);
-        Button journey = view.findViewById(R.id.journey_title);
+        TextView mood = view.findViewById(R.id.left_title);
+        TextView journey = view.findViewById(R.id.right_title);
+        left_line = (View)view.findViewById(R.id.left_line);
+        right_line = (View) view.findViewById(R.id.right_line);
+        right_line.setVisibility(View.INVISIBLE);
         TextView name = view.findViewById(R.id.name);
         Button like = view.findViewById(R.id.like);
         Button letter = view.findViewById(R.id.letter);
@@ -134,6 +152,7 @@ public class IndividualActivity extends Fragment {
         launchAdapter.notifyDataSetChanged();
         launchRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         launchRecView.setAdapter(launchAdapter);
+        launchRecView.setFocusable(false);
         launchRecView.setVisibility(View.GONE);
         initDatas(moodnum,fans,tnum,launchAdapter,myAdapter);
         launchAdapter.setOnItemClickLitener(new OnItemClickLitener()
@@ -183,7 +202,8 @@ public class IndividualActivity extends Fragment {
             public void onClick(View v) {
                 launchRecView.setVisibility(View.GONE);
                 myRecView.setVisibility(View.VISIBLE);
-
+                left_line.setVisibility(View.VISIBLE);
+                right_line.setVisibility(View.INVISIBLE);
             }
         });
         journey.setOnClickListener(new View.OnClickListener() {
@@ -191,6 +211,8 @@ public class IndividualActivity extends Fragment {
             public void onClick(View v) {
                 myRecView.setVisibility(View.GONE);
                 launchRecView.setVisibility(View.VISIBLE);
+                left_line.setVisibility(View.INVISIBLE);
+                right_line.setVisibility(View.VISIBLE);
             }
         });
 
@@ -304,7 +326,7 @@ public class IndividualActivity extends Fragment {
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openAlbum();
                 } else {
-                    Toast.makeText(getActivity(),"You denied the permission",Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getActivity(),"You denied the permission",Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -407,7 +429,7 @@ public class IndividualActivity extends Fragment {
             }
             Log.d("checkSelectPath",imagePath);
         } else {
-            Toast.makeText(getActivity(),"failed to get image", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getActivity(),"failed to get image", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -515,8 +537,8 @@ public class IndividualActivity extends Fragment {
                     Map<String, String> temp = new LinkedHashMap<String, String>();
                     temp.put("user_id", String.valueOf(t.getuserid()));
                     temp.put("title", t.gettitle());
-                    temp.put("firstday", t.getFirst_day());
-                    temp.put("duration",  String.valueOf(t.getduration()));
+                    temp.put("firstday", formatter.format(findDate(t.getFirst_day())));
+                    temp.put("duration",  String.valueOf(t.getduration()) + "天");
                     temp.put("location", t.getlocation());
                     temp.put("name", t.getnickname());
 
@@ -538,7 +560,7 @@ public class IndividualActivity extends Fragment {
                             t.setText(String.valueOf(tripnum));
                             // Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity().getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getActivity().getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
