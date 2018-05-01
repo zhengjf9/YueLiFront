@@ -117,7 +117,7 @@ public class IndividualOtherActivity extends AppCompatActivity {
                             }
                             // Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -371,7 +371,7 @@ public class IndividualOtherActivity extends AppCompatActivity {
                             t.setText(String.valueOf(tripnum));
                             // Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(getApplicationContext(), "try", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

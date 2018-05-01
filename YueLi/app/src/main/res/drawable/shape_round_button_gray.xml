@@ -1,0 +1,21 @@
+<!-- 形状 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"
+    >
+
+    <solid android:color="@color/gray"
+        />
+    <!-- 边框 -->
+    <stroke
+        android:width="1dip"
+        android:color="@android:color/transparent" />
+    <!-- 内填充颜色 -->
+    <padding
+        android:bottom="0dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="0dp" />
+    <!-- 圆角 -->
+    <corners android:radius="5dp" />
+
+</shape>

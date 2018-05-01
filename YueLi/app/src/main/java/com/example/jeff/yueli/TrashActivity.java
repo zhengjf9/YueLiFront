@@ -14,6 +14,8 @@ import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map;
 
@@ -24,6 +26,18 @@ import java.util.Map;
 public class TrashActivity extends AppCompatActivity {
     public List<java.util.Map<String, String>> mDatas =
             new ArrayList<java.util.Map<String, String>>();
+    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日");
+    private Date findDate(String str) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date();
+        try {
+            date = formatter.parse(str);
+            calendar.setTime(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,8 +109,8 @@ public class TrashActivity extends AppCompatActivity {
             trashJournalItem t = trashItem.get(i);
             temp.put("user_id",String.valueOf(t.getUser_id()));
             temp.put("title", t.gettitle());
-            temp.put("firstday", t.getFirst_day());
-            temp.put("duration",  String.valueOf(t.getduration()));
+            temp.put("firstday", formatter.format(findDate(t.getFirst_day())));
+            temp.put("duration",  String.valueOf(t.getduration()) + "天");
             temp.put("location", t.getlocation());
             temp.put("travel_id",String.valueOf(t.getid()));
             mDatas.add(temp);

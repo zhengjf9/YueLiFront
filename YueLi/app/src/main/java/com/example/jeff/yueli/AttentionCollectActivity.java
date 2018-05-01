@@ -36,6 +36,8 @@ public class AttentionCollectActivity extends AppCompatActivity {
             new ArrayList<java.util.Map<String, String>>();//关注的数据
     public List<java.util.Map<String, String>> collectDatas =
             new ArrayList<java.util.Map<String, String>>();//收藏的数据
+    View left_line;
+    View right_line;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,21 +46,23 @@ public class AttentionCollectActivity extends AppCompatActivity {
         setContentView(R.layout.attention_and_collect);
         final String t = (String) getIntent().getSerializableExtra("travel_id");
 
-
+        left_line = (View)findViewById(R.id.left_line);
+        right_line = (View) findViewById(R.id.right_line);
+        right_line.setVisibility(View.INVISIBLE);
         final RecyclerView attentionRecView = (RecyclerView) findViewById(R.id.attention_recyclerview);
         final HomeAdapter myAdapter = new HomeAdapter();
         myAdapter.notifyDataSetChanged();
         attentionRecView.setLayoutManager(new LinearLayoutManager(this));
         attentionRecView.setAdapter(myAdapter);
-        attentionRecView.setVisibility(View.INVISIBLE);
 
         final RecyclerView collectRecView = (RecyclerView)findViewById(R.id.collect_recyclerview);
         final JourneyItemAdapter myAdapter2 = new JourneyItemAdapter(this, collectDatas);
         collectRecView.setLayoutManager(new LinearLayoutManager(this));
         collectRecView.setAdapter(myAdapter2);
+        collectRecView.setVisibility(View.INVISIBLE);
         initData(myAdapter,myAdapter2);
-        Button attention = findViewById(R.id.attention);
-        Button collect = findViewById(R.id.collect);
+        TextView attention = findViewById(R.id.left_title);
+        TextView collect = findViewById(R.id.right_title);
         Button back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,56 +77,10 @@ public class AttentionCollectActivity extends AppCompatActivity {
         attention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*
-                mDatas.clear();
-                MyApplication application = (MyApplication) getApplication();
-                OkHttpClient httpClient = application.gethttpclient();
-                final User user = application.getUser();
-                String url = "http://123.207.29.66:3009/api/users/"+String.valueOf(user.getuserid())+"/followers";
-                Request request = new Request.Builder().url(url).build();
-
-                httpClient.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                    }
-
-                    String string = null;
-                    @Override
-                    public void onResponse(Call call, final Response response) throws IOException {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    string = response.body().string();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
-                                Gson gson = new Gson();
-                                Followers result = gson.fromJson(string, Followers.class);
-                                List<Followers.follow> followerlist = result.getdata();
-
-                                for (int i = 0; i < followerlist.size(); i++) {
-                                    Followers.follow t = followerlist.get(i);
-                                    Map<String, String> temp = new LinkedHashMap<String, String>();
-                                    temp.put("name", t.getnickname());
-                                    temp.put("signature",t.getsignature());
-                                    mDatas.add(temp);
-                                }
-                                int rescode = response.code();
-                                if (rescode == 200) {
-                                    Toast.makeText(getApplicationContext(), result.getmsg(), Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(getApplicationContext(),
-                                            result.getmsg(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
-                });*/
                 attentionRecView.setVisibility(View.VISIBLE);
                 collectRecView.setVisibility(View.INVISIBLE);
-
+                left_line.setVisibility(View.VISIBLE);
+                right_line.setVisibility(View.INVISIBLE);
             }
         });
         collect.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +88,8 @@ public class AttentionCollectActivity extends AppCompatActivity {
             public void onClick(View v) {
                 attentionRecView.setVisibility(View.INVISIBLE);
                 collectRecView.setVisibility(View.VISIBLE);
+                left_line.setVisibility(View.INVISIBLE);
+                right_line.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -229,7 +189,7 @@ public class AttentionCollectActivity extends AppCompatActivity {
                          if (rescode == 200) {
                              //Toast.makeText(getActivity().getApplicationContext(),"travel_id is " + String.valueOf(travellist.get(0).gettravelid())  , Toast.LENGTH_SHORT).show();
                          } else {
-                             Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
                          }
                      }
                  });

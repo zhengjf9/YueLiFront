@@ -65,6 +65,7 @@ public class DateInfoAdapter extends RecyclerView.Adapter<DateInfoAdapter.ViewHo
             // 需要注意的是GridLayoutManager要设置setAutoMeasureEnabled(true)成自适应高度
             manager.setAutoMeasureEnabled(true);
             mRecyclerView.setLayoutManager(manager);
+            mRecyclerView.setFocusable(false);
         }
     }
 }

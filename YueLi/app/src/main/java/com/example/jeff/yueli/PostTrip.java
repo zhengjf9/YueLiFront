@@ -236,7 +236,7 @@ public class PostTrip extends AppCompatActivity {
             MyApplication application = (MyApplication) getApplication();
             String t = (String)getIntent().getSerializableExtra("travel_id");
             System.out.println("传入的ID:"+t);
-            Toast.makeText(PostTrip.this, t, Toast.LENGTH_SHORT).show();
+           // Toast.makeText(PostTrip.this, t, Toast.LENGTH_SHORT).show();
             int i = Integer.parseInt(t);
             application.setTrashItemId(i);
             trashJournalItem journeltofindtitle = DataSupport.find(trashJournalItem.class,i);
@@ -305,7 +305,7 @@ public class PostTrip extends AppCompatActivity {
             public void onClick(View v) {
                 //清空这次编辑
                 MyApplication application = (MyApplication) getApplication();
-                Toast.makeText(PostTrip.this, String.valueOf(application.curTrashRecords.size()), Toast.LENGTH_LONG).show();
+               // Toast.makeText(PostTrip.this, String.valueOf(application.curTrashRecords.size()), Toast.LENGTH_LONG).show();
                 if (application.curTrashRecords.size()!=0) {
                     saveTrip();
                 }
@@ -449,9 +449,9 @@ public class PostTrip extends AppCompatActivity {
                                                 int rescode = response.code();
                                                 if (rescode == 200) {
                                                     //application.eid=denglu.getComment_id();
-                                                    Toast.makeText(PostTrip.this, "发布游记记录成功", Toast.LENGTH_SHORT).show();
+                                                   // Toast.makeText(PostTrip.this, "发布游记记录成功", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(PostTrip.this, String.valueOf(rescode), Toast.LENGTH_SHORT).show();
+                                                    //Toast.makeText(PostTrip.this, String.valueOf(rescode), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
 
@@ -500,7 +500,7 @@ public class PostTrip extends AppCompatActivity {
 
 //模仿journeydetail.activity
 
-        Toast.makeText(PostTrip.this, String.valueOf(all.size()), Toast.LENGTH_SHORT).show();
+       // Toast.makeText(PostTrip.this, String.valueOf(all.size()), Toast.LENGTH_SHORT).show();
         boolean newday = true;
 
         for (int i = 0; i < all.size();) {
@@ -515,7 +515,7 @@ public class PostTrip extends AppCompatActivity {
             ParentInfo parentInfo = new ParentInfo();
             parentInfo.setDay_num("Day"+String.valueOf(writingday));
           //  Toast.makeText(PostTrip.this, "Day"+String.valueOf(writingday),Toast.LENGTH_SHORT).show();
-            Toast.makeText(PostTrip.this, String.valueOf(tmp.gettravelid()),Toast.LENGTH_LONG).show();
+           // Toast.makeText(PostTrip.this, String.valueOf(tmp.gettravelid()),Toast.LENGTH_LONG).show();
             parentInfo.setDate(tmp.getday());
             parentInfo.setWeek(findWeekX(tmp.getday()));
             List<ChildInfo> childInfoList = new ArrayList<>();
@@ -585,7 +585,7 @@ public class PostTrip extends AppCompatActivity {
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openAlbum();
                 } else {
-                    Toast.makeText(PostTrip.this,"You denied the permission",Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(PostTrip.this,"You denied the permission",Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -659,7 +659,7 @@ public class PostTrip extends AppCompatActivity {
             textView.setVisibility(View.GONE);
             Log.d("checkSelectPath",imagePath);
         } else {
-            Toast.makeText(this,"failed to get image", Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this,"failed to get image", Toast.LENGTH_SHORT).show();
         }
     }
     @Override

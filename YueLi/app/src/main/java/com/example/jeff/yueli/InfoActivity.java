@@ -123,10 +123,10 @@ public class InfoActivity extends AppCompatActivity {
                         a.notifyDataSetChanged();
                         int rescode = response.code();
                         if (rescode == 200) {
-                            Toast.makeText(getApplicationContext(),String.valueOf(result.getdata().size())  , Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getApplicationContext(),String.valueOf(result.getdata().size())  , Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getApplicationContext(),
-                                    result.getmsg(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(),
+                                 //   result.getmsg(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

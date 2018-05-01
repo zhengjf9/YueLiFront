@@ -4,7 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 <ImageView
     android:id="@+id/pic"
@@ -13,13 +14,13 @@
     android:src="@drawable/coffee"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
-    android:layout_marginTop="20dp"
+    android:layout_marginTop="15dp"
     android:layout_marginLeft="20dp"
     />
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:src="@drawable/shop_icon_48px"
         app:layout_constraintTop_toTopOf="@+id/pic"
         app:layout_constraintLeft_toRightOf="@+id/pic"
@@ -30,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="星巴克"
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/icon"
         app:layout_constraintLeft_toRightOf="@+id/icon"
