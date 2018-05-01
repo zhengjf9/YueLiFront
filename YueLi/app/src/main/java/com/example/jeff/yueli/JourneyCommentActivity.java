@@ -7,8 +7,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -221,8 +223,16 @@ public class JourneyCommentActivity extends AppCompatActivity {
                 });
             }
         });
-
-
-
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(null != this.getCurrentFocus()){
+            /**
+             * 点击空白位置 隐藏软键盘
+             */
+            InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            return mInputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.onTouchEvent(event);
     }
 }

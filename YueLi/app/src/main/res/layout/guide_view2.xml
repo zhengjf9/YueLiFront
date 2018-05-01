@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:layout_width="match_parent"
@@ -10,5 +10,41 @@
         android:scaleType="centerCrop"
         android:src="@drawable/guideview2"
         />
-
-</LinearLayout>
+    <TextView
+        android:id="@+id/line1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="1"
+        android:text="一个镜头，"
+        android:textSize="26dp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="30dp"
+        />
+    <TextView
+        android:id="@+id/line2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="1"
+        android:text="一次涟漪，"
+        android:textSize="26dp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="@+id/line1"
+        app:layout_constraintRight_toLeftOf="@+id/line1"
+        android:layout_marginRight="5dp"
+        />
+    <TextView
+        android:id="@+id/line3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="1"
+        android:text="一份喜欢。"
+        android:textSize="26dp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="@+id/line1"
+        app:layout_constraintRight_toLeftOf="@+id/line2"
+        android:layout_marginRight="5dp"
+        />
+</android.support.constraint.ConstraintLayout>

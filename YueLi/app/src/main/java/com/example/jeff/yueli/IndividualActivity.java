@@ -131,6 +131,10 @@ public class IndividualActivity extends Fragment {
 
         final CustomRecyclerView launchRecView = (CustomRecyclerView)view.findViewById(R.id.launch_recyclerview);
         final JourneyItemAdapter launchAdapter = new JourneyItemAdapter(getContext(), launchDatas);
+        launchAdapter.notifyDataSetChanged();
+        launchRecView.setLayoutManager(new LinearLayoutManager(getContext()));
+        launchRecView.setAdapter(launchAdapter);
+        launchRecView.setVisibility(View.GONE);
         initDatas(moodnum,fans,tnum,launchAdapter,myAdapter);
         launchAdapter.setOnItemClickLitener(new OnItemClickLitener()
         {
@@ -150,10 +154,6 @@ public class IndividualActivity extends Fragment {
                 //myAdapter.removeData(position);
             }
         });
-        launchRecView.setLayoutManager(new LinearLayoutManager(getContext()));
-        launchRecView.setAdapter(launchAdapter);
-        launchRecView.setVisibility(View.INVISIBLE);
-        //launchRecView.addHeaderView(headerView);
 
         like.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +181,7 @@ public class IndividualActivity extends Fragment {
         mood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchRecView.setVisibility(View.INVISIBLE);
+                launchRecView.setVisibility(View.GONE);
                 myRecView.setVisibility(View.VISIBLE);
 
             }
@@ -189,7 +189,7 @@ public class IndividualActivity extends Fragment {
         journey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myRecView.setVisibility(View.INVISIBLE);
+                myRecView.setVisibility(View.GONE);
                 launchRecView.setVisibility(View.VISIBLE);
             }
         });

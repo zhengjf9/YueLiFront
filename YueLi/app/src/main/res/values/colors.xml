@@ -13,4 +13,5 @@
     <color name="bottom_gray">#f7f7f7</color>
     <color name="individual_gray">#f6f6f6</color>
     <color name="orange">#f39800</color>
+    <color name="text_gray">#a9a9a9</color>
 </resources>

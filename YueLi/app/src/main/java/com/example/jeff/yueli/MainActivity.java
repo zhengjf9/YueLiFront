@@ -23,7 +23,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -55,6 +57,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentAdapter fragmentAdapter;
     public ViewPager getVp() {return vp;}
 
+    TextView recommend_text;
+    TextView meet_text;
+    TextView trip_text;
+    TextView individual_text;
 
 
     @Override
@@ -146,13 +152,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
     private void initViews() {
         ImageView recommend = (ImageView) findViewById(R.id.recommend);
         ImageView add = (ImageView) findViewById(R.id.plus);
         ImageView individual = (ImageView) findViewById(R.id.individual);
         ImageView trip = (ImageView) findViewById(R.id.trip);
         ImageView meet = (ImageView) findViewById(R.id.meet);
+        recommend_text = (TextView) findViewById(R.id.recommend_text);
+        meet_text = (TextView) findViewById(R.id.meet_text);
+        trip_text = (TextView) findViewById(R.id.trip_text);
+        individual_text = (TextView) findViewById(R.id.individual_text);
 
         recommend.setOnClickListener(this);
         add.setOnClickListener(this);
@@ -209,22 +218,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         individual.setImageResource(R.drawable.male_user_96px);
         trip.setImageResource(R.drawable.photo_gallery_96px);
         meet.setImageResource(R.drawable.map_marker_96px);
+        individual_text.setTextColor(getResources().getColor(R.color.text_gray));
+        recommend_text.setTextColor(getResources().getColor(R.color.text_gray));
+        trip_text.setTextColor(getResources().getColor(R.color.text_gray));
+        meet_text.setTextColor(getResources().getColor(R.color.text_gray));
         switch (pos) {
             case 2:
                 add.setImageResource(R.drawable.plus_cover);
-
                 break;
             case 4:
                 individual.setImageResource(R.drawable.male_user_96px_cover);
+                individual_text.setTextColor(getResources().getColor(R.color.mood_blue));
                 break;
             case 0:
                 recommend.setImageResource(R.drawable.marker_96px_cover);
+                recommend_text.setTextColor(getResources().getColor(R.color.mood_blue));
                 break;
             case 3:
                 trip.setImageResource(R.drawable.photo_gallery_96px_cover);
+                trip_text.setTextColor(getResources().getColor(R.color.mood_blue));
                 break;
             case 1:
                 meet.setImageResource(R.drawable.map_marker_96px_cover);
+                meet_text.setTextColor(getResources().getColor(R.color.mood_blue));
                 break;
         }
     }
@@ -280,5 +296,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 //        Log.e("click function",String.valueOf(p));
     }
+    public interface MyTouchListener {
+        public void onTouchEvent(MotionEvent event);
+    }
 
+    // 保存MyTouchListener接口的列表
+    private ArrayList<MyTouchListener> myTouchListeners = new ArrayList<MainActivity.MyTouchListener>();
+
+    /**
+     * 提供给Fragment通过getActivity()方法来注册自己的触摸事件的方法
+     * @param listener
+     */
+    public void registerMyTouchListener(MyTouchListener listener) {
+        myTouchListeners.add(listener);
+    }
+
+    /**
+     * 提供给Fragment通过getActivity()方法来取消注册自己的触摸事件的方法
+     * @param listener
+     */
+    public void unRegisterMyTouchListener(MyTouchListener listener) {
+        myTouchListeners.remove( listener );
+    }
+
+    /**
+     * 分发触摸事件给所有注册了MyTouchListener的接口
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        for (MyTouchListener listener : myTouchListeners) {
+            listener.onTouchEvent(ev);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 }
